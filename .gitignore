@@ -18,3 +18,6 @@ output/
 
 # Verification scratch (not part of the package)
 temp/
+
+# Generated figure_data JSONs (regenerable via figure_data/generate_all.py)
+figure_data/out/

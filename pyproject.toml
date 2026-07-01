@@ -1,0 +1,11 @@
+[project]
+name = "to26-author-package"
+version = "0.1.0"
+description = "Reproducible pipeline for Tobin & Oschinski (2026): skills-based occupation transitions (Suitable -> Viable -> Skill gaps) for 7 Canadian communities"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scipy>=1.11",
+]

@@ -2,15 +2,26 @@
 
 Replicates the authors' OaSIS similarity methodology
 (`OaSIS Similarity Matrix_Code.rtf`) with ONE correction, and adds the
-NOC-collapsed matrix the rest of this pipeline consumes.
+NOC-collapsed matrices the rest of this pipeline consumes.
 
-The authors' method, verbatim:
+Two metrics, produced in parallel:
+  The authors used EUCLIDEAN distance for occupation matching; an earlier
+  replication used COSINE. Rather than choose, this package carries both as
+  symmetric variants through every step. Both are emitted here as similarities
+  in [0, 1] where 1 = identical, so downstream logic (floors, thresholds,
+  ranking) treats them uniformly:
+    - cosine similarity   = 1 - cosine distance          (already in [0, 1])
+    - euclidean similarity = 1 / (1 + euclidean distance) (absolute, stable;
+      a pair's score never depends on the rest of the population, mirroring
+      cosine's absolute scale)
+  The raw euclidean DISTANCE matrices are also written for transparency.
+
+The authors' matrix construction, verbatim:
   - Unit of analysis: OaSIS sub-occupations (.01, .02, ...) kept distinct.
   - Four domains concatenated as-is: Skills (33), Abilities (49),
     Knowledge (44), Work Activities (40) = 166 attributes, all on a 0-5 scale.
-  - No normalization (cosine self-normalizes by magnitude).
+  - No feature normalization (both metrics operate on the raw 0-5 vectors).
   - Zeros retained (a zero = "attribute not required", meaningful signal).
-  - Similarity = cosine (1 - cosine distance); Euclidean distance also emitted.
 
 The one correction — merge on CODE, not LABEL:
   The authors merge the four domains on `OaSIS Label - Final` and drop the
@@ -21,18 +32,21 @@ The one correction — merge on CODE, not LABEL:
   authors' code exactly.
 
 Outputs (output/similarity/):
-  merged_matrix.csv                   900 occupations x 166 attributes (code-indexed)
-  oasis_code_label_lookup.csv         code -> label (labels from the Skills domain)
-  cosine_suboccupation.csv            900 x 900 cosine similarity (authors' unit)
-  euclidean_suboccupation.csv         900 x 900 Euclidean distance (authors' unit)
-  cosine_noc.csv                      NOC x NOC cosine similarity (collapsed)
-  euclidean_noc.csv                   NOC x NOC Euclidean distance (collapsed)
+  merged_matrix.csv                      900 occupations x 166 attributes (code-indexed)
+  oasis_code_label_lookup.csv            code -> label (labels from the Skills domain)
+  similarity_cosine_suboccupation.csv    900 x 900 cosine similarity (authors' unit)
+  similarity_euclidean_suboccupation.csv 900 x 900 euclidean similarity 1/(1+d)
+  distance_euclidean_suboccupation.csv   900 x 900 raw euclidean distance
+  similarity_cosine_noc.csv              NOC x NOC cosine similarity (collapsed)
+  similarity_euclidean_noc.csv           NOC x NOC euclidean similarity (collapsed)
+  distance_euclidean_noc.csv             NOC x NOC raw euclidean distance
 
-The NOC-collapsed cosine matrix (`cosine_noc.csv`) is what Step 2 consumes.
+The NOC-collapsed similarity matrices (`similarity_{cosine,euclidean}_noc.csv`)
+are what Step 2 consumes, one per metric variant.
 
   NOC collapse method: sub-occupation competency VECTORS are averaged up to
   their 5-digit NOC parent, then similarity is computed on the collapsed
-  matrix (collapse-then-cosine). The authors never collapsed in code, but
+  matrix (collapse-then-metric). The authors never collapsed in code, but
   their published candidate selections are all at 5-digit NOC level. Averaging
   profiles first compares each occupation's typical competency profile and
   avoids an arbitrary rule for aggregating pairwise scores.
@@ -153,14 +167,40 @@ def collapse_to_noc(matrix: pd.DataFrame) -> pd.DataFrame:
 
 # ── 4. Similarity / distance matrices ─────────────────────────────────────
 
+def _frame(values, index) -> pd.DataFrame:
+    return pd.DataFrame(values, index=index, columns=index)
+
+
 def cosine_similarity(matrix: pd.DataFrame) -> pd.DataFrame:
-    sim = 1 - squareform(pdist(matrix.values, metric="cosine"))
-    return pd.DataFrame(sim, index=matrix.index, columns=matrix.index)
+    """Cosine similarity in [0, 1]; 1 = identical direction."""
+    return _frame(1 - squareform(pdist(matrix.values, metric="cosine")), matrix.index)
 
 
 def euclidean_distance(matrix: pd.DataFrame) -> pd.DataFrame:
-    dist = squareform(pdist(matrix.values, metric="euclidean"))
-    return pd.DataFrame(dist, index=matrix.index, columns=matrix.index)
+    """Raw Euclidean distance; 0 = identical, larger = more different."""
+    return _frame(squareform(pdist(matrix.values, metric="euclidean")), matrix.index)
+
+
+def euclidean_similarity(distance: pd.DataFrame) -> pd.DataFrame:
+    """Convert Euclidean distance to a similarity in (0, 1]; 1 = identical.
+
+    sim = 1 / (1 + d). Absolute and stable: a pair's score does not depend on
+    the rest of the population, mirroring cosine's absolute scale so that
+    downstream floors/thresholds mean the same thing for both metrics.
+    """
+    return 1.0 / (1.0 + distance)
+
+
+def write_metric_matrices(matrix: pd.DataFrame, unit: str) -> None:
+    """Write cosine similarity, euclidean similarity, and euclidean distance
+    for one matrix (unit is 'suboccupation' or 'noc')."""
+    cosine_similarity(matrix).to_csv(OUT_DIR / f"similarity_cosine_{unit}.csv")
+    dist = euclidean_distance(matrix)
+    euclidean_similarity(dist).to_csv(OUT_DIR / f"similarity_euclidean_{unit}.csv")
+    dist.to_csv(OUT_DIR / f"distance_euclidean_{unit}.csv")
+    n = matrix.shape[0]
+    print(f"  similarity_cosine_{unit}.csv, similarity_euclidean_{unit}.csv, "
+          f"distance_euclidean_{unit}.csv  ({n} x {n})")
 
 
 # ── 5. Main ───────────────────────────────────────────────────────────────
@@ -183,18 +223,12 @@ def main() -> None:
 
     # Authors' unit of analysis: sub-occupation level
     print("\nSub-occupation matrices (authors' unit, corrected to 900):")
-    cosine_similarity(merged).to_csv(OUT_DIR / "cosine_suboccupation.csv")
-    euclidean_distance(merged).to_csv(OUT_DIR / "euclidean_suboccupation.csv")
-    print(f"  cosine_suboccupation.csv, euclidean_suboccupation.csv "
-          f"({merged.shape[0]} x {merged.shape[0]})")
+    write_metric_matrices(merged, "suboccupation")
 
-    # NOC-collapsed: what Step 2 consumes
+    # NOC-collapsed: what Step 2 consumes (one matrix per metric variant)
     print("\nNOC-collapsed matrices:")
     collapsed = collapse_to_noc(merged)
-    cosine_similarity(collapsed).to_csv(OUT_DIR / "cosine_noc.csv")
-    euclidean_distance(collapsed).to_csv(OUT_DIR / "euclidean_noc.csv")
-    print(f"  cosine_noc.csv, euclidean_noc.csv "
-          f"({collapsed.shape[0]} x {collapsed.shape[0]})")
+    write_metric_matrices(collapsed, "noc")
 
     print(f"\nDone. Outputs in {OUT_DIR}")
 

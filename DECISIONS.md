@@ -37,11 +37,36 @@ between them via a single lever downstream.
   labels across domains, so their label merge silently drops it and dedups to 899
   occupations. Merging on `OaSIS Code - Final` retains all **900**. Verified: our
   code merge reproduces 900×166; the label merge reproduces the authors' 899.
+- **No per-domain normalization; concatenate raw, let the metric handle it.**
+  The author confirmed by email (Apr 2026): he concatenates the four raw domains
+  as-is and does not L2-normalize per domain ("normalizing each domain separately
+  before concatenating is a different operation as it would reweight the four
+  domains"). We do the same — `merge_domains` joins raw columns; `pdist` runs on
+  the full 166-dim vector. Verified: our raw sub-occupation **euclidean** distances
+  are **identical to the author's exact code** (0.00e+00 max diff across all 899
+  occupations they share; the only difference is the 900th occupation 92023.0 that
+  their label-merge drops and our code-merge keeps).
+  - Note on euclidean scale: the author's docstring says results fall in [0, 1] —
+    that is true only for *cosine*; raw euclidean distances here run 0–41.4 (ours
+    and theirs alike). Our Step-2 per-source min-max is the only rescale we add,
+    and it is order-preserving (Spearman −1.0 vs raw distance).
+  - Euclidean is *our* addition — the author's stated metric is cosine, so our
+    euclidean-side choices (per-source min-max, the implicit domain weighting that
+    euclidean-on-raw carries) are ours to make and need not match his cosine
+    normalization reasoning.
 - **Collapse-then-metric** for the NOC-level matrices: sub-occupation competency
   vectors are averaged to their 5-digit NOC parent, then similarity is computed.
-  The authors never collapsed in code, but their published selections are all at
-  5-digit NOC level; averaging profiles first is more defensible than aggregating
-  pairwise scores. Verified: matches the replication's collapsed cosine exactly.
+  The author confirmed he does **not** aggregate to 5-digit in the similarity code
+  — he collapses "later in the analysis when used in conjunction with other labour
+  market data." Our two-level design mirrors this exactly: similarity at
+  sub-occupation level (`*_suboccupation.csv`), collapse to NOC at the census join.
+  Averaging profiles first (collapse-then-metric) is more defensible than
+  aggregating pairwise scores. Verified: matches the replication's collapsed
+  cosine exactly.
+- **We do NOT filter senior-management (000*) occupations** from the similarity
+  matrix — matching the author (confirmed by email). All 900 occupations are
+  present. (The TEER≥2 clamp in Step 5 drops them as viable *candidates*, a
+  downstream viability decision, not a similarity-stage filter.)
 - **Zero-pad NOC parents to 5 digits.** Short OaSIS codes (`10.0` → NOC `00010`
   Legislators) were losing leading zeros and failing census joins. Padding fixes
   ~40 false join failures.

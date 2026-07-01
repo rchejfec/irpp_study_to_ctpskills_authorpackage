@@ -42,13 +42,27 @@ filter basis.
 | `noc_teer_lookup.csv` | NOC 2021 → TEER level + official 5-digit title | Steps 2, 3 |
 | `cops_summary_2024_2033.csv` | COPS 2024–2033 occupational outlook projections | Step 3 (outlook filter) |
 | `ai_exposure_complementarity_dais.csv` | Dais (2025) AI exposure / complementarity by NOC | Step 3 (AI exposure filter) |
-| `author_viable_selections_noc.csv` | Author's viable picks per (community, source, candidate) | Step 3 (classification), Step 4 |
+| `viable_selections.csv` | The viable picks per (community, source, candidate), with a `pick_source` column denoting **author** vs **user** picks and a `rationale` for each user pick. | Step 3 (classification), Step 4 |
 | `susceptible_sector_nocs.json` | NOCs belonging to each susceptible sector | Step 3 (susceptible-occupation exclusion) |
 | `source_sector_mapping.json` | Community → susceptible sector(s) | Step 3 (susceptible-occupation exclusion) |
 
 `community_occupations.csv` was promoted from the replication repo's
 generated-but-orphaned `output/pipeline/lookups/target_pairs.csv` (it had no
-runnable producer). It is now treated as a curated input.
+runnable producer). It is now treated as a curated input. Its 15 source
+occupations and their community assignments were verified against the authors'
+Appendix A (15 source-occupation blocks — an exact match). Note: the reviseddraft
+abstract says "16 occupations"; that count appears to include Industrial painters
+(NOC 94213), which the authors dropped and which appears in Appendix A only as a
+candidate, never as a source. Our data follows Appendix A.
+
+`viable_selections.csv` consolidates two previously separate things: the author
+viable picks (`author_viable_selections_noc.csv`, 67 rows) and the user/community
+additions that were hard-coded as a `USER_ADDITIONS` dict inside the replication's
+`generate_viable_csv.py` (29 unique rows, after dropping 2 that duplicated author
+picks — author takes precedence). Externalizing the user picks makes the
+judgment layer editable reference data rather than buried code. The `pick_source`
+column denotes origin; `rationale` carries the community-context reasoning for
+each user pick.
 
 ---
 

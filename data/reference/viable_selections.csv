@@ -1,0 +1,97 @@
+cd_uid,community,source_noc,source_teer,source_label,teer_category,candidate_noc,candidate_teer,candidate_label,pick_source,rationale
+1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,extensive,73200,3,Residential and commercial installers and servicers,author,
+1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,comparable,74204,4,Utility maintenance workers,author,
+1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,comparable,73400,3,Heavy equipment operators,user,Heavy equipment operators have real demand from post-Fiona reconstruction; skills bridge from marine deck work is weak but broad availability compensates
+1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,comparable,73402,3,"Drillers and blasters - surface mining, quarrying and construction",user,Drillers and blasters could serve quarrying for construction aggregate and Cape Ray Gold if it advances
+1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,comparable,74205,4,Public works maintenance equipment operators and related workers,user,Public works maintenance is universally present; post-Fiona reconstruction creates ongoing demand; strong skills overlap with outdoor equipment operation
+1003,Channel-Port aux Basques,75210,5,Boat and cable ferry operators and related occupations,comparable,75110,5,Construction trades helpers and labourers,author,
+1003,Channel-Port aux Basques,75210,5,Boat and cable ferry operators and related occupations,extensive,94111,4,Plastics processing machine operators,author,
+1003,Channel-Port aux Basques,75210,5,Boat and cable ferry operators and related occupations,comparable,74205,4,Public works maintenance equipment operators and related workers,user,Same public works rationale; stable municipal infrastructure maintenance
+1003,Channel-Port aux Basques,85102,5,Aquaculture and marine harvest labourers,comparable,75212,5,Public works and maintenance labourers,author,
+1003,Channel-Port aux Basques,85102,5,Aquaculture and marine harvest labourers,extensive,94110,4,Chemical plant machine operators,author,
+1003,Channel-Port aux Basques,85102,5,Aquaculture and marine harvest labourers,comparable,84121,4,Fishing vessel deckhands,user,"Fishing vessel deckhands — fishing IS present in CPAB; recognizable local transition for aquaculture workers. Caveat: lateral move within same marine vulnerability, not diversification"
+3532,Ingersoll,75101,5,Material handlers,comparable,75211,5,Railway and motor transport labourers,author,
+3532,Ingersoll,75101,5,Material handlers,extensive,94101,4,Foundry workers,author,
+3532,Oxford,75101,5,Material handlers,comparable,95101,5,Labourers in metal fabrication,user,"Metal fabrication labourers — these industries exist in broader southwestern Ontario corridor (Kitchener-Waterloo, London); may require commuting"
+3532,Oxford,75101,5,Material handlers,comparable,95104,5,Labourers in rubber and plastic products manufacturing,user,Rubber/plastic labourers — exists in southwestern Ontario manufacturing corridor; within realistic regional labour market
+3532,Ingersoll,94204,4,Mechanical assemblers and inspectors,extensive,93200,3,Aircraft assemblers and aircraft assembly inspectors,author,
+3532,Ingersoll,94204,4,Mechanical assemblers and inspectors,comparable,94111,4,Plastics processing machine operators,author,
+3532,Oxford,94204,4,Mechanical assemblers and inspectors,comparable,94105,4,Metalworking and forging machine operators,user,Metalworking and forging machine operators — direct skills transfer from mechanical assembly; Oxford County has active manufacturing base in the Woodstock industrial corridor
+3532,Oxford,94204,4,Mechanical assemblers and inspectors,comparable,94112,4,Rubber processing machine operators and related workers,user,Rubber processing machine operators — plastics/rubber manufacturing present in the southwestern Ontario corridor; very high cosine similarity to source occupation
+3532,Ingersoll,95109,5,"Other labourers in processing, manufacturing and utilities",comparable,75212,5,Public works and maintenance labourers,author,
+3557,Sault Ste. Marie,75101,5,Material handlers,extensive,94124,4,Woodworking machine operators,author,
+3557,Sault Ste. Marie,75101,5,Material handlers,comparable,95104,5,Labourers in rubber and plastic products manufacturing,author,
+3557,Algoma,75101,5,Material handlers,comparable,75110,5,Construction trades helpers and labourers,user,Construction trades helpers — SSM has active port development and infrastructure investment planned
+3557,Sault Ste. Marie,94100,4,"Machine operators, mineral and metal processing",comparable,94106,4,Machining tool operators,author,
+3557,Algoma,94100,4,"Machine operators, mineral and metal processing",comparable,73402,3,"Drillers and blasters - surface mining, quarrying and construction",user,Drillers and blasters — anchored by SSM's critical minerals strategy; surface mining/quarrying skills transfer from metal processing
+3557,Sault Ste. Marie,95100,5,Labourers in mineral and metal processing,extensive,94101,4,Foundry workers,author,
+3557,Sault Ste. Marie,95100,5,Labourers in mineral and metal processing,comparable,95102,5,Labourers in chemical products processing and utilities,author,
+3557,Algoma,95100,5,Labourers in mineral and metal processing,comparable,75211,5,Railway and motor transport labourers,user,Railway and motor transport labourers — SSM has Algoma Central and Huron Central rail lines; logistics could grow with new port development. Caveat: Huron Central threatened with abandonment
+3557,Algoma,95100,5,Labourers in mineral and metal processing,comparable,95101,5,Labourers in metal fabrication,user,Labourers in metal fabrication — interchangeable at TEER 5; SSM has metal fabrication shops
+3557,Algoma,95100,5,Labourers in mineral and metal processing,comparable,95103,5,"Labourers in wood, pulp and paper processing",user,Labourers in wood/pulp/paper — interchangeable at TEER 5; SSM has forestry heritage
+3557,Algoma,95100,5,Labourers in mineral and metal processing,comparable,95104,5,Labourers in rubber and plastic products manufacturing,user,Labourers in rubber/plastic products — interchangeable at TEER 5 level; plastics may connect to advanced manufacturing diversification
+3557,Algoma,95100,5,Labourers in mineral and metal processing,comparable,95106,5,Labourers in food and beverage processing,user,Labourers in food and beverage processing — some food processing in SSM; interchangeable generic labourer category. Caveat: not a growth sector
+3557,Algoma,95100,5,Labourers in mineral and metal processing,comparable,95107,5,Labourers in fish and seafood processing,user,Labourers in fish/seafood processing — interchangeable at TEER 5
+3557,Algoma,95100,5,Labourers in mineral and metal processing,comparable,95109,5,"Other labourers in processing, manufacturing and utilities",user,Other labourers in processing/manufacturing — interchangeable at TEER 5
+4615,Neepawa,73300,3,Transport truck drivers,extensive,22114,2,Landscape and horticulture technicians and specialists,author,
+4615,Neepawa,73300,3,Transport truck drivers,comparable,73301,3,"Bus drivers, subway operators and other transit operators",author,
+4615,Neepawa,73300,3,Transport truck drivers,extensive,73311,3,Railway conductors and brakemen/women,author,
+4615,Neepawa,73300,3,Transport truck drivers,comparable,74200,4,Railway yard and track maintenance workers,author,
+4615,Neepawa,73300,3,Transport truck drivers,comparable,73400,3,Heavy equipment operators,user,"Heavy equipment operators — agriculture, road maintenance, and construction all use heavy equipment in Manitoba"
+4615,Neepawa,73300,3,Transport truck drivers,comparable,74205,4,Public works maintenance equipment operators and related workers,user,Public works maintenance equipment operators — stable municipal equipment operation; equally valid as Railway yard pick
+4615,Neepawa,94141,4,"Industrial butchers, meat cutters, poultry preparers and related workers",comparable,94103,4,"Concrete, clay and stone forming operators",author,
+4615,Neepawa,94141,4,"Industrial butchers, meat cutters, poultry preparers and related workers",comparable,94124,4,Woodworking machine operators,author,
+4615,Neepawa,95106,5,Labourers in food and beverage processing,comparable,75211,5,Railway and motor transport labourers,author,
+4615,Neepawa,95106,5,Labourers in food and beverage processing,extensive,94103,4,"Concrete, clay and stone forming operators",author,
+4615,Neepawa,95106,5,Labourers in food and beverage processing,extensive,94124,4,Woodworking machine operators,author,
+4701,Estevan,73300,3,Transport truck drivers,extensive,72500,2,Crane operators,author,
+4701,Estevan,73300,3,Transport truck drivers,comparable,73301,3,"Bus drivers, subway operators and other transit operators",author,
+4701,Estevan,73300,3,Transport truck drivers,extensive,73311,3,Railway conductors and brakemen/women,author,
+4701,Estevan,73300,3,Transport truck drivers,comparable,73400,3,Heavy equipment operators,user,Heavy equipment operators — Southeast College runs HEO program in Estevan; major local demand. Note: appears in susceptible list for mining but transport→HEO is a legitimate transition
+4701,Estevan,73300,3,Transport truck drivers,comparable,74200,4,Railway yard and track maintenance workers,user,Railway yard and track maintenance — CP line runs through region
+4701,Estevan,73300,3,Transport truck drivers,comparable,74205,4,Public works maintenance equipment operators and related workers,user,Public works maintenance equipment operators — stable municipal infrastructure work
+4701,Estevan,73300,3,Transport truck drivers,comparable,94100,4,"Machine operators, mineral and metal processing",user,Machine operators mineral/metal — could connect to future mineral processing or geothermal infrastructure
+4701,Estevan,73400,3,Heavy equipment operators,extensive,72106,2,Welders and related machine operators,author,
+4701,Estevan,73400,3,Heavy equipment operators,extensive,72500,2,Crane operators,author,
+4701,Estevan,73400,3,Heavy equipment operators,comparable,73100,3,Concrete finishers,author,
+4701,Estevan,73400,3,Heavy equipment operators,extensive,72105,2,Ironworkers,user,Ironworkers — power plant maintenance and construction uses ironworkers; plausible for Estevan's energy infrastructure
+4701,Estevan,73400,3,Heavy equipment operators,comparable,74200,4,Railway yard and track maintenance workers,user,Railway yard and track maintenance — CP line present in southeastern Saskatchewan
+4701,Estevan,73400,3,Heavy equipment operators,comparable,74205,4,Public works maintenance equipment operators and related workers,user,Public works maintenance equipment operators — stable infrastructure demand
+4701,Estevan,84101,4,Oil and gas well drilling and related workers and service operators,comparable,74204,4,Utility maintenance workers,author,
+4701,Estevan,84101,4,Oil and gas well drilling and related workers and service operators,extensive,92101,2,Water and waste treatment plant operators,author,
+4701,Estevan,84101,4,Oil and gas well drilling and related workers and service operators,comparable,94110,4,Chemical plant machine operators,author,
+4701,Estevan,84101,4,Oil and gas well drilling and related workers and service operators,comparable,74200,4,Railway yard and track maintenance workers,user,Railway yard and track maintenance — CP line present
+4701,Estevan,84101,4,Oil and gas well drilling and related workers and service operators,comparable,94100,4,"Machine operators, mineral and metal processing",user,Machine operators mineral/metal — skills transfer from O&G machine operation to other industrial processing
+4701,Estevan,85111,5,"Oil and gas drilling, servicing and related labourers",extensive,73200,3,Residential and commercial installers and servicers,author,
+4701,Estevan,85111,5,"Oil and gas drilling, servicing and related labourers",extensive,74205,4,Public works maintenance equipment operators and related workers,author,
+4701,Estevan,85111,5,"Oil and gas drilling, servicing and related labourers",comparable,75110,5,Construction trades helpers and labourers,author,
+4701,Estevan,85111,5,"Oil and gas drilling, servicing and related labourers",comparable,95102,5,Labourers in chemical products processing and utilities,author,
+4816,Wood Buffalo,73300,3,Transport truck drivers,extensive,22114,2,Landscape and horticulture technicians and specialists,author,
+4816,Wood Buffalo,73300,3,Transport truck drivers,comparable,73301,3,"Bus drivers, subway operators and other transit operators",author,
+4816,Wood Buffalo,73300,3,Transport truck drivers,extensive,73311,3,Railway conductors and brakemen/women,author,
+4816,Wood Buffalo,73400,3,Heavy equipment operators,extensive,72106,2,Welders and related machine operators,author,
+4816,Wood Buffalo,73400,3,Heavy equipment operators,extensive,72406,2,Elevator constructors and mechanics,author,
+4816,Wood Buffalo,73400,3,Heavy equipment operators,extensive,72500,2,Crane operators,author,
+4816,Wood Buffalo,73400,3,Heavy equipment operators,comparable,73100,3,Concrete finishers,author,
+4816,Wood Buffalo,74203,4,Automotive and heavy truck and equipment parts installers and servicers,extensive,72400,2,Construction millwrights and industrial mechanics,author,
+4816,Wood Buffalo,74203,4,Automotive and heavy truck and equipment parts installers and servicers,comparable,74204,4,Utility maintenance workers,author,
+4816,Wood Buffalo,74203,4,Automotive and heavy truck and equipment parts installers and servicers,comparable,94111,4,Plastics processing machine operators,author,
+4816,Wood Buffalo,75101,5,Material handlers,comparable,75211,5,Railway and motor transport labourers,author,
+4816,Wood Buffalo,75101,5,Material handlers,extensive,94103,4,"Concrete, clay and stone forming operators",author,
+4816,Wood Buffalo,84101,4,Oil and gas well drilling and related workers and service operators,extensive,72405,2,Machine fitters,author,
+4816,Wood Buffalo,84101,4,Oil and gas well drilling and related workers and service operators,comparable,94110,4,Chemical plant machine operators,author,
+4816,Wood Buffalo,85111,5,"Oil and gas drilling, servicing and related labourers",comparable,75119,5,Other trades helpers and labourers,author,
+4816,Wood Buffalo,85111,5,"Oil and gas drilling, servicing and related labourers",comparable,95102,5,Labourers in chemical products processing and utilities,author,
+PR61,Northwest Territories,73300,3,Transport truck drivers,extensive,22114,2,Landscape and horticulture technicians and specialists,author,
+PR61,Northwest Territories,73300,3,Transport truck drivers,comparable,73301,3,"Bus drivers, subway operators and other transit operators",author,
+PR61,Northwest Territories,73300,3,Transport truck drivers,extensive,73311,3,Railway conductors and brakemen/women,author,
+PR61,Northwest Territories,73300,3,Transport truck drivers,comparable,74200,4,Railway yard and track maintenance workers,author,
+PR61,Northwest Territories,73400,3,Heavy equipment operators,extensive,72106,2,Welders and related machine operators,author,
+PR61,Northwest Territories,73400,3,Heavy equipment operators,extensive,72406,2,Elevator constructors and mechanics,author,
+PR61,Northwest Territories,73400,3,Heavy equipment operators,extensive,72500,2,Crane operators,author,
+PR61,Northwest Territories,73400,3,Heavy equipment operators,comparable,73402,3,"Drillers - surface mining, quarrying and construction",author,
+PR61,Northwest Territories,73400,3,Heavy equipment operators,comparable,83100,3,Underground production and development miners,author,
+PR61,Northwest Territories,75101,5,Material handlers,extensive,73102,3,"Plasterers, drywall installers and finishers and lathers",author,
+PR61,Northwest Territories,75101,5,Material handlers,extensive,74200,4,Railway yard and track maintenance workers,author,
+PR61,Northwest Territories,75101,5,Material handlers,comparable,75110,5,Construction trades helpers and labourers,author,
+PR61,Northwest Territories,75101,5,Material handlers,comparable,75211,5,Railway and motor transport labourers,author,

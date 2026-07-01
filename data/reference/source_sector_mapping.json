@@ -1,0 +1,42 @@
+{
+  "1003": {
+    "85102": "Water transportation",
+    "75210": "Water transportation",
+    "74201": "Water transportation"
+  },
+  "3532": {
+    "94213": "Auto manufacturing",
+    "94204": "Auto manufacturing",
+    "75101": "Auto manufacturing",
+    "95109": "Auto manufacturing"
+  },
+  "3557": {
+    "95100": "Iron and steel product mfg.",
+    "94100": "Iron and steel product mfg.",
+    "75101": "Iron and steel product mfg."
+  },
+  "4615": {
+    "94141": "Food and beverage mgf",
+    "95106": "Food and beverage mgf",
+    "73300": "Truck Transport"
+  },
+  "4701": {
+    "73400": "Support activities for mining and O&G; coal mining",
+    "84101": "Support activities for mining and O&G; coal mining",
+    "85111": "Support activities for mining and O&G; coal mining",
+    "73300": "Truck Transport"
+  },
+  "4816": {
+    "73400": "Oil and gas extraction; Oil and gas support activities",
+    "84101": "Oil and gas extraction; Oil and gas support activities",
+    "85111": "Oil and gas extraction; Oil and gas support activities",
+    "73300": "Truck Transport",
+    "75101": "Oil and gas extraction; Oil and gas support activities",
+    "74203": "Oil and gas extraction; Oil and gas support activities"
+  },
+  "PR61": {
+    "73400": "Mineral and diamond mining",
+    "75101": "Mineral and diamond mining",
+    "73300": "Truck Transport"
+  }
+}

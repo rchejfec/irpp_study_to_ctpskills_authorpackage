@@ -1,0 +1,17 @@
+# Virtual environment
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# OS
+.DS_Store
+
+# Generated pipeline outputs (regenerable from data/ via the pipeline)
+output/
+
+# Local Claude settings
+.claude/

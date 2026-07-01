@@ -1,0 +1,68 @@
+cd_uid,community,source_noc,source_teer,source_label,teer_category,candidate_noc,candidate_teer,candidate_label
+1003,Channel-Port aux Basques,85102,5,Aquaculture and marine harvest labourers,comparable,75212,5,Public works and maintenance labourers
+1003,Channel-Port aux Basques,85102,5,Aquaculture and marine harvest labourers,extensive,94110,4,Chemical plant machine operators
+1003,Channel-Port aux Basques,75210,5,Boat and cable ferry operators and related occupations,comparable,75110,5,Construction trades helpers and labourers
+1003,Channel-Port aux Basques,75210,5,Boat and cable ferry operators and related occupations,extensive,94111,4,Plastics processing machine operators
+1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,comparable,74204,4,Utility maintenance workers
+1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,extensive,73200,3,Residential and commercial installers and servicers
+3557,Sault Ste. Marie,95100,5,Labourers in mineral and metal processing,comparable,95102,5,Labourers in chemical products processing and utilities
+3557,Sault Ste. Marie,95100,5,Labourers in mineral and metal processing,extensive,94101,4,Foundry workers
+3557,Sault Ste. Marie,94100,4,"Machine operators, mineral and metal processing",comparable,94106,4,Machining tool operators
+3557,Sault Ste. Marie,75101,5,Material handlers,comparable,95104,5,Labourers in rubber and plastic products manufacturing
+3557,Sault Ste. Marie,75101,5,Material handlers,extensive,94124,4,Woodworking machine operators
+3532,Ingersoll,75101,5,Material handlers,comparable,75211,5,Railway and motor transport labourers
+3532,Ingersoll,75101,5,Material handlers,extensive,94101,4,Foundry workers
+3532,Ingersoll,94204,4,Mechanical assemblers and inspectors,comparable,94111,4,Plastics processing machine operators
+3532,Ingersoll,94204,4,Mechanical assemblers and inspectors,extensive,93200,3,Aircraft assemblers and aircraft assembly inspectors
+3532,Ingersoll,95109,5,"Other labourers in processing, manufacturing and utilities",comparable,75212,5,Public works and maintenance labourers
+4615,Neepawa,94141,4,"Industrial butchers, meat cutters, poultry preparers and related workers",comparable,94103,4,"Concrete, clay and stone forming operators"
+4615,Neepawa,94141,4,"Industrial butchers, meat cutters, poultry preparers and related workers",comparable,94124,4,Woodworking machine operators
+4615,Neepawa,95106,5,Labourers in food and beverage processing,comparable,75211,5,Railway and motor transport labourers
+4615,Neepawa,95106,5,Labourers in food and beverage processing,extensive,94103,4,"Concrete, clay and stone forming operators"
+4615,Neepawa,95106,5,Labourers in food and beverage processing,extensive,94124,4,Woodworking machine operators
+4615,Neepawa,73300,3,Transport truck drivers,comparable,73301,3,"Bus drivers, subway operators and other transit operators"
+4615,Neepawa,73300,3,Transport truck drivers,comparable,74200,4,Railway yard and track maintenance workers
+4615,Neepawa,73300,3,Transport truck drivers,extensive,73311,3,Railway conductors and brakemen/women
+4615,Neepawa,73300,3,Transport truck drivers,extensive,22114,2,Landscape and horticulture technicians and specialists
+4701,Estevan,73400,3,Heavy equipment operators,comparable,73100,3,Concrete finishers
+4701,Estevan,73400,3,Heavy equipment operators,extensive,72500,2,Crane operators
+4701,Estevan,73400,3,Heavy equipment operators,extensive,72106,2,Welders and related machine operators
+4701,Estevan,84101,4,Oil and gas well drilling and related workers and service operators,comparable,74204,4,Utility maintenance workers
+4701,Estevan,84101,4,Oil and gas well drilling and related workers and service operators,comparable,94110,4,Chemical plant machine operators
+4701,Estevan,84101,4,Oil and gas well drilling and related workers and service operators,extensive,92101,2,Water and waste treatment plant operators
+4701,Estevan,85111,5,"Oil and gas drilling, servicing and related labourers",comparable,95102,5,Labourers in chemical products processing and utilities
+4701,Estevan,85111,5,"Oil and gas drilling, servicing and related labourers",comparable,75110,5,Construction trades helpers and labourers
+4701,Estevan,85111,5,"Oil and gas drilling, servicing and related labourers",extensive,74205,4,Public works maintenance equipment operators and related workers
+4701,Estevan,85111,5,"Oil and gas drilling, servicing and related labourers",extensive,73200,3,Residential and commercial installers and servicers
+4701,Estevan,73300,3,Transport truck drivers,comparable,73301,3,"Bus drivers, subway operators and other transit operators"
+4701,Estevan,73300,3,Transport truck drivers,extensive,72500,2,Crane operators
+4701,Estevan,73300,3,Transport truck drivers,extensive,73311,3,Railway conductors and brakemen/women
+4816,Wood Buffalo,74203,4,Automotive and heavy truck and equipment parts installers and servicers,comparable,94111,4,Plastics processing machine operators
+4816,Wood Buffalo,74203,4,Automotive and heavy truck and equipment parts installers and servicers,comparable,74204,4,Utility maintenance workers
+4816,Wood Buffalo,74203,4,Automotive and heavy truck and equipment parts installers and servicers,extensive,72400,2,Construction millwrights and industrial mechanics
+4816,Wood Buffalo,73400,3,Heavy equipment operators,comparable,73100,3,Concrete finishers
+4816,Wood Buffalo,73400,3,Heavy equipment operators,extensive,72500,2,Crane operators
+4816,Wood Buffalo,73400,3,Heavy equipment operators,extensive,72106,2,Welders and related machine operators
+4816,Wood Buffalo,73400,3,Heavy equipment operators,extensive,72406,2,Elevator constructors and mechanics
+4816,Wood Buffalo,75101,5,Material handlers,comparable,75211,5,Railway and motor transport labourers
+4816,Wood Buffalo,75101,5,Material handlers,extensive,94103,4,"Concrete, clay and stone forming operators"
+4816,Wood Buffalo,84101,4,Oil and gas well drilling and related workers and service operators,comparable,94110,4,Chemical plant machine operators
+4816,Wood Buffalo,84101,4,Oil and gas well drilling and related workers and service operators,extensive,72405,2,Machine fitters
+4816,Wood Buffalo,85111,5,"Oil and gas drilling, servicing and related labourers",comparable,75119,5,Other trades helpers and labourers
+4816,Wood Buffalo,85111,5,"Oil and gas drilling, servicing and related labourers",comparable,95102,5,Labourers in chemical products processing and utilities
+4816,Wood Buffalo,73300,3,Transport truck drivers,comparable,73301,3,"Bus drivers, subway operators and other transit operators"
+4816,Wood Buffalo,73300,3,Transport truck drivers,extensive,73311,3,Railway conductors and brakemen/women
+4816,Wood Buffalo,73300,3,Transport truck drivers,extensive,22114,2,Landscape and horticulture technicians and specialists
+PR61,Northwest Territories,73400,3,Heavy equipment operators,comparable,83100,3,Underground production and development miners
+PR61,Northwest Territories,73400,3,Heavy equipment operators,comparable,73402,3,"Drillers - surface mining, quarrying and construction"
+PR61,Northwest Territories,73400,3,Heavy equipment operators,extensive,72500,2,Crane operators
+PR61,Northwest Territories,73400,3,Heavy equipment operators,extensive,72106,2,Welders and related machine operators
+PR61,Northwest Territories,73400,3,Heavy equipment operators,extensive,72406,2,Elevator constructors and mechanics
+PR61,Northwest Territories,75101,5,Material handlers,comparable,75211,5,Railway and motor transport labourers
+PR61,Northwest Territories,75101,5,Material handlers,comparable,75110,5,Construction trades helpers and labourers
+PR61,Northwest Territories,75101,5,Material handlers,extensive,73102,3,"Plasterers, drywall installers and finishers and lathers"
+PR61,Northwest Territories,75101,5,Material handlers,extensive,74200,4,Railway yard and track maintenance workers
+PR61,Northwest Territories,73300,3,Transport truck drivers,comparable,73301,3,"Bus drivers, subway operators and other transit operators"
+PR61,Northwest Territories,73300,3,Transport truck drivers,comparable,74200,4,Railway yard and track maintenance workers
+PR61,Northwest Territories,73300,3,Transport truck drivers,extensive,73311,3,Railway conductors and brakemen/women
+PR61,Northwest Territories,73300,3,Transport truck drivers,extensive,22114,2,Landscape and horticulture technicians and specialists

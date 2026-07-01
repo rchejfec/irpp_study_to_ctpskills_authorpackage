@@ -1,0 +1,52 @@
+{
+  "Water transportation": [
+    "72602",
+    "72603",
+    "74201",
+    "75100",
+    "75210"
+  ],
+  "Auto manufacturing": [
+    "94200",
+    "94204"
+  ],
+  "Iron and steel product mfg.": [
+    "93100",
+    "94100",
+    "94101",
+    "94104",
+    "95100"
+  ],
+  "Food and beverage mgf": [
+    "94140",
+    "94141",
+    "94142",
+    "94143",
+    "95106",
+    "95107"
+  ],
+  "Truck Transport": [
+    "73300"
+  ],
+  "Support activities for mining and O&G; coal mining": [
+    "83101",
+    "84101",
+    "85111",
+    "93101",
+    "73402"
+  ],
+  "Oil and gas extraction; Oil and gas support activities": [
+    "83101",
+    "84101",
+    "85111",
+    "93101"
+  ],
+  "Mineral and diamond mining": [
+    "83100",
+    "84100",
+    "73402",
+    "93100",
+    "94100",
+    "95100"
+  ]
+}

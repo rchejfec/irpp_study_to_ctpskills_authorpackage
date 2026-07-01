@@ -1,0 +1,26 @@
+cd_uid,geo_label,geo_type,occupation_label,teer,oasis_code,noc_5digit
+1003,Channel-Port aux Basques,cd,Aquaculture and marine harvest labourers,5,85102.0,85102
+1003,Channel-Port aux Basques,cd,Boat and cable ferry operators and related occupations,5,75210.02,75210
+1003,Channel-Port aux Basques,cd,Water transport deck and engine room crew,4,74201.01,74201
+3557,Algoma,cd,Labourers in mineral and metal processing,5,95100.0,95100
+3557,Algoma,cd,Machine operators mineral and metal processing,4,94100.0,94100
+3557,Algoma,cd,Material handlers,5,75101.01,75101
+3532,Oxford,cd,Mechanical assemblers and inspectors,4,94204.01,94204
+3532,Oxford,cd,Material handlers,5,75101.01,75101
+3532,Oxford,cd,Other labourers in processing manufacturing and utilities,5,95109.0,95109
+4615,Neepawa,cd,Industrial butchers meat cutters poultry preparers and related workers,4,94141.01,94141
+4615,Neepawa,cd,Labourers in food and beverage processing,5,95106.0,95106
+4615,Neepawa,cd,Transport truck drivers,3,73300.01,73300
+4701,Estevan,cd,Heavy equipment operators,3,73400.0,73400
+4701,Estevan,cd,Oil and gas well drilling and related workers and service operators,4,84101.01,84101
+4701,Estevan,cd,Oil and gas drilling servicing and related labourers,5,85111.0,85111
+4701,Estevan,cd,Transport truck drivers,3,73300.01,73300
+4816,Wood Buffalo,cd,Heavy equipment operators,3,73400.0,73400
+4816,Wood Buffalo,cd,Oil and gas well drilling and related workers and service operators,4,84101.01,84101
+4816,Wood Buffalo,cd,Oil and gas drilling servicing and related labourers,5,85111.0,85111
+4816,Wood Buffalo,cd,Transport truck drivers,3,73300.01,73300
+4816,Wood Buffalo,cd,Material handlers,5,75101.01,75101
+4816,Wood Buffalo,cd,Automotive and heavy truck and equipment parts installers and servicers,4,74203.0,74203
+PR61,Northwest Territories,territory,Heavy equipment operators,3,73400.0,73400
+PR61,Northwest Territories,territory,Material handlers,5,75101.01,75101
+PR61,Northwest Territories,territory,Transport truck drivers,3,73300.01,73300

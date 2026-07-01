@@ -1,0 +1,507 @@
+﻿noc_title,noc_2021,aioe,caioe,groupmean,Exposure,Comp,Quadrant
+Senior government managers and officials,11,6.598938755,4.09714316,0.7275,High exposure,High complementarity,HE-HC
+"Senior managers - financial, communications and other business services",12,6.598938755,4.09714316,0.7275,High exposure,High complementarity,HE-HC
+"Senior managers - health, education, social and community services and membership organizations",13,6.567002537,4.176818592,0.712476852,High exposure,High complementarity,HE-HC
+"Senior managers - trade, broadcasting and other services",14,6.486245376,4.176376083,0.704111111,High exposure,High complementarity,HE-HC
+"Senior managers - construction, transportation, production and utilities",15,6.598938755,4.09714316,0.7275,High exposure,High complementarity,HE-HC
+Financial managers,10010,6.647188027,4.664204772,0.646759259,High exposure,High complementarity,HE-HC
+Human resources managers,10011,6.62976422,4.44562523,0.677777778,High exposure,High complementarity,HE-HC
+Purchasing managers,10012,6.687508505,4.779745588,0.633611111,High exposure,High complementarity,HE-HC
+Other administrative services managers,10019,6.524487672,4.826234238,0.608888889,High exposure,Low complementarity,HE-LC
+"Insurance, real estate and financial brokerage managers",10020,6.623038024,4.76227683,0.629513889,High exposure,High complementarity,HE-HC
+"Banking, credit and other investment managers",10021,6.672870348,4.688521475,0.645694444,High exposure,High complementarity,HE-HC
+"Advertising, marketing and public relations managers",10022,6.629146986,4.878815906,0.612555556,High exposure,Low complementarity,HE-LC
+Other business services managers,10029,6.478557879,4.484214383,0.65712963,High exposure,High complementarity,HE-HC
+Telecommunication carriers managers,10030,6.233941817,4.722210926,0.590833333,High exposure,Low complementarity,HE-LC
+Financial auditors and accountants,11100,6.705747841,5.206268115,0.571944444,High exposure,Low complementarity,HE-LC
+Financial and investment analysts,11101,6.656898,0.858514833,0.6335,High exposure,High complementarity,HE-HC
+Financial advisors,11102,6.679859123,5.284510773,0.557222222,High exposure,Low complementarity,HE-LC
+"Securities agents, investment dealers and brokers",11103,6.668288733,5.027148784,0.594444444,High exposure,Low complementarity,HE-LC
+Other financial officers,11109,6.650237614,5.107442807,0.580388889,High exposure,Low complementarity,HE-LC
+Human resources professionals,11200,6.649056518,4.873566936,0.615509259,High exposure,High complementarity,HE-HC
+Professional occupations in business management consulting,11201,6.559356224,5.002595668,0.585555556,High exposure,Low complementarity,HE-LC
+"Professional occupations in advertising, marketing and public relations",11202,6.630252091,5.000096998,0.594375,High exposure,Low complementarity,HE-LC
+"Supervisors, general office and administrative support workers",12010,6.502773276,4.952945645,0.586666667,High exposure,Low complementarity,HE-LC
+"Supervisors, finance and insurance office workers",12011,6.502773276,4.952945645,0.586666667,High exposure,Low complementarity,HE-LC
+"Supervisors, library, correspondence and related information workers",12012,6.339542645,4.781071745,0.594166667,High exposure,Low complementarity,HE-LC
+"Supervisors, supply chain, tracking and scheduling coordination occupations",12013,6.589553917,4.45992542,0.671666667,High exposure,High complementarity,HE-HC
+Executive assistants,12100,6.521234315,5.528557536,0.500555556,High exposure,Low complementarity,HE-LC
+Human resources and recruitment officers,12101,6.647628811,4.675498931,0.645,High exposure,High complementarity,HE-HC
+Procurement and purchasing agents and officers,12102,6.547963885,4.678887196,0.634166667,High exposure,High complementarity,HE-HC
+Conference and event planners,12103,6.203170865,4.125108625,0.683333333,High exposure,High complementarity,HE-HC
+Employment insurance and revenue officers,12104,6.450139253,5.332483813,0.522962963,High exposure,Low complementarity,HE-LC
+"Court reporters, medical transcriptionists and related occupations",12110,6.392244358,5.118764019,0.547361111,High exposure,Low complementarity,HE-LC
+Health information management occupations,12111,6.444289961,4.754777585,0.612592593,High exposure,Low complementarity,HE-LC
+Records management technicians,12112,6.187362697,5.333191946,0.483888889,High exposure,Low complementarity,HE-LC
+Statistical officers and related research support occupations,12113,6.640630651,5.407139697,0.533981481,High exposure,Low complementarity,HE-LC
+Accounting technicians and bookkeepers,12200,6.503251614,5.437440933,0.512222222,High exposure,Low complementarity,HE-LC
+Insurance adjusters and claims examiners,12201,6.474649483,5.14458982,0.55375,High exposure,Low complementarity,HE-LC
+Insurance underwriters,12202,6.632575021,5.38528244,0.536388889,High exposure,Low complementarity,HE-LC
+"Assessors, business valuators and appraisers",12203,6.516794378,5.188361007,0.5525,High exposure,Low complementarity,HE-LC
+Administrative officers,13100,6.621021758,5.443662771,0.525694444,High exposure,Low complementarity,HE-LC
+Property administrators,13101,6.618110325,4.516860297,0.665833333,High exposure,High complementarity,HE-HC
+Payroll administrators,13102,6.566024376,5.756214703,0.471666667,High exposure,Low complementarity,HE-LC
+Administrative assistants,13110,6.510392044,5.497769009,0.503888889,High exposure,Low complementarity,HE-LC
+Legal administrative assistants,13111,6.616979534,5.756772194,0.478333333,High exposure,Low complementarity,HE-LC
+Medical administrative assistants,13112,6.10041421,4.643093038,0.587222222,High exposure,Low complementarity,HE-LC
+"Customs, ship and other brokers",13200,6.729419255,5.471391711,0.535277778,High exposure,Low complementarity,HE-LC
+Production and transportation logistics coordinators,13201,6.677801078,5.184570559,0.571944444,High exposure,Low complementarity,HE-LC
+General office support workers,14100,6.269058316,5.351560587,0.496805556,High exposure,Low complementarity,HE-LC
+Receptionists,14101,6.499343417,5.699563102,0.471388889,High exposure,Low complementarity,HE-LC
+Personnel clerks,14102,6.64449433,5.435565501,0.530277778,High exposure,Low complementarity,HE-LC
+Court clerks and related court services occupations,14103,6.596338983,5.230802446,0.554814815,High exposure,Low complementarity,HE-LC
+Survey interviewers and statistical clerks,14110,6.112442163,4.894194754,0.548472222,High exposure,Low complementarity,HE-LC
+Data entry clerks,14111,6.174677878,5.313653352,0.487777778,High exposure,Low complementarity,HE-LC
+Desktop publishing operators and related occupations,14112,6.322206313,5.368606861,0.499166667,High exposure,Low complementarity,HE-LC
+Accounting and related clerks,14200,6.567777565,5.495074057,0.511547619,High exposure,Low complementarity,HE-LC
+"Banking, insurance and other financial clerks",14201,6.503054053,5.463079669,0.508680556,High exposure,Low complementarity,HE-LC
+Collection clerks,14202,6.637043594,5.645174301,0.497777778,High exposure,Low complementarity,HE-LC
+Library assistants and clerks,14300,6.126484757,5.004997686,0.531388889,High exposure,Low complementarity,HE-LC
+"Correspondence, publication and regulatory clerks",14301,6.604468229,5.633978315,0.495277778,High exposure,Low complementarity,HE-LC
+Shippers and receivers,14400,5.698171242,4.455653346,0.566388889,Low exposure,Low complementarity,LE-LC
+Storekeepers and partspersons,14401,5.490511607,4.525096649,0.524166667,Low exposure,Low complementarity,LE-LC
+Production logistics workers,14402,6.417394855,4.916437503,0.582222222,High exposure,Low complementarity,HE-LC
+Purchasing and inventory control workers,14403,6.591214235,5.624502814,0.495,High exposure,Low complementarity,HE-LC
+Dispatchers,14404,6.488309259,5.428105144,0.511458333,High exposure,Low complementarity,HE-LC
+Transportation route and crew schedulers,14405,6.570109431,4.748729094,0.625555556,High exposure,High complementarity,HE-HC
+Engineering managers,20010,6.530154689,4.190182592,0.706666667,High exposure,High complementarity,HE-HC
+Architecture and science managers,20011,6.525015106,4.193223461,0.705694444,High exposure,High complementarity,HE-HC
+Computer and information systems managers,20012,6.606680196,4.65268905,0.644027778,High exposure,High complementarity,HE-HC
+Physicists and astronomers,21100,6.621194139,4.921518481,0.604930556,High exposure,Low complementarity,HE-LC
+Chemists,21101,6.364369049,4.461008831,0.6475,High exposure,High complementarity,HE-HC
+Geoscientists and oceanographers,21102,6.370044224,4.4169747,0.654861111,High exposure,High complementarity,HE-HC
+Meteorologists and climatologists,21103,6.653879989,4.914629692,0.609722222,High exposure,Low complementarity,HE-LC
+Other professional occupations in physical sciences,21109,6.564252407,4.525687354,0.658888889,High exposure,High complementarity,HE-HC
+Biologists and related scientists,21110,6.454008795,4.40791912,0.666035354,High exposure,High complementarity,HE-HC
+Forestry professionals,21111,5.999752806,3.949837264,0.69,High exposure,High complementarity,HE-HC
+"Agricultural representatives, consultants and specialists",21112,5.943252743,4.511247605,0.585069444,Low exposure,Low complementarity,LE-LC
+Public and environmental health and safety professionals,21120,6.40604098,4.363123635,0.667916667,High exposure,High complementarity,HE-HC
+Architects,21200,6.521839404,4.393183488,0.674722222,High exposure,High complementarity,HE-HC
+Landscape architects,21201,6.531681464,4.633865128,0.638888889,High exposure,High complementarity,HE-HC
+Urban and land use planners,21202,6.593738652,4.639427779,0.644722222,High exposure,High complementarity,HE-HC
+Land surveyors,21203,6.155387159,4.246401898,0.659444444,High exposure,High complementarity,HE-HC
+"Mathematicians, statisticians and actuaries",21210,6.688735262,5.248822313,0.563611111,High exposure,Low complementarity,HE-LC
+Data scientists,21211,6.64236307,5.199012017,0.566111111,High exposure,Low complementarity,HE-LC
+Cybersecurity specialists,21220,6.59808968,5.062201027,0.581111111,High exposure,Low complementarity,HE-LC
+Business systems specialists,21221,6.63112094,5.275972855,0.552638889,High exposure,Low complementarity,HE-LC
+Information systems specialists,21222,6.569506529,5.251024109,0.549027778,High exposure,Low complementarity,HE-LC
+Database analysts and data administrators,21223,6.650596313,5.365705242,0.541527778,High exposure,Low complementarity,HE-LC
+Computer systems developers and programmers,21230,6.416177218,5.219193637,0.535648148,High exposure,Low complementarity,HE-LC
+Software engineers and designers,21231,6.575901,1.017029778,0.611888889,High exposure,Low complementarity,HE-LC
+Software developers and programmers,21232,6.607717052,5.623901402,0.497222222,High exposure,Low complementarity,HE-LC
+Web designers,21233,6.543558983,5.320003531,0.535277778,High exposure,Low complementarity,HE-LC
+Web developers and programmers,21234,6.566688631,5.514661638,0.508611111,High exposure,Low complementarity,HE-LC
+Civil engineers,21300,6.440660036,4.508050147,0.648518519,High exposure,High complementarity,HE-HC
+Mechanical engineers,21301,6.447680579,4.525221407,0.646527778,High exposure,High complementarity,HE-HC
+Electrical and electronics engineers,21310,6.423620125,4.707359884,0.615092593,High exposure,High complementarity,HE-HC
+Computer engineers (except software engineers and designers),21311,6.569785616,5.07829933,0.575277778,High exposure,Low complementarity,HE-LC
+Chemical engineers,21320,6.522620745,4.74915779,0.619907407,High exposure,High complementarity,HE-HC
+Industrial and manufacturing engineers,21321,6.455327635,4.409542892,0.665138889,High exposure,High complementarity,HE-HC
+Metallurgical and materials engineers,21322,6.467547808,4.63687247,0.631388889,High exposure,High complementarity,HE-HC
+Mining engineers,21330,6.641723378,4.634446979,0.650555556,High exposure,High complementarity,HE-HC
+Geological engineers,21331,6.641723378,4.634446979,0.650555556,High exposure,High complementarity,HE-HC
+Petroleum engineers,21332,6.637833461,4.620669626,0.652222222,High exposure,High complementarity,HE-HC
+Aerospace engineers,21390,6.638022585,4.902917237,0.609722222,High exposure,Low complementarity,HE-LC
+Other professional engineers,21399,6.469651611,4.58957383,0.639316239,High exposure,High complementarity,HE-HC
+Chemical technologists and technicians,22100,6.084932755,4.638538427,0.585925926,High exposure,Low complementarity,HE-LC
+Geological and mineral technologists and technicians,22101,6.087849436,4.479787006,0.6125,High exposure,Low complementarity,HE-LC
+Biological technologists and technicians,22110,6.170363434,4.68262025,0.589444444,High exposure,Low complementarity,HE-LC
+Agricultural and fish products inspectors,22111,6.111427182,4.575082294,0.599722222,High exposure,Low complementarity,HE-LC
+Forestry technologists and technicians,22112,5.85443334,3.610888657,0.7325,Low exposure,High complementarity,LE-HC
+Conservation and fishery officers,22113,6.117601669,4.12620778,0.67587963,High exposure,High complementarity,HE-HC
+Landscape and horticulture technicians and specialists,22114,5.212270823,4.365276815,0.510833333,Low exposure,Low complementarity,LE-LC
+Architectural technologists and technicians,22210,6.458722942,5.145449278,0.551666667,High exposure,Low complementarity,HE-LC
+Industrial designers,22211,6.425401608,4.708391511,0.615555556,High exposure,High complementarity,HE-HC
+Drafting technologists and technicians,22212,6.43860866,5.184226028,0.543134921,High exposure,Low complementarity,HE-LC
+Land survey technologists and technicians,22213,6.123320702,4.670732958,0.585555556,High exposure,Low complementarity,HE-LC
+Technical occupations in geomatics and meteorology,22214,6.410887506,5.117388913,0.550555556,High exposure,Low complementarity,HE-LC
+Computer network and web technicians,22220,6.46098082,5.08742883,0.561041667,High exposure,Low complementarity,HE-LC
+User support technicians,22221,6.072101685,4.547017228,0.598611111,High exposure,Low complementarity,HE-LC
+Information systems testing technicians,22222,6.584672242,5.254934264,0.550277778,High exposure,Low complementarity,HE-LC
+Non-destructive testers and inspectors,22230,5.922356876,4.396602514,0.605833333,Low exposure,Low complementarity,LE-LC
+Engineering inspectors and regulatory officers,22231,5.923692386,4.051855669,0.66375,Low exposure,High complementarity,LE-HC
+Occupational health and safety specialists,22232,6.495117106,4.520532399,0.651805556,High exposure,High complementarity,HE-HC
+Construction inspectors,22233,6.201742964,4.23441228,0.665555556,High exposure,High complementarity,HE-HC
+Civil engineering technologists and technicians,22300,6.334761929,4.793328554,0.591388889,High exposure,Low complementarity,HE-LC
+Mechanical engineering technologists and technicians,22301,5.980606607,4.326422679,0.624814815,High exposure,High complementarity,HE-HC
+Industrial engineering and manufacturing technologists and technicians,22302,6.309841231,4.627216903,0.615,High exposure,High complementarity,HE-HC
+Construction estimators,22303,6.671857031,5.255940705,0.560555556,High exposure,Low complementarity,HE-LC
+Electrical and electronics engineering technologists and technicians,22310,6.181654365,4.53810689,0.61412037,High exposure,High complementarity,HE-HC
+Electronic service technicians (household and business equipment),22311,5.793745084,4.000438539,0.658472222,Low exposure,High complementarity,LE-HC
+Industrial instrument technicians and mechanics,22312,5.924871962,4.175646898,0.640925926,Low exposure,High complementarity,LE-HC
+"Aircraft instrument, electrical and avionics mechanics, technicians and inspectors",22313,5.968914526,4.402508656,0.611111111,Low exposure,Low complementarity,LE-LC
+Managers in health care,30010,6.660997535,5.178236984,0.57125,High exposure,Low complementarity,HE-LC
+Specialists in clinical and laboratory medicine,31100,6.3362572,3.714613111,0.763002137,High exposure,High complementarity,HE-HC
+Specialists in surgery,31101,6.278439261,3.856972106,0.733125,High exposure,High complementarity,HE-HC
+General practitioners and family physicians,31102,6.492166218,3.8379599,0.757361111,High exposure,High complementarity,HE-HC
+Veterinarians,31103,6.017719406,3.45851707,0.773611111,High exposure,High complementarity,HE-HC
+Dentists,31110,5.988550633,3.307854735,0.796111111,High exposure,High complementarity,HE-HC
+Optometrists,31111,6.30295576,3.970862129,0.718333333,High exposure,High complementarity,HE-HC
+Audiologists and speech-language pathologists,31112,6.494087008,4.20228669,0.701111111,High exposure,High complementarity,HE-HC
+Pharmacists,31120,6.313195205,3.975559314,0.718611111,High exposure,High complementarity,HE-HC
+Dietitians and nutritionists,31121,6.504914839,4.400512307,0.672083333,High exposure,High complementarity,HE-HC
+Psychologists,31200,6.658392216,4.73540152,0.637111111,High exposure,High complementarity,HE-HC
+Chiropractors,31201,5.948406252,3.559129741,0.75,Low exposure,High complementarity,LE-HC
+Physiotherapists,31202,5.863692719,3.348820064,0.777222222,Low exposure,High complementarity,LE-HC
+Occupational therapists,31203,6.139053132,3.749677744,0.7375,High exposure,High complementarity,HE-HC
+Kinesiologists and other professional occupations in therapy and assessment,31204,6.133306638,4.020612444,0.692916667,High exposure,High complementarity,HE-HC
+Other professional occupations in health diagnosing and treating,31209,6.041861689,4.28340382,0.638269231,High exposure,High complementarity,HE-HC
+Nursing coordinators and supervisors,31300,6.380558513,5.162935263,0.539166667,High exposure,Low complementarity,HE-LC
+Registered nurses and registered psychiatric nurses,31301,6.163441229,3.897713837,0.716468254,High exposure,High complementarity,HE-HC
+Nurse practitioners,31302,6.145852755,3.739490892,0.739861111,High exposure,High complementarity,HE-HC
+"Physician assistants, midwives and allied health professionals",31303,6.287033885,4.184435401,0.683156566,High exposure,High complementarity,HE-HC
+Opticians,32100,6.12878838,4.572757108,0.602222222,High exposure,Low complementarity,HE-LC
+Licensed practical nurses,32101,5.8134515,4.137239651,0.636666667,Low exposure,High complementarity,LE-HC
+Paramedical occupations,32102,5.660511188,3.746943934,0.686388889,Low exposure,High complementarity,LE-HC
+"Respiratory therapists, clinical perfusionists and cardiopulmonary technologists",32103,6.039097481,3.997363532,0.685694444,High exposure,High complementarity,HE-HC
+Animal health technologists and veterinary technicians,32104,6.165838578,4.202505626,0.664722222,High exposure,High complementarity,HE-HC
+Other technical occupations in therapy and assessment,32109,5.939528393,4.401509341,0.60770202,Low exposure,Low complementarity,LE-LC
+Denturists,32110,5.95284375,3.282331901,0.796944444,Low exposure,High complementarity,LE-HC
+Dental hygienists and dental therapists,32111,5.813774578,4.455612239,0.581944444,Low exposure,Low complementarity,LE-LC
+Dental technologists and technicians,32112,5.960452914,4.938897511,0.519722222,Low exposure,Low complementarity,LE-LC
+Medical laboratory technologists,32120,6.08286021,4.471122727,0.613373016,High exposure,High complementarity,HE-HC
+Medical radiation technologists,32121,5.917956965,4.264981415,0.627638889,Low exposure,High complementarity,LE-HC
+Medical sonographers,32122,5.915555518,4.525399971,0.583333333,Low exposure,Low complementarity,LE-LC
+Cardiology technologists and electrophysiological diagnostic technologists,32123,5.993582458,4.355336586,0.621666667,High exposure,High complementarity,HE-HC
+Pharmacy technicians,32124,5.93628949,4.01564535,0.671111111,Low exposure,High complementarity,LE-HC
+Other medical technologists and technicians,32129,5.93628949,4.01564535,0.671111111,Low exposure,High complementarity,LE-HC
+Traditional Chinese medicine practitioners and acupuncturists,32200,6.295661264,4.005230736,0.7125,High exposure,High complementarity,HE-HC
+Massage therapists,32201,5.374356796,4.124818841,0.580833333,Low exposure,Low complementarity,LE-LC
+Other practitioners of natural healing,32209,6.295661264,4.005230736,0.7125,High exposure,High complementarity,HE-HC
+Dental assistants and dental laboratory assistants,33100,5.900693731,4.56082782,0.575972222,Low exposure,Low complementarity,LE-LC
+Medical laboratory assistants and related technical occupations,33101,5.9432616,4.45765162,0.598611111,Low exposure,Low complementarity,LE-LC
+"Nurse aides, orderlies and patient service associates",33102,5.809991435,4.428981618,0.587301587,Low exposure,Low complementarity,LE-LC
+Pharmacy technical assistants and pharmacy assistants,33103,5.884879628,4.329769151,0.611979167,Low exposure,Low complementarity,LE-LC
+Other assisting occupations in support of health services,33109,6.014574201,4.546902734,0.592373737,High exposure,Low complementarity,HE-LC
+Government managers - health and social policy development and program administration,40010,6.471193881,4.415844889,0.667407407,High exposure,High complementarity,HE-HC
+"Government managers - economic analysis, policy development and program administration",40011,6.471193881,4.415844889,0.667407407,High exposure,High complementarity,HE-HC
+Government managers - education policy development and program administration,40012,6.471193881,4.415844889,0.667407407,High exposure,High complementarity,HE-HC
+Other managers in public administration,40019,6.577161363,4.702029001,0.634675926,High exposure,High complementarity,HE-HC
+Administrators - post-secondary education and vocational training,40020,6.693199791,4.376608974,0.694444444,High exposure,High complementarity,HE-HC
+School principals and administrators of elementary and secondary education,40021,6.45982616,3.792548433,0.761111111,High exposure,High complementarity,HE-HC
+"Managers in social, community and correctional services",40030,6.304962693,4.184690451,0.687685185,High exposure,High complementarity,HE-HC
+Commissioned police officers and related occupations in public protection services,40040,5.947886023,3.416730082,0.773888889,Low exposure,High complementarity,LE-HC
+Fire chiefs and senior firefighting officers,40041,5.720581295,3.147908763,0.798055556,Low exposure,High complementarity,LE-HC
+Judges,41100,6.753844133,4.071067158,0.745555556,High exposure,High complementarity,HE-HC
+Lawyers and Quebec notaries,41101,6.633534727,4.265731359,0.705277778,High exposure,High complementarity,HE-HC
+University professors and lecturers,41200,6.591753611,4.400013298,0.681151961,High exposure,High complementarity,HE-HC
+Post-secondary teaching and research assistants,41201,6.565268621,5.070863464,0.57625,High exposure,Low complementarity,HE-LC
+College and other vocational instructors,41210,6.577923525,4.397325173,0.680071429,High exposure,High complementarity,HE-HC
+Secondary school teachers,41220,6.571574886,4.337239425,0.688333333,High exposure,High complementarity,HE-HC
+Elementary school and kindergarten teachers,41221,6.343902776,4.108684123,0.700722222,High exposure,High complementarity,HE-HC
+Social workers,41300,6.48878506,4.344297117,0.678796296,High exposure,High complementarity,HE-HC
+Therapists in counselling and related specialized therapies,41301,6.477722812,4.494776498,0.655425926,High exposure,High complementarity,HE-HC
+Religious leaders,41302,6.668950389,4.179208911,0.721666667,High exposure,High complementarity,HE-HC
+Police investigators and other investigative occupations,41310,6.234818757,4.023766355,0.704814815,High exposure,High complementarity,HE-HC
+Probation and parole officers,41311,6.1394277,4.101478783,0.680277778,High exposure,High complementarity,HE-HC
+Educational counsellors,41320,6.473582601,4.191644734,0.700833333,High exposure,High complementarity,HE-HC
+Career development practitioners and career counsellors (except education),41321,6.569150282,4.555959641,0.655416667,High exposure,High complementarity,HE-HC
+"Natural and applied science policy researchers, consultants and program officers",41400,6.499434183,4.621468795,0.636944444,High exposure,High complementarity,HE-HC
+Economists and economic policy researchers and analysts,41401,6.660172617,5.087616895,0.584444444,High exposure,Low complementarity,HE-LC
+Business development officers and market researchers and analysts,41402,6.677697266,5.28465542,0.556944444,High exposure,Low complementarity,HE-LC
+"Social policy researchers, consultants and program officers",41403,6.637994738,5.342212603,0.543333333,High exposure,Low complementarity,HE-LC
+"Health policy researchers, consultants and program officers",41404,6.427413732,4.795460963,0.605694444,High exposure,Low complementarity,HE-LC
+"Education policy researchers, consultants and program officers",41405,6.645306273,4.391439895,0.6875,High exposure,High complementarity,HE-HC
+"Recreation, sports and fitness policy researchers, consultants and program officers",41406,6.595008835,5.519656005,0.511388889,High exposure,Low complementarity,HE-LC
+Program officers unique to government,41407,6.592338725,5.471641142,0.518333333,High exposure,Low complementarity,HE-LC
+Other professional occupations in social science,41409,6.563945292,4.706995033,0.631888889,High exposure,High complementarity,HE-HC
+Police officers (except commissioned),42100,5.760064855,3.490125382,0.742083333,Low exposure,High complementarity,LE-HC
+Firefighters,42101,5.676381746,3.434848883,0.743944444,Low exposure,High complementarity,LE-HC
+Paralegals and related occupations,42200,6.648947041,5.385584862,0.538055556,High exposure,Low complementarity,HE-LC
+Social and community service workers,42201,6.3485823,4.279757509,0.674222222,High exposure,High complementarity,HE-HC
+Early childhood educators and assistants,42202,6.048389039,4.455646592,0.611666667,High exposure,Low complementarity,HE-LC
+Instructors of persons with disabilities,42203,6.254146039,3.933006025,0.720888889,High exposure,High complementarity,HE-HC
+Other instructors,43109,6.422526961,4.723674415,0.613333333,High exposure,High complementarity,HE-HC
+Sheriffs and bailiffs,43200,5.732806708,3.944183221,0.660555556,Low exposure,High complementarity,LE-HC
+Correctional service officers,43201,5.618266032,3.753313835,0.680277778,Low exposure,High complementarity,LE-HC
+By-law enforcement and other regulatory officers,43202,5.969503326,4.459371236,0.601180556,Low exposure,Low complementarity,LE-LC
+"Border services, customs, and immigration officers",43203,5.989408952,4.08777161,0.665833333,High exposure,High complementarity,HE-HC
+Home child care providers,44100,5.888368052,4.332676649,0.612638889,Low exposure,Low complementarity,LE-LC
+"Home support workers, caregivers and related occupations",44101,5.77655005,4.600380276,0.551944444,Low exposure,Low complementarity,LE-LC
+"Student monitors, crossing guards and related occupations",45100,5.812465396,4.240122141,0.61875,Low exposure,High complementarity,LE-HC
+"Library, archive, museum and art gallery managers",50010,6.471193881,4.415844889,0.667407407,High exposure,High complementarity,HE-HC
+"Managers - publishing, motion pictures, broadcasting and performing arts",50011,6.484575341,4.607653991,0.638564815,High exposure,High complementarity,HE-HC
+"Recreation, sports and fitness program and service directors",50012,6.25036284,4.515055792,0.625231481,High exposure,High complementarity,HE-HC
+Librarians,51100,6.365586874,4.517798462,0.638611111,High exposure,High complementarity,HE-HC
+Conservators and curators,51101,6.1800504,4.231895951,0.662777778,High exposure,High complementarity,HE-HC
+Archivists,51102,6.339542645,4.781071745,0.594166667,High exposure,Low complementarity,HE-LC
+Editors,51110,6.543130636,4.811018554,0.613055556,High exposure,High complementarity,HE-HC
+Authors and writers (except technical),51111,6.489752863,5.157400654,0.552962963,High exposure,Low complementarity,HE-LC
+Technical writers,51112,6.568273856,5.371388398,0.530555556,High exposure,Low complementarity,HE-LC
+Journalists,51113,6.56755127,4.653839802,0.639722222,High exposure,High complementarity,HE-HC
+"Translators, terminologists and interpreters",51114,6.523049621,4.692971811,0.628888889,High exposure,High complementarity,HE-HC
+"Producers, directors, choreographers and related occupations",51120,6.292552339,4.420683731,0.647708333,High exposure,High complementarity,HE-HC
+"Conductors, composers and arrangers",51121,6.251375838,4.642916923,0.606805556,High exposure,Low complementarity,HE-LC
+Musicians and singers,51122,6.019128556,5.020956403,0.514166667,High exposure,Low complementarity,HE-LC
+Library and public archive technicians,52100,6.051692512,4.888422729,0.540555556,High exposure,Low complementarity,HE-LC
+Film and video camera operators,52110,5.83309117,4.322968678,0.607222222,Low exposure,Low complementarity,LE-LC
+Graphic arts technicians,52111,6.158020763,5.242810261,0.493472222,High exposure,Low complementarity,HE-LC
+Broadcast technicians,52112,6.089672685,4.673823785,0.580833333,High exposure,Low complementarity,HE-LC
+Audio and video recording technicians,52113,6.113513922,4.586557856,0.598194444,High exposure,Low complementarity,HE-LC
+Announcers and other broadcasters,52114,6.417429825,4.643723526,0.624722222,High exposure,High complementarity,HE-HC
+"Other technical and coordinating occupations in motion pictures, broadcasting and the performing arts",52119,5.828815853,4.362759016,0.599861111,Low exposure,Low complementarity,LE-LC
+Graphic designers and illustrators,52120,6.362911254,4.828119961,0.589583333,High exposure,Low complementarity,HE-LC
+Interior designers and interior decorators,52121,6.540182749,4.536343423,0.654722222,High exposure,High complementarity,HE-HC
+"Registrars, restorers, interpreters and other occupations related to museum and art galleries",53100,5.993465673,4.265349737,0.636666667,High exposure,High complementarity,HE-HC
+Photographers,53110,5.946157338,4.365470512,0.614166667,Low exposure,High complementarity,LE-HC
+"Motion pictures, broadcasting, photography and performing arts assistants and operators",53111,5.761055988,4.44213515,0.579513889,Low exposure,Low complementarity,LE-LC
+Dancers,53120,4.83117283,3.705241162,0.581388889,Low exposure,Low complementarity,LE-LC
+"Actors, comedians and circus performers",53121,5.790803512,4.843188694,0.507638889,Low exposure,Low complementarity,LE-LC
+"Painters, sculptors and other visual artists",53122,5.778077737,5.14730425,0.4575,Low exposure,Low complementarity,LE-LC
+"Theatre, fashion, exhibit and other creative designers",53123,6.260278956,4.715432817,0.595416667,High exposure,Low complementarity,HE-LC
+Artisans and craftspersons,53124,5.833884266,4.663184931,0.548277778,Low exposure,Low complementarity,LE-LC
+"Patternmakers - textile, leather and fur products",53125,5.997116868,4.742719923,0.5575,High exposure,Low complementarity,HE-LC
+Athletes,53200,5.216758485,3.735778715,0.632222222,Low exposure,High complementarity,LE-HC
+Coaches,53201,6.08725821,3.858645343,0.714444444,High exposure,High complementarity,HE-HC
+Sports officials and referees,53202,6.011560786,4.815928141,0.547222222,High exposure,Low complementarity,HE-LC
+"Program leaders and instructors in recreation, sport and fitness",54100,5.630436232,3.929604644,0.649166667,Low exposure,High complementarity,LE-HC
+Other performers,55109,5.475314746,5.038810487,0.428055556,Low exposure,Low complementarity,LE-LC
+Corporate sales managers,60010,6.594914041,4.587706633,0.652777778,High exposure,High complementarity,HE-HC
+Retail and wholesale trade managers,60020,6.48623218,4.198936529,0.70162037,High exposure,High complementarity,HE-HC
+Restaurant and food service managers,60030,5.97989782,4.257355031,0.636388889,High exposure,High complementarity,HE-HC
+Accommodation service managers,60031,6.215860454,4.021316388,0.701388889,High exposure,High complementarity,HE-HC
+Managers in customer and personal services,60040,6.181318069,4.285723426,0.655810185,High exposure,High complementarity,HE-HC
+Retail sales supervisors,62010,6.187927951,4.670095986,0.593796296,High exposure,Low complementarity,HE-LC
+Food service supervisors,62020,5.918487711,4.044299936,0.665,Low exposure,High complementarity,LE-HC
+Executive housekeepers,62021,5.795825081,4.214852795,0.621111111,Low exposure,High complementarity,LE-HC
+"Accommodation, travel, tourism and related services supervisors",62022,6.248049388,4.304211801,0.659444444,High exposure,High complementarity,HE-HC
+Customer and information services supervisors,62023,6.140052496,4.122363023,0.676944444,High exposure,High complementarity,HE-HC
+Cleaning supervisors,62024,5.795825081,4.214852795,0.621111111,Low exposure,High complementarity,LE-HC
+Other services supervisors,62029,6.140052496,4.122363023,0.676944444,High exposure,High complementarity,HE-HC
+Technical sales specialists - wholesale trade,62100,6.397342455,4.53417549,0.639722222,High exposure,High complementarity,HE-HC
+Retail and wholesale buyers,62101,6.403669143,4.701360429,0.614166667,High exposure,High complementarity,HE-HC
+Chefs,62200,5.901226374,3.875138652,0.691666667,Low exposure,High complementarity,LE-HC
+Funeral directors and embalmers,62201,5.827027349,3.557627037,0.738055556,Low exposure,High complementarity,LE-HC
+"Jewellers, jewellery and watch repairers and related occupations",62202,5.955022783,4.955738295,0.516222222,Low exposure,Low complementarity,LE-LC
+Insurance agents and brokers,63100,6.639157942,5.008875825,0.593888889,High exposure,Low complementarity,HE-LC
+Real estate agents and salespersons,63101,6.424457341,4.500689282,0.647777778,High exposure,High complementarity,HE-HC
+Financial sales representatives,63102,6.675194987,5.179761238,0.572407407,High exposure,Low complementarity,HE-LC
+Cooks,63200,5.724964128,4.64109973,0.537555556,Low exposure,Low complementarity,LE-LC
+Butchers - retail and wholesale,63201,5.596899916,4.406003989,0.561111111,Low exposure,Low complementarity,LE-LC
+Bakers,63202,5.860904262,4.827105871,0.524722222,Low exposure,Low complementarity,LE-LC
+Hairstylists and barbers,63210,5.716365973,4.257661786,0.603472222,Low exposure,Low complementarity,LE-LC
+"Estheticians, electrologists and related occupations",63211,5.933080109,4.652735137,0.562916667,Low exposure,Low complementarity,LE-LC
+Shoe repairers and shoemakers,63220,5.640286769,4.864747338,0.485833333,Low exposure,Low complementarity,LE-LC
+Upholsterers,63221,5.442407124,4.678958346,0.488611111,Low exposure,Low complementarity,LE-LC
+Retail salespersons and visual merchandisers,64100,6.049522856,4.700877995,0.570888889,High exposure,Low complementarity,HE-LC
+Sales and account representatives - wholesale trade (non-technical),64101,6.310203142,4.557368936,0.626111111,High exposure,High complementarity,HE-HC
+"Tailors, dressmakers, furriers and milliners",64200,5.789534627,4.750634802,0.527777778,Low exposure,Low complementarity,LE-LC
+"Image, social and other personal consultants",64201,5.883265754,4.391481569,0.598472222,Low exposure,Low complementarity,LE-LC
+MaÃ®tres d'hÃ´tel and hosts/hostesses,64300,6.009090285,4.802264653,0.549166667,High exposure,Low complementarity,HE-LC
+Bartenders,64301,5.756919704,5.018115009,0.476666667,Low exposure,Low complementarity,LE-LC
+Travel counsellors,64310,6.545554444,5.46735617,0.513055556,High exposure,Low complementarity,HE-LC
+Pursers and flight attendants,64311,5.621125335,3.599079925,0.706944444,Low exposure,High complementarity,LE-HC
+Airline ticket and service agents,64312,6.137041535,4.872129085,0.554444444,High exposure,Low complementarity,HE-LC
+"Ground and water transport ticket agents, cargo service representatives and related clerks",64313,6.238565866,4.872596428,0.567083333,High exposure,Low complementarity,HE-LC
+Hotel front desk clerks,64314,6.363532867,4.785935454,0.595972222,High exposure,Low complementarity,HE-LC
+Tour and travel guides,64320,6.368551781,4.534055059,0.636388889,High exposure,High complementarity,HE-HC
+Casino workers,64321,6.063761885,4.994633252,0.524722222,High exposure,Low complementarity,HE-LC
+Outdoor sport and recreational guides,64322,5.924543618,3.974381343,0.6775,Low exposure,High complementarity,LE-HC
+Customer services representatives - financial institutions,64400,6.510472632,5.879318479,0.445277778,High exposure,Low complementarity,HE-LC
+Postal services representatives,64401,5.87573802,4.946907117,0.506111111,Low exposure,Low complementarity,LE-LC
+Other customer and information services representatives,64409,6.608430958,5.197621068,0.561458333,High exposure,Low complementarity,HE-LC
+Security guards and related security service occupations,64410,5.844485653,4.275042406,0.617222222,Low exposure,High complementarity,LE-HC
+Cashiers,65100,5.922752488,5.216957816,0.4675,Low exposure,Low complementarity,LE-LC
+Service station attendants,65101,5.723107993,3.793148797,0.685555556,Low exposure,High complementarity,LE-HC
+"Store shelf stockers, clerks and order fillers",65102,5.490511607,4.525096649,0.524166667,Low exposure,Low complementarity,LE-LC
+Other sales related occupations,65109,6.415723604,5.074735259,0.55781746,High exposure,Low complementarity,HE-LC
+Food and beverage servers,65200,5.438765246,4.587396642,0.503402778,Low exposure,Low complementarity,LE-LC
+"Food counter attendants, kitchen helpers and related support occupations",65201,5.689286435,4.894307881,0.488611111,Low exposure,Low complementarity,LE-LC
+Meat cutters and fishmongers - retail and wholesale,65202,5.596899916,4.406003989,0.561111111,Low exposure,Low complementarity,LE-LC
+"Support occupations in accommodation, travel and facilities set-up services",65210,5.663328573,4.430730938,0.568194444,Low exposure,Low complementarity,LE-LC
+"Operators and attendants in amusement, recreation and sport",65211,5.969471199,4.256183929,0.634444444,Low exposure,High complementarity,LE-HC
+Pet groomers and animal care workers,65220,5.627589122,3.939411363,0.648333333,Low exposure,High complementarity,LE-HC
+Other support occupations in personal services,65229,6.140052496,4.122363023,0.676944444,High exposure,High complementarity,HE-HC
+Light duty cleaners,65310,5.561989149,4.79268586,0.484027778,Low exposure,Low complementarity,LE-LC
+Specialized cleaners,65311,5.272076627,4.116613166,0.5675,Low exposure,Low complementarity,LE-LC
+"Janitors, caretakers and heavy-duty cleaners",65312,5.388025524,4.055985881,0.595555556,Low exposure,Low complementarity,LE-LC
+"Dry cleaning, laundry and related occupations",65320,5.559304158,5.058966784,0.438333333,Low exposure,Low complementarity,LE-LC
+Other service support occupations,65329,5.900750888,4.456034281,0.592118056,Low exposure,Low complementarity,LE-LC
+Construction managers,70010,6.502255361,3.785757566,0.766111111,High exposure,High complementarity,HE-HC
+Home building and renovation managers,70011,6.502255361,3.785757566,0.766111111,High exposure,High complementarity,HE-HC
+Facility operation and maintenance managers,70012,6.499978183,4.520672611,0.652962963,High exposure,High complementarity,HE-HC
+Managers in transportation,70020,6.533072448,4.536163667,0.654666667,High exposure,High complementarity,HE-HC
+Postal and courier services managers,70021,6.405720161,4.38258021,0.664166667,High exposure,High complementarity,HE-HC
+"Contractors and supervisors, machining, metal forming, shaping and erecting trades and related occupations",72010,5.887740735,3.321667065,0.784166667,Low exposure,High complementarity,LE-HC
+"Contractors and supervisors, electrical trades and telecommunications occupations",72011,5.887740735,3.321667065,0.784166667,Low exposure,High complementarity,LE-HC
+"Contractors and supervisors, pipefitting trades",72012,5.887740735,3.321667065,0.784166667,Low exposure,High complementarity,LE-HC
+"Contractors and supervisors, carpentry trades",72013,5.887740735,3.321667065,0.784166667,Low exposure,High complementarity,LE-HC
+"Contractors and supervisors, other construction trades, installers, repairers and servicers",72014,5.877118694,3.502261648,0.752361111,Low exposure,High complementarity,LE-HC
+"Contractors and supervisors, mechanic trades",72020,5.844234115,3.775641815,0.701296296,Low exposure,High complementarity,LE-HC
+"Contractors and supervisors, heavy equipment operator crews",72021,5.887740735,3.321667065,0.784166667,Low exposure,High complementarity,LE-HC
+"Supervisors, printing and related occupations",72022,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, railway transport operations",72023,5.902033983,3.965257342,0.676111111,Low exposure,High complementarity,LE-HC
+"Supervisors, motor transport and other ground transit operators",72024,5.870666067,4.221754325,0.627777778,Low exposure,High complementarity,LE-HC
+"Supervisors, mail and message distribution occupations",72025,6.405720161,4.38258021,0.664166667,High exposure,High complementarity,HE-HC
+Machinists and machining and tooling inspectors,72100,5.644522322,4.501506551,0.550833333,Low exposure,Low complementarity,LE-LC
+Tool and die makers,72101,5.750972951,4.319619684,0.597222222,Low exposure,Low complementarity,LE-LC
+Sheet metal workers,72102,5.526754439,4.363065588,0.558888889,Low exposure,Low complementarity,LE-LC
+Boilermakers,72103,5.539861668,3.796344093,0.663055556,Low exposure,High complementarity,LE-HC
+Structural metal and platework fabricators and fitters,72104,5.549428946,3.718117394,0.678333333,Low exposure,High complementarity,LE-HC
+Ironworkers,72105,5.189174373,3.537117405,0.666527778,Low exposure,High complementarity,LE-HC
+Welders and related machine operators,72106,5.566512468,4.718187291,0.500763889,Low exposure,Low complementarity,LE-LC
+Electricians (except industrial and power system),72200,5.664204633,3.527540775,0.725555556,Low exposure,High complementarity,LE-HC
+Industrial electricians,72201,5.659602973,3.628349986,0.707222222,Low exposure,High complementarity,LE-HC
+Power system electricians,72202,5.664204633,3.527540775,0.725555556,Low exposure,High complementarity,LE-HC
+Electrical power line and cable workers,72203,5.478333345,3.3433051,0.738055556,Low exposure,High complementarity,LE-HC
+Telecommunications line and cable installers and repairers,72204,5.664223833,4.056282038,0.6325,Low exposure,High complementarity,LE-HC
+Telecommunications equipment installation and cable television service technicians,72205,5.697080353,4.080310966,0.632222222,Low exposure,High complementarity,LE-HC
+Plumbers,72300,5.523745075,3.653343617,0.686944444,Low exposure,High complementarity,LE-HC
+"Steamfitters, pipefitters and sprinkler system installers",72301,5.523745075,3.653343617,0.686944444,Low exposure,High complementarity,LE-HC
+Gas fitters,72302,5.523745075,3.653343617,0.686944444,Low exposure,High complementarity,LE-HC
+Carpenters,72310,5.445526961,4.013644526,0.611111111,Low exposure,Low complementarity,LE-LC
+Cabinetmakers,72311,5.436207323,4.590575073,0.503888889,Low exposure,Low complementarity,LE-LC
+Bricklayers,72320,5.307148417,3.860018182,0.621759259,Low exposure,High complementarity,LE-HC
+Insulators,72321,5.304910005,4.092148634,0.576944444,Low exposure,Low complementarity,LE-LC
+Construction millwrights and industrial mechanics,72400,5.503397191,3.97350449,0.626805556,Low exposure,High complementarity,LE-HC
+Heavy-duty equipment mechanics,72401,5.498892024,3.797934181,0.657638889,Low exposure,High complementarity,LE-HC
+"Heating, refrigeration and air conditioning mechanics",72402,5.628293082,3.727180752,0.686111111,Low exposure,High complementarity,LE-HC
+Railway carmen/women,72403,5.381840256,3.9586425,0.612777778,Low exposure,Low complementarity,LE-LC
+Aircraft mechanics and aircraft inspectors,72404,5.73928152,4.153007878,0.624722222,Low exposure,High complementarity,LE-HC
+Machine fitters,72405,5.644522322,4.501506551,0.550833333,Low exposure,Low complementarity,LE-LC
+Elevator constructors and mechanics,72406,5.61751664,3.631100339,0.701944444,Low exposure,High complementarity,LE-HC
+"Automotive service technicians, truck and bus mechanics and mechanical repairers",72410,5.647499861,4.12237118,0.618492063,Low exposure,High complementarity,LE-HC
+"Auto body collision, refinishing and glass technicians and damage repair estimators",72411,5.499668328,4.347096827,0.557916667,Low exposure,Low complementarity,LE-LC
+Oil and solid fuel heating mechanics,72420,5.628293082,3.727180752,0.686111111,Low exposure,High complementarity,LE-HC
+Appliance servicers and repairers,72421,5.597175953,4.2336417,0.591944444,Low exposure,Low complementarity,LE-LC
+Electrical mechanics,72422,5.731598652,4.054808363,0.640833333,Low exposure,High complementarity,LE-HC
+"Motorcycle, all-terrain vehicle and other related mechanics",72423,5.631643419,3.857394372,0.663425926,Low exposure,High complementarity,LE-HC
+Other small engine and small equipment repairers,72429,5.631541161,4.575627194,0.535833333,Low exposure,Low complementarity,LE-LC
+Crane operators,72500,5.528270988,3.64160697,0.689722222,Low exposure,High complementarity,LE-HC
+Water well drillers,72501,5.718221929,4.183832378,0.616666667,Low exposure,High complementarity,LE-HC
+"Air pilots, flight engineers and flying instructors",72600,5.817246966,3.740830051,0.704953704,Low exposure,High complementarity,LE-HC
+Air traffic controllers and related occupations,72601,6.554208812,5.055843853,0.576944444,High exposure,Low complementarity,HE-LC
+"Deck officers, water transport",72602,5.71745572,3.357417053,0.761111111,Low exposure,High complementarity,LE-HC
+"Engineer officers, water transport",72603,5.797259308,3.790763448,0.694444444,Low exposure,High complementarity,LE-HC
+Railway traffic controllers and marine traffic regulators,72604,5.824404757,4.081937001,0.6475,Low exposure,High complementarity,LE-HC
+Other technical trades and related occupations,72999,5.644338445,4.057652193,0.629444444,Low exposure,High complementarity,LE-HC
+Concrete finishers,73100,5.233404614,3.858182179,0.611111111,Low exposure,Low complementarity,LE-LC
+Tilesetters,73101,5.450049662,4.311594844,0.557222222,Low exposure,Low complementarity,LE-LC
+"Plasterers, drywall installers and finishers and lathers",73102,5.24323936,4.24119806,0.539444444,Low exposure,Low complementarity,LE-LC
+Roofers and shinglers,73110,5.244433036,3.618658795,0.658333333,Low exposure,High complementarity,LE-HC
+Glaziers,73111,5.440539123,3.699566603,0.668333333,Low exposure,High complementarity,LE-HC
+Painters and decorators (except interior decorators),73112,5.59709523,5.17420359,0.423888889,Low exposure,Low complementarity,LE-LC
+Floor covering installers,73113,5.388738113,4.128588944,0.582361111,Low exposure,Low complementarity,LE-LC
+Residential and commercial installers and servicers,73200,5.394339283,3.976761051,0.610439815,Low exposure,Low complementarity,LE-LC
+General building maintenance workers and building superintendents,73201,5.587066367,3.639352953,0.696944444,Low exposure,High complementarity,LE-HC
+Pest controllers and fumigators,73202,5.707539963,4.3107781,0.593055556,Low exposure,Low complementarity,LE-LC
+Other repairers and servicers,73209,5.708449475,4.309946974,0.594351852,Low exposure,Low complementarity,LE-LC
+Transport truck drivers,73300,5.6039813,4.146725542,0.608472222,Low exposure,Low complementarity,LE-LC
+"Bus drivers, subway operators and other transit operators",73301,5.75381356,4.516841837,0.563333333,Low exposure,Low complementarity,LE-LC
+Railway and yard locomotive engineers,73310,5.714767441,3.855323777,0.673611111,Low exposure,High complementarity,LE-HC
+Railway conductors and brakemen/women,73311,5.824404757,4.081937001,0.6475,Low exposure,High complementarity,LE-HC
+Heavy equipment operators,73400,5.527178568,3.89664064,0.643214286,Low exposure,High complementarity,LE-HC
+Printing press operators,73401,5.685279941,4.622448441,0.535277778,Low exposure,Low complementarity,LE-LC
+"Drillers and blasters - surface mining, quarrying and construction",73402,5.718221929,4.183832378,0.616666667,Low exposure,High complementarity,LE-HC
+Mail and parcel sorters and related occupations,74100,5.50043463,5.052760367,0.429722222,Low exposure,Low complementarity,LE-LC
+Letter carriers,74101,5.554654234,4.635050366,0.513888889,Low exposure,Low complementarity,LE-LC
+Couriers and messengers,74102,5.567333508,4.386514479,0.560277778,Low exposure,Low complementarity,LE-LC
+Railway yard and track maintenance workers,74200,5.403946361,3.49455198,0.701666667,Low exposure,High complementarity,LE-HC
+Water transport deck and engine room crew,74201,5.516211403,3.71118445,0.675555556,Low exposure,High complementarity,LE-HC
+Air transport ramp attendants,74202,6.182615126,4.269384795,0.659537037,High exposure,High complementarity,HE-HC
+Automotive and heavy truck and equipment parts installers and servicers,74203,5.524981021,4.062520692,0.61287037,Low exposure,Low complementarity,LE-LC
+Utility maintenance workers,74204,5.475799455,3.969578173,0.622314815,Low exposure,High complementarity,LE-HC
+Public works maintenance equipment operators and related workers,74205,5.420165999,4.134690783,0.585,Low exposure,Low complementarity,LE-LC
+Longshore workers,75100,5.336598224,3.810529731,0.633472222,Low exposure,High complementarity,LE-HC
+Material handlers,75101,5.792257996,4.375229604,0.590396825,Low exposure,Low complementarity,LE-LC
+Construction trades helpers and labourers,75110,5.415087031,3.92883992,0.621925926,Low exposure,High complementarity,LE-HC
+Other trades helpers and labourers,75119,5.373384894,3.910630117,0.620555556,Low exposure,High complementarity,LE-HC
+Delivery service drivers and door-to-door distributors,75201,5.567333508,4.386514479,0.560277778,Low exposure,Low complementarity,LE-LC
+Boat and cable ferry operators and related occupations,75210,5.717967987,3.635742712,0.712731481,Low exposure,High complementarity,LE-HC
+Railway and motor transport labourers,75211,5.593691925,3.923353364,0.646944444,Low exposure,High complementarity,LE-HC
+Public works and maintenance labourers,75212,5.382308612,4.492732605,0.513611111,Low exposure,Low complementarity,LE-LC
+Managers in natural resources production and fishing,80010,6.382130059,4.324840004,0.671481481,High exposure,High complementarity,HE-HC
+Managers in agriculture,80020,5.843659754,3.933999933,0.672407407,Low exposure,High complementarity,LE-HC
+Managers in horticulture,80021,5.983559372,3.704820511,0.729166667,High exposure,High complementarity,HE-HC
+Managers in aquaculture,80022,5.983559372,3.704820511,0.729166667,High exposure,High complementarity,HE-HC
+"Supervisors, logging and forestry",82010,5.749772652,3.77887836,0.691111111,Low exposure,High complementarity,LE-HC
+"Supervisors, mining and quarrying",82020,5.887740735,3.321667065,0.784166667,Low exposure,High complementarity,LE-HC
+"Contractors and supervisors, oil and gas drilling and services",82021,5.887740735,3.321667065,0.784166667,Low exposure,High complementarity,LE-HC
+Agricultural service contractors and farm supervisors,82030,5.725967492,3.944487767,0.658287037,Low exposure,High complementarity,LE-HC
+"Contractors and supervisors, landscaping, grounds maintenance and horticulture services",82031,5.923792036,3.836263583,0.700833333,Low exposure,High complementarity,LE-HC
+Underground production and development miners,83100,5.534404387,3.962931627,0.630381944,Low exposure,High complementarity,LE-HC
+"Oil and gas well drillers, servicers, testers and related workers",83101,5.596483606,3.491583938,0.724444444,Low exposure,High complementarity,LE-HC
+Logging machinery operators,83110,5.582156099,4.306013191,0.576944444,Low exposure,Low complementarity,LE-LC
+Fishing masters and officers,83120,5.398795864,4.320536357,0.548055556,Low exposure,Low complementarity,LE-LC
+Fishermen/women,83121,5.398795864,4.320536357,0.548055556,Low exposure,Low complementarity,LE-LC
+Underground mine service and support workers,84100,5.338995079,3.428821284,0.706111111,Low exposure,High complementarity,LE-HC
+Oil and gas well drilling and related workers and services operators,84101,5.53876126,3.89835675,0.644722222,Low exposure,High complementarity,LE-HC
+Chain saw and skidder operators,84110,5.225291325,4.143946315,0.555277778,Low exposure,Low complementarity,LE-LC
+Silviculture and forestry workers,84111,5.48984448,3.725469462,0.669722222,Low exposure,High complementarity,LE-HC
+Specialized livestock workers and farm machinery operators,84120,5.604689177,3.944633015,0.641388889,Low exposure,High complementarity,LE-HC
+Fishing vessel deckhands,84121,5.398795864,4.320536357,0.548055556,Low exposure,Low complementarity,LE-LC
+Livestock labourers,85100,5.604689177,3.944633015,0.641388889,Low exposure,High complementarity,LE-HC
+Harvesting labourers,85101,5.241046781,4.292673692,0.527685185,Low exposure,Low complementarity,LE-LC
+Aquaculture and marine harvest labourers,85102,5.534948564,4.226548223,0.584722222,Low exposure,Low complementarity,LE-LC
+Nursery and greenhouse labourers,85103,5.09409589,4.325736426,0.499166667,Low exposure,Low complementarity,LE-LC
+Trappers and hunters,85104,5.398795864,4.320536357,0.548055556,Low exposure,Low complementarity,LE-LC
+Mine labourers,85110,5.338995079,3.428821284,0.706111111,Low exposure,High complementarity,LE-HC
+"Oil and gas drilling, servicing and related labourers",85111,5.35098494,3.607093832,0.674305556,Low exposure,High complementarity,LE-HC
+Landscaping and grounds maintenance labourers,85121,5.368045042,3.999847951,0.602777778,Low exposure,Low complementarity,LE-LC
+Manufacturing managers,90010,6.375571544,4.098237082,0.705972222,High exposure,High complementarity,HE-HC
+Utilities managers,90011,6.277054881,3.821770723,0.739880952,High exposure,High complementarity,HE-HC
+"Supervisors, mineral and metal processing",92010,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, petroleum, gas and chemical processing and utilities",92011,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, food and beverage processing",92012,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, plastic and rubber products manufacturing",92013,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, forest products processing",92014,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, textile, fabric, fur and leather products processing and manufacturing",92015,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, motor vehicle assembling",92020,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, electronics and electrical products manufacturing",92021,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, furniture and fixtures manufacturing",92022,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, other mechanical and metal products manufacturing",92023,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+"Supervisors, other products manufacturing and assembly",92024,5.979663209,3.848577682,0.704722222,High exposure,High complementarity,HE-HC
+Power engineers and power systems operators,92100,5.734984432,4.36120416,0.585902778,Low exposure,Low complementarity,LE-LC
+Water and waste treatment plant operators,92101,5.833989062,4.041657978,0.655555556,Low exposure,High complementarity,LE-HC
+"Central control and process operators, mineral and metal processing",93100,5.508338791,4.510717432,0.529444444,Low exposure,Low complementarity,LE-LC
+"Central control and process operators, petroleum, gas and chemical processing",93101,5.759065824,4.192607113,0.620092593,Low exposure,High complementarity,LE-HC
+"Pulping, papermaking and coating control operators",93102,5.59075983,4.595095461,0.526203704,Low exposure,Low complementarity,LE-LC
+Aircraft assemblers and aircraft assembly inspectors,93200,5.669981092,4.186222738,0.611203704,Low exposure,Low complementarity,LE-LC
+"Machine operators, mineral and metal processing",94100,5.508338791,4.510717432,0.529444444,Low exposure,Low complementarity,LE-LC
+Foundry workers,94101,5.367004469,4.439165294,0.521944444,Low exposure,Low complementarity,LE-LC
+Glass forming and finishing machine operators and glass cutters,94102,5.535717023,4.721337135,0.495222222,Low exposure,Low complementarity,LE-LC
+"Concrete, clay and stone forming operators",94103,5.47000435,4.602707161,0.506898148,Low exposure,Low complementarity,LE-LC
+"Inspectors and testers, mineral and metal processing",94104,5.880311896,4.470670461,0.588055556,Low exposure,Low complementarity,LE-LC
+Metalworking and forging machine operators,94105,5.612922794,4.676014306,0.51525,Low exposure,Low complementarity,LE-LC
+Machining tool operators,94106,5.623666133,4.732065901,0.506805556,Low exposure,Low complementarity,LE-LC
+Machine operators of other metal products,94107,5.44345163,4.254964691,0.566666667,Low exposure,Low complementarity,LE-LC
+Chemical plant machine operators,94110,5.832945741,4.21653676,0.625416667,Low exposure,High complementarity,LE-HC
+Plastics processing machine operators,94111,5.589672976,4.651471845,0.516132479,Low exposure,Low complementarity,LE-LC
+Rubber processing machine operators and related workers,94112,5.45986093,4.658006499,0.494944444,Low exposure,Low complementarity,LE-LC
+Sawmill machine operators,94120,5.50943605,4.485599184,0.534166667,Low exposure,Low complementarity,LE-LC
+"Pulp mill, papermaking and finishing machine operators",94121,5.62620502,4.543632081,0.540694444,Low exposure,Low complementarity,LE-LC
+Paper converting machine operators,94122,5.640599903,4.434138257,0.562222222,Low exposure,Low complementarity,LE-LC
+Lumber graders and other wood processing inspectors and graders,94123,5.819645544,4.316237112,0.606666667,Low exposure,Low complementarity,LE-LC
+Woodworking machine operators,94124,5.567488048,4.424342645,0.552916667,Low exposure,Low complementarity,LE-LC
+Other wood processing machine operators,94129,5.517250517,4.502704645,0.532222222,Low exposure,Low complementarity,LE-LC
+"Textile fibre and yarn, hide and pelt processing machine operators and workers",94130,5.375828808,4.850411397,0.445740741,Low exposure,Low complementarity,LE-LC
+"Weavers, knitters and other fabric making occupations",94131,5.51087226,4.638317485,0.506666667,Low exposure,Low complementarity,LE-LC
+Industrial sewing machine operators,94132,5.585216871,5.241791572,0.409861111,Low exposure,Low complementarity,LE-LC
+"Inspectors and graders, textile, fabric, fur and leather products manufacturing",94133,5.880311896,4.470670461,0.588055556,Low exposure,Low complementarity,LE-LC
+"Process control and machine operators, food and beverage processing",94140,5.713786239,4.680125167,0.529097222,Low exposure,Low complementarity,LE-LC
+"Industrial butchers and meat cutters, poultry preparers and related workers",94141,5.446901448,4.448294631,0.531851852,Low exposure,Low complementarity,LE-LC
+Fish and seafood plant workers,94142,5.640263083,4.570805513,0.537430556,Low exposure,Low complementarity,LE-LC
+"Testers and graders, food and beverage processing",94143,5.880311896,4.470670461,0.588055556,Low exposure,Low complementarity,LE-LC
+Plateless printing equipment operators,94150,5.801475923,5.30835047,0.433333333,Low exposure,Low complementarity,LE-LC
+"Camera, platemaking and other prepress occupations",94151,6.219747864,5.373171071,0.484444444,High exposure,Low complementarity,HE-LC
+Binding and finishing machine operators,94152,5.626101515,4.79312593,0.496388889,Low exposure,Low complementarity,LE-LC
+Photographic and film processors,94153,5.871594866,4.901150714,0.513611111,Low exposure,Low complementarity,LE-LC
+"Motor vehicle assemblers, inspectors and testers",94200,5.741951813,4.407505302,0.580555556,Low exposure,Low complementarity,LE-LC
+"Electronics assemblers, fabricators, inspectors and testers",94201,5.793522343,4.669792407,0.541944444,Low exposure,Low complementarity,LE-LC
+"Assemblers and inspectors, electrical appliance, apparatus and equipment manufacturing",94202,5.816611357,4.561269035,0.563888889,Low exposure,Low complementarity,LE-LC
+"Assemblers, fabricators and inspectors, industrial electrical motors and transformers",94203,5.845268917,4.678051052,0.547777778,Low exposure,Low complementarity,LE-LC
+Mechanical assemblers and inspectors,94204,5.741951813,4.407505302,0.580555556,Low exposure,Low complementarity,LE-LC
+"Machine operators and inspectors, electrical apparatus manufacturing",94205,5.880311896,4.470670461,0.588055556,Low exposure,Low complementarity,LE-LC
+"Furniture and fixture assemblers, finishers, refinishers and inspectors",94210,5.75177402,4.512857268,0.562592593,Low exposure,Low complementarity,LE-LC
+"Plastic products assemblers, finishers and inspectors",94212,5.880311896,4.470670461,0.588055556,Low exposure,Low complementarity,LE-LC
+"Industrial painters, coaters and metal finishing process operators",94213,5.506692956,4.405354365,0.548333333,Low exposure,Low complementarity,LE-LC
+"Other products assemblers, finishers and inspectors",94219,5.76195143,4.465458589,0.575,Low exposure,Low complementarity,LE-LC
+Labourers in mineral and metal processing,95100,5.39842728,4.543676294,0.506666667,Low exposure,Low complementarity,LE-LC
+Labourers in metal fabrication,95101,5.39842728,4.543676294,0.506666667,Low exposure,Low complementarity,LE-LC
+Labourers in chemical products processing and utilities,95102,5.688106254,4.325583271,0.585833333,Low exposure,Low complementarity,LE-LC
+"Labourers in wood, pulp and paper processing",95103,5.39842728,4.543676294,0.506666667,Low exposure,Low complementarity,LE-LC
+Labourers in rubber and plastic products manufacturing,95104,5.39842728,4.543676294,0.506666667,Low exposure,Low complementarity,LE-LC
+Labourers in textile processing and cutting,95105,5.425241629,4.927062867,0.440069444,Low exposure,Low complementarity,LE-LC
+Labourers in food and beverage processing,95106,5.39842728,4.543676294,0.506666667,Low exposure,Low complementarity,LE-LC
+Labourers in fish and seafood processing,95107,5.39842728,4.543676294,0.506666667,Low exposure,Low complementarity,LE-LC
+"Other labourers in processing, manufacturing and utilities",95109,5.658769882,4.524399859,0.547383041,Low exposure,Low complementarity,LE-LC

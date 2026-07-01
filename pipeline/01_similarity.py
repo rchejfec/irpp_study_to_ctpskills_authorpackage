@@ -158,7 +158,10 @@ def collapse_to_noc(matrix: pd.DataFrame) -> pd.DataFrame:
     Parent key = integer part before the decimal ("73300.01" -> "73300").
     Codes already ending in .0 are undivided and map to themselves.
     """
-    parent = matrix.index.str.split(".").str[0]
+    # Parent NOC, zero-padded to 5 digits. Some OaSIS codes are short (e.g. "10.0"
+    # for NOC 00010 Legislators); the census and reference tables use the padded
+    # 5-digit form, so pad here to keep NOC keys consistent across the pipeline.
+    parent = matrix.index.str.split(".").str[0].str.zfill(5)
     collapsed = matrix.groupby(parent, sort=True).mean(numeric_only=True)
     collapsed.index.name = "noc_5digit"
     print(f"  Collapsed: {collapsed.shape[0]} NOCs x {collapsed.shape[1]} attributes")

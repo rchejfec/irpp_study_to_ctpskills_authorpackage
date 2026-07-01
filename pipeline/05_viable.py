@@ -31,11 +31,14 @@ Hand-picks always take a viable-* status (a pick wins over the automated screen)
 but passes_filters and filter_reasons are still populated, and pick_failed_filters
 flags any pick that would not have passed on its own.
 
-Comparable vs aspirational (= extensive):
-  - hand-picks: use their stated teer_category from viable_selections.csv (these
-    carry author judgment, incl. same-TEER-but-needs-certification cases)
-  - all others: derive by TEER delta — comparable if delta >= 0 (same or less
-    training), aspirational if delta < 0 (more training)
+Comparable vs aspirational (= extensive) — uniform TEER-delta rule for ALL
+candidates (picks included):
+  delta = candidate_teer - source_teer  (LOWER TEER number = MORE training)
+  comparable   if delta >= 0  (equal or higher TEER: same or less training)
+  aspirational if delta <  0  (lower TEER: more training)
+The authors' stated teer_category is NOT preserved where it disagrees with the
+delta: same-TEER railway conductors (they labeled 'extensive') become comparable;
+user picks one TEER-step up (they labeled 'comparable') become aspirational.
 
 Inputs:
   output/viable/enriched_cosine.csv, enriched_euclidean.csv
@@ -134,22 +137,35 @@ def filter_reasons(row: pd.Series, source_teer: int, susc: set[str]) -> list[str
 # ── Classification ────────────────────────────────────────────────────────
 
 def teer_category(delta) -> str:
-    """Derived comparable/aspirational for non-picks."""
+    """comparable vs aspirational by TEER delta, applied uniformly to everyone.
+
+    delta = candidate_teer - source_teer (LOWER TEER number = MORE training).
+    Equal or higher TEER (delta >= 0, same or less training) = comparable.
+    Lower TEER / more training (delta < 0) = aspirational.
+
+    This is a pure function of the TEER numbers — the authors' stated
+    teer_category is NOT preserved where it disagrees (e.g. same-TEER railway
+    conductors they called 'extensive' become comparable; user picks one step up
+    they called 'comparable' become aspirational).
+    """
     if pd.isna(delta):
         return "comparable"
     return "comparable" if int(delta) >= 0 else "aspirational"
 
 
 def classify(row: pd.Series, pick: dict | None, passes: bool) -> tuple[str, str, str]:
-    """Return (status, teer_class, rationale)."""
+    """Return (status, teer_class, rationale).
+
+    teer_class is always the delta-derived category (uniform rule). A pick sets
+    the status to viable-{author,user}[-aspirational]; a non-pick is viable or
+    not-viable by the filters.
+    """
+    cat = teer_category(row.get("teer_delta_calc"))
     if pick is not None:
-        # picks win; use their stated category (extensive -> aspirational)
-        cat = "aspirational" if pick["teer_category"] == "extensive" else "comparable"
         who = pick["pick_source"]  # author | user
         status = f"viable-{who}" + ("-aspirational" if cat == "aspirational" else "")
         return status, cat, pick["rationale"]
 
-    cat = teer_category(row.get("teer_delta_calc"))
     status = "viable" if passes else "not-viable"
     return status, cat, ""
 

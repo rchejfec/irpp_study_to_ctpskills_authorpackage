@@ -6,15 +6,15 @@ NOC-collapsed matrices the rest of this pipeline consumes.
 
 Two metrics, produced in parallel:
   The authors used EUCLIDEAN distance for occupation matching; an earlier
-  replication used COSINE. Rather than choose, this package carries both as
-  symmetric variants through every step. Both are emitted here as similarities
-  in [0, 1] where 1 = identical, so downstream logic (floors, thresholds,
-  ranking) treats them uniformly:
-    - cosine similarity   = 1 - cosine distance          (already in [0, 1])
-    - euclidean similarity = 1 / (1 + euclidean distance) (absolute, stable;
-      a pair's score never depends on the rest of the population, mirroring
-      cosine's absolute scale)
-  The raw euclidean DISTANCE matrices are also written for transparency.
+  replication used COSINE. Rather than choose, this package carries both through
+  every step. Step 1 emits:
+    - cosine SIMILARITY  = 1 - cosine distance   (already in [0, 1], 1 = identical)
+    - euclidean DISTANCE = raw pdist euclidean   (0 = identical, symmetric)
+  Euclidean is left as raw distance here and converted to a similarity in Step 2
+  by per-source min-max scaling (nearest candidate -> 1.0, farthest -> 0.0 within
+  each source's list). That makes euclidean readable like cosine (closer to 1 =
+  more similar) where it is actually used. The scaling is per-row, so it cannot
+  be a symmetric matrix and belongs in Step 2, not here.
 
 The authors' matrix construction, verbatim:
   - Unit of analysis: OaSIS sub-occupations (.01, .02, ...) kept distinct.
@@ -35,14 +35,12 @@ Outputs (output/similarity/):
   merged_matrix.csv                      900 occupations x 166 attributes (code-indexed)
   oasis_code_label_lookup.csv            code -> label (labels from the Skills domain)
   similarity_cosine_suboccupation.csv    900 x 900 cosine similarity (authors' unit)
-  similarity_euclidean_suboccupation.csv 900 x 900 euclidean similarity 1/(1+d)
   distance_euclidean_suboccupation.csv   900 x 900 raw euclidean distance
   similarity_cosine_noc.csv              NOC x NOC cosine similarity (collapsed)
-  similarity_euclidean_noc.csv           NOC x NOC euclidean similarity (collapsed)
   distance_euclidean_noc.csv             NOC x NOC raw euclidean distance
 
-The NOC-collapsed similarity matrices (`similarity_{cosine,euclidean}_noc.csv`)
-are what Step 2 consumes, one per metric variant.
+Step 2 consumes similarity_cosine_noc.csv (cosine) and distance_euclidean_noc.csv
+(euclidean, which it converts to a per-source similarity).
 
   NOC collapse method: sub-occupation competency VECTORS are averaged up to
   their 5-digit NOC parent, then similarity is computed on the collapsed
@@ -184,26 +182,22 @@ def euclidean_distance(matrix: pd.DataFrame) -> pd.DataFrame:
     return _frame(squareform(pdist(matrix.values, metric="euclidean")), matrix.index)
 
 
-def euclidean_similarity(distance: pd.DataFrame) -> pd.DataFrame:
-    """Convert Euclidean distance to a similarity in (0, 1]; 1 = identical.
-
-    sim = 1 / (1 + d). Absolute and stable: a pair's score does not depend on
-    the rest of the population, mirroring cosine's absolute scale so that
-    downstream floors/thresholds mean the same thing for both metrics.
-    """
-    return 1.0 / (1.0 + distance)
-
-
 def write_metric_matrices(matrix: pd.DataFrame, unit: str) -> None:
-    """Write cosine similarity, euclidean similarity, and euclidean distance
-    for one matrix (unit is 'suboccupation' or 'noc')."""
+    """Write cosine similarity and raw euclidean distance for one matrix
+    (unit is 'suboccupation' or 'noc').
+
+    Euclidean is emitted as the raw DISTANCE (symmetric, metric-pure). It is
+    converted to a similarity in Step 2 via per-source min-max scaling: within
+    each source occupation's candidate list, the nearest candidate maps to 1.0
+    and the farthest to 0.0. That normalization is inherently per-row (each
+    source has its own scale), so it cannot live in a symmetric matrix here and
+    belongs in Step 2 where ranking is already done per source.
+    """
     cosine_similarity(matrix).to_csv(OUT_DIR / f"similarity_cosine_{unit}.csv")
-    dist = euclidean_distance(matrix)
-    euclidean_similarity(dist).to_csv(OUT_DIR / f"similarity_euclidean_{unit}.csv")
-    dist.to_csv(OUT_DIR / f"distance_euclidean_{unit}.csv")
+    euclidean_distance(matrix).to_csv(OUT_DIR / f"distance_euclidean_{unit}.csv")
     n = matrix.shape[0]
-    print(f"  similarity_cosine_{unit}.csv, similarity_euclidean_{unit}.csv, "
-          f"distance_euclidean_{unit}.csv  ({n} x {n})")
+    print(f"  similarity_cosine_{unit}.csv, distance_euclidean_{unit}.csv "
+          f"({n} x {n})")
 
 
 # ── 5. Main ───────────────────────────────────────────────────────────────

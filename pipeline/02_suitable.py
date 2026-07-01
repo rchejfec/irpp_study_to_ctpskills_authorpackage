@@ -13,13 +13,24 @@ earnings, AI exposure, susceptible-occupation exclusion) happens in Step 3
   From reviseddraft/canonical_concepts.md: "Step 2 produces a complete
   skills-proximity map; Step 3 applies all judgment-based filters."
 
+Per metric:
+  - cosine    : read the cosine similarity matrix directly (already [0, 1]).
+  - euclidean : read the raw distance matrix and convert to a similarity by
+                PER-SOURCE min-max scaling — within each source occupation's
+                candidate list, nearest candidate -> 1.0, farthest -> 0.0:
+                    sim = 1 - (d - d_min) / (d_max - d_min)
+                This makes euclidean readable like cosine (closer to 1 = more
+                similar) for the occupation being analyzed. Note: euclidean
+                similarities are only comparable WITHIN a source, not across
+                sources (each source has its own min/max); cosine is absolute.
+
 Ranking: similarity descending. Euclidean produces many tied distances, so ties
 are broken deterministically by candidate NOC ascending, giving stable,
 reproducible ranks for both metrics.
 
 Inputs:
   output/similarity/similarity_cosine_noc.csv
-  output/similarity/similarity_euclidean_noc.csv
+  output/similarity/distance_euclidean_noc.csv
   output/similarity/oasis_code_label_lookup.csv
   data/reference/community_occupations.csv
   data/reference/noc_teer_lookup.csv        (candidate labels / TEER for readability)
@@ -39,9 +50,11 @@ SIM_DIR = PROJECT_ROOT / "output" / "similarity"
 REF_DIR = PROJECT_ROOT / "data" / "reference"
 OUT_DIR = PROJECT_ROOT / "output" / "suitable"
 
+# metric -> (matrix file, kind). "similarity": higher = closer (use directly).
+# "distance": lower = closer (convert to per-source min-max similarity).
 METRICS = {
-    "cosine": "similarity_cosine_noc.csv",
-    "euclidean": "similarity_euclidean_noc.csv",
+    "cosine": ("similarity_cosine_noc.csv", "similarity"),
+    "euclidean": ("distance_euclidean_noc.csv", "distance"),
 }
 
 
@@ -63,11 +76,24 @@ def load_labels() -> dict[str, str]:
 
 # ── Ranking for one pair, one metric ──────────────────────────────────────
 
-def rank_candidates(sim_row: pd.Series, source_noc: str) -> pd.DataFrame:
-    """Rank every other occupation by similarity (ties broken by NOC ascending)."""
+def rank_candidates(row: pd.Series, source_noc: str, kind: str) -> pd.DataFrame:
+    """Rank every other occupation by similarity (ties broken by NOC ascending).
+
+    kind == "similarity": row values are similarities (higher = closer), used as-is.
+    kind == "distance":   row values are distances (lower = closer), converted to a
+                          per-source min-max similarity so nearest -> 1, farthest -> 0.
+    """
+    values = row.drop(labels=[source_noc], errors="ignore")
+    if kind == "distance":
+        d = values.astype(float)
+        d_min, d_max = d.min(), d.max()
+        span = d_max - d_min
+        similarity = 1.0 - (d - d_min) / span if span > 0 else pd.Series(1.0, index=d.index)
+    else:
+        similarity = values.astype(float)
+
     df = (
-        sim_row.drop(labels=[source_noc], errors="ignore")
-        .rename("similarity")
+        similarity.rename("similarity")
         .reset_index()
         .rename(columns={"index": "candidate_noc"})
     )
@@ -80,20 +106,20 @@ def rank_candidates(sim_row: pd.Series, source_noc: str) -> pd.DataFrame:
 
 # ── Main ──────────────────────────────────────────────────────────────────
 
-def build_metric(metric: str, fname: str, pairs: pd.DataFrame,
+def build_metric(metric: str, fname: str, kind: str, pairs: pd.DataFrame,
                  labels: dict) -> pd.DataFrame:
-    sim = pd.read_csv(SIM_DIR / fname, index_col=0)
-    sim.index = sim.index.astype(str)
-    sim.columns = sim.columns.astype(str)
+    mat = pd.read_csv(SIM_DIR / fname, index_col=0)
+    mat.index = mat.index.astype(str).str.zfill(5)
+    mat.columns = mat.columns.astype(str).str.zfill(5)
 
     blocks = []
     for _, pair in pairs.iterrows():
         source_noc = pair["noc_5digit"]
-        if source_noc not in sim.index:
+        if source_noc not in mat.index:
             print(f"  WARNING [{metric}]: {source_noc} not in matrix — skipping")
             continue
 
-        ranked = rank_candidates(sim.loc[source_noc], source_noc)
+        ranked = rank_candidates(mat.loc[source_noc], source_noc, kind)
         ranked.insert(0, "cd_uid", pair["cd_uid"])
         ranked.insert(1, "community", pair["geo_label"])
         ranked.insert(2, "source_noc", source_noc)
@@ -119,8 +145,8 @@ def main() -> None:
     labels = load_labels()
     print(f"Pairs: {len(pairs)} across {pairs['cd_uid'].nunique()} communities")
 
-    for metric, fname in METRICS.items():
-        out = build_metric(metric, fname, pairs, labels)
+    for metric, (fname, kind) in METRICS.items():
+        out = build_metric(metric, fname, kind, pairs, labels)
         path = OUT_DIR / f"suitable_{metric}.csv"
         out.to_csv(path, index=False)
         n_pairs = out.groupby(["cd_uid", "source_noc"]).ngroups

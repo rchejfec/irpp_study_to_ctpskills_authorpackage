@@ -1,14 +1,14 @@
 cd_uid,community,source_noc,source_teer,source_label,teer_category,candidate_noc,candidate_teer,candidate_label,pick_source,rationale
-1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,extensive,73200,3,Residential and commercial installers and servicers,author,Community fit
+1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,extensive,73200,3,Residential and commercial installers and servicers,author,Retained on community review for strong local fit; caveat: provincial earnings fall below the 65% threshold.
 1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,comparable,74204,4,Utility maintenance workers,author,
 1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,comparable,73400,3,Heavy equipment operators,user,Heavy equipment operators have real demand from post-Fiona reconstruction; skills bridge from marine deck work is weak but broad availability compensates
 1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,comparable,73402,3,"Drillers and blasters - surface mining, quarrying and construction",user,Drillers and blasters could serve quarrying for construction aggregate and Cape Ray Gold if it advances
 1003,Channel-Port aux Basques,74201,4,Water transport deck and engine room crew,comparable,74205,4,Public works maintenance equipment operators and related workers,user,Public works maintenance is universally present; post-Fiona reconstruction creates ongoing demand; strong skills overlap with outdoor equipment operation
 1003,Channel-Port aux Basques,75210,5,Boat and cable ferry operators and related occupations,comparable,75110,5,Construction trades helpers and labourers,author,
-1003,Channel-Port aux Basques,75210,5,Boat and cable ferry operators and related occupations,extensive,94111,4,Plastics processing machine operators,author,Income suppressed / possible community aspirations
+1003,Channel-Port aux Basques,75210,5,Boat and cable ferry operators and related occupations,extensive,94111,4,Plastics processing machine operators,author,"Retained as a possible community aspiration; caveat: provincial income is suppressed for small counts, so the earnings screen is inconclusive."
 1003,Channel-Port aux Basques,75210,5,Boat and cable ferry operators and related occupations,comparable,74205,4,Public works maintenance equipment operators and related workers,user,Same public works rationale; stable municipal infrastructure maintenance
 1003,Channel-Port aux Basques,85102,5,Aquaculture and marine harvest labourers,comparable,75212,5,Public works and maintenance labourers,author,
-1003,Channel-Port aux Basques,85102,5,Aquaculture and marine harvest labourers,extensive,94110,4,Chemical plant machine operators,author,Income suppressed / possible community aspirations
+1003,Channel-Port aux Basques,85102,5,Aquaculture and marine harvest labourers,extensive,94110,4,Chemical plant machine operators,author,"Retained as a possible community aspiration; caveat: provincial income is suppressed for small counts, so the earnings screen is inconclusive."
 1003,Channel-Port aux Basques,85102,5,Aquaculture and marine harvest labourers,comparable,84121,4,Fishing vessel deckhands,user,"Fishing vessel deckhands — fishing IS present in CPAB; recognizable local transition for aquaculture workers. Caveat: lateral move within same marine vulnerability, not diversification"
 3532,Ingersoll,75101,5,Material handlers,comparable,75211,5,Railway and motor transport labourers,author,
 3532,Ingersoll,75101,5,Material handlers,extensive,94101,4,Foundry workers,author,
@@ -24,7 +24,7 @@ cd_uid,community,source_noc,source_teer,source_label,teer_category,candidate_noc
 3557,Algoma,75101,5,Material handlers,comparable,75110,5,Construction trades helpers and labourers,user,Construction trades helpers — SSM has active port development and infrastructure investment planned
 3557,Sault Ste. Marie,94100,4,"Machine operators, mineral and metal processing",comparable,94106,4,Machining tool operators,author,
 3557,Algoma,94100,4,"Machine operators, mineral and metal processing",comparable,73402,3,"Drillers and blasters - surface mining, quarrying and construction",user,Drillers and blasters — anchored by SSM's critical minerals strategy; surface mining/quarrying skills transfer from metal processing
-3557,Sault Ste. Marie,95100,5,Labourers in mineral and metal processing,extensive,94101,4,Foundry workers,author,Specific community characteristics
+3557,Sault Ste. Marie,95100,5,Labourers in mineral and metal processing,extensive,94101,4,Foundry workers,author,Retained on community review as it aligns with Sault Ste. Marie's steel and metal-processing base; caveat: falls within the community's susceptible sector.
 3557,Sault Ste. Marie,95100,5,Labourers in mineral and metal processing,comparable,95102,5,Labourers in chemical products processing and utilities,author,
 3557,Algoma,95100,5,Labourers in mineral and metal processing,comparable,75211,5,Railway and motor transport labourers,user,Railway and motor transport labourers — SSM has Algoma Central and Huron Central rail lines; logistics could grow with new port development. Caveat: Huron Central threatened with abandonment
 3557,Algoma,95100,5,Labourers in mineral and metal processing,comparable,95101,5,Labourers in metal fabrication,user,Labourers in metal fabrication — interchangeable at TEER 5; SSM has metal fabrication shops
@@ -84,14 +84,14 @@ cd_uid,community,source_noc,source_teer,source_label,teer_category,candidate_noc
 4816,Wood Buffalo,85111,5,"Oil and gas drilling, servicing and related labourers",comparable,95102,5,Labourers in chemical products processing and utilities,author,
 PR61,Northwest Territories,73300,3,Transport truck drivers,extensive,22114,2,Landscape and horticulture technicians and specialists,author,
 PR61,Northwest Territories,73300,3,Transport truck drivers,comparable,73301,3,"Bus drivers, subway operators and other transit operators",author,
-PR61,Northwest Territories,73300,3,Transport truck drivers,extensive,73311,3,Railway conductors and brakemen/women,author,Missing data / possible community fit
+PR61,Northwest Territories,73300,3,Transport truck drivers,extensive,73311,3,Railway conductors and brakemen/women,author,"Retained on community review for plausible local fit; caveat: territorial data is suppressed, so the presence and earnings screens are inconclusive."
 PR61,Northwest Territories,73300,3,Transport truck drivers,comparable,74200,4,Railway yard and track maintenance workers,author,
 PR61,Northwest Territories,73400,3,Heavy equipment operators,extensive,72106,2,Welders and related machine operators,author,
 PR61,Northwest Territories,73400,3,Heavy equipment operators,extensive,72406,2,Elevator constructors and mechanics,author,
-PR61,Northwest Territories,73400,3,Heavy equipment operators,extensive,72500,2,Crane operators,author,Missing data / possible community fit
-PR61,Northwest Territories,73400,3,Heavy equipment operators,comparable,73402,3,"Drillers - surface mining, quarrying and construction",author,Specific community characteristics / possible community aspirations
-PR61,Northwest Territories,73400,3,Heavy equipment operators,comparable,83100,3,Underground production and development miners,author,Specific community characteristics / possible community aspirations
-PR61,Northwest Territories,75101,5,Material handlers,extensive,73102,3,"Plasterers, drywall installers and finishers and lathers",author,Missing data / possible community fit
+PR61,Northwest Territories,73400,3,Heavy equipment operators,extensive,72500,2,Crane operators,author,"Retained on community review for plausible local fit; caveat: territorial data is suppressed, so the presence and earnings screens are inconclusive."
+PR61,Northwest Territories,73400,3,Heavy equipment operators,comparable,73402,3,"Drillers - surface mining, quarrying and construction",author,"Retained as a possible community aspiration, consistent with the Northwest Territories' mining economy; caveat: falls within the community's susceptible sector."
+PR61,Northwest Territories,73400,3,Heavy equipment operators,comparable,83100,3,Underground production and development miners,author,"Retained as a possible community aspiration, consistent with the Northwest Territories' mining economy; caveat: falls within the community's susceptible sector."
+PR61,Northwest Territories,75101,5,Material handlers,extensive,73102,3,"Plasterers, drywall installers and finishers and lathers",author,"Retained on community review for plausible local fit; caveat: territorial data is suppressed, so the presence and earnings screens are inconclusive."
 PR61,Northwest Territories,75101,5,Material handlers,extensive,74200,4,Railway yard and track maintenance workers,author,
 PR61,Northwest Territories,75101,5,Material handlers,comparable,75110,5,Construction trades helpers and labourers,author,
 PR61,Northwest Territories,75101,5,Material handlers,comparable,75211,5,Railway and motor transport labourers,author,

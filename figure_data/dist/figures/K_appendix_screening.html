@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Appendix — Full Viability Screening</title>
+<link rel="stylesheet" href="../theme.css">
+<style>
+  /* Scrolling appendix — not a fixed figure frame. */
+  .appendix {
+    width: 100%;
+    padding: 14px 16px 24px;
+    box-sizing: border-box;
+    font-family: var(--font-body, system-ui, sans-serif);
+  }
+
+  .app-intro {
+    font-size: 12px;
+    color: var(--clr-body-secondary);
+    line-height: 1.5;
+    margin-bottom: 14px;
+    max-width: 60em;
+  }
+  .app-intro strong { color: var(--irpp-navy); }
+
+  /* ── Community group ── */
+  .comm-group { margin-bottom: 18px; }
+  .comm-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--irpp-navy);
+    border-bottom: 2px solid var(--irpp-navy);
+    padding-bottom: 3px;
+    margin-bottom: 8px;
+  }
+
+  /* ── Collapsible per-occupation ── */
+  details.occ {
+    border: 1px solid var(--clr-border);
+    border-radius: 4px;
+    margin-bottom: 6px;
+    overflow: hidden;
+  }
+  details.occ > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 7px 10px;
+    background: var(--clr-bg-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    user-select: none;
+  }
+  details.occ > summary::-webkit-details-marker { display: none; }
+  .occ-caret { color: var(--irpp-navy); font-size: 10px; transition: transform 0.15s; flex-shrink: 0; }
+  details.occ[open] .occ-caret { transform: rotate(90deg); }
+  .occ-name { font-weight: 700; color: var(--irpp-navy); }
+  .occ-teer { color: var(--clr-body-secondary); font-weight: 400; }
+  .occ-meta { margin-left: auto; font-size: 10.5px; color: var(--clr-body-secondary); }
+
+  /* ── Screening table ── */
+  .scr-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .scr-table thead th {
+    background: #fff;
+    color: var(--irpp-navy);
+    font-weight: 700;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 5px 6px;
+    border-bottom: 1.5px solid var(--clr-border);
+    text-align: center;
+    white-space: nowrap;
+  }
+  .scr-table thead th.l { text-align: left; }
+  .scr-table tbody td {
+    padding: 4px 6px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .scr-table tbody tr:last-child td { border-bottom: none; }
+  .scr-table tbody td.l { text-align: left; }
+  .scr-table tbody tr.extra { background: #fffaf2; }         /* deep hand-pick beyond top-10 */
+
+  .cand-noc { color: var(--clr-body-secondary); font-variant-numeric: tabular-nums; }
+  .cand-label { font-weight: 600; color: var(--clr-body); }
+  .cand-rank { font-variant-numeric: tabular-nums; color: var(--clr-body-secondary); }
+  .cand-sim  { font-variant-numeric: tabular-nums; }
+
+  /* Pass/fail dots */
+  .dot { display: inline-block; width: 13px; height: 13px; line-height: 13px; border-radius: 50%; font-size: 9px; font-weight: 700; color: #fff; }
+  .dot.pass { background: var(--irpp-teal); }
+  .dot.fail { background: var(--irpp-red); }
+  .dot.na   { background: #ccc; }
+
+  /* Classification pill */
+  .pill { display: inline-block; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; padding: 1px 6px; border-radius: 9px; }
+  .pill.handpicked { background: #eaf6f6; color: var(--irpp-teal); border: 1px solid var(--irpp-teal); }
+  .pill.viable     { background: #eef4ea; color: #4a8a3a; border: 1px solid #4a8a3a; }
+  .pick-tag { font-size: 8.5px; color: var(--clr-body-secondary); margin-left: 3px; }
+</style>
+</head>
+<body>
+<div class="dev-wrapper">
+  <div class="appendix" id="app">
+    <div class="app-intro" id="intro"></div>
+    <div id="groups"></div>
+  </div>
+</div>
+
+<script>
+  const METRIC = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
+
+  const SCREENS = [
+    { key: 'passes_teer',     label: 'TEER' },
+    { key: 'passes_earnings', label: 'Earn' },
+    { key: 'passes_local_pr', label: 'Prov' },
+    { key: 'passes_local_cd', label: 'CD' },
+    { key: 'passes_cops',     label: 'COPS' },
+    { key: 'passes_ai',       label: 'AI' },
+  ];
+
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  function dot(pass, title) {
+    const cls = pass ? 'pass' : 'fail';
+    const mark = pass ? '✓' : '✗';
+    return `<span class="dot ${cls}" title="${esc(title || '')}">${mark}</span>`;
+  }
+
+  function candRow(c) {
+    const tds = SCREENS.map(s => {
+      let title = s.label + (c[s.key] ? ' — pass' : ' — fail');
+      if (s.key === 'passes_cops' && c.cops) title = 'COPS: ' + c.cops;
+      if (s.key === 'passes_ai' && c.ai) title = 'AI: ' + c.ai;
+      return `<td>${dot(c[s.key], title)}</td>`;
+    }).join('');
+    const pick = c.pick_source ? `<span class="pick-tag">${c.pick_source}</span>` : '';
+    const cls = c.in_top10 ? '' : ' class="extra"';
+    return `<tr${cls}>
+      <td class="l"><span class="cand-noc">${c.noc}</span> <span class="cand-label">${esc(c.label)}</span></td>
+      <td>${c.teer}</td>
+      <td class="cand-sim">${c.similarity.toFixed(3)}</td>
+      <td class="cand-rank">${c.in_top10 ? '#' + c.rank : '#' + c.rank + '*'}</td>
+      ${tds}
+      <td><span class="pill ${c.classification}">${c.classification}</span>${pick}</td>
+    </tr>`;
+  }
+
+  function occBlock(src, key) {
+    const extra = src.n_extra_picks > 0 ? ` · +${src.n_extra_picks} hand-pick${src.n_extra_picks > 1 ? 's' : ''} beyond top&#8209;10` : '';
+    const headCols = SCREENS.map(s => `<th>${s.label}</th>`).join('');
+    const rows = src.candidates.map(candRow).join('');
+    return `<details class="occ" data-key="${key}">
+      <summary>
+        <span class="occ-caret">▶</span>
+        <span class="occ-name">${esc(src.source_label)}</span>
+        <span class="occ-teer">TEER ${src.source_teer}</span>
+        <span class="occ-meta">top ${src.n_top10} viable/handpicked${extra}</span>
+      </summary>
+      <table class="scr-table">
+        <thead><tr>
+          <th class="l">Candidate occupation</th>
+          <th>TEER</th><th>Sim</th><th>Rank</th>
+          ${headCols}
+          <th>Classification</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </details>`;
+  }
+
+  // Cache each metric's data so switching in place is instant and preserves
+  // whichever sections the reviewer has expanded (for side-by-side comparison).
+  const CACHE = {};
+  let currentMetric = METRIC;
+
+  function openKeys() {
+    return new Set([...document.querySelectorAll('details.occ[open]')].map(d => d.dataset.key));
+  }
+
+  function render(metric, preserveOpen) {
+    const DATA = CACHE[metric];
+    const groupsEl = document.getElementById('groups');
+    document.getElementById('intro').innerHTML =
+      `Full viability screening for every <strong>community × susceptible occupation</strong> — the top&#8209;10 ` +
+      `<strong>viable or handpicked</strong> candidates (plus any handpicks ranked deeper, shaded, marked <strong>*</strong>), ` +
+      `each against the five screens from Figure&nbsp;7’s viability panel: TEER window, earnings (≥65%), local presence ` +
+      `(provincial &amp; census-division), COPS outlook, and AI exposure. <span class="dot pass">✓</span> pass · ` +
+      `<span class="dot fail">✗</span> fail. Candidates screened out entirely (“rest”) are not shown. ` +
+      `Showing the <strong>${metric}</strong> metric — switch above to compare in place (your expanded rows stay open).`;
+
+    groupsEl.innerHTML = DATA.communities.map(comm => {
+      const occs = comm.sources.map(s => occBlock(s, comm.cd_uid + '|' + s.source_noc)).join('');
+      return `<div class="comm-group"><div class="comm-title">${esc(comm.community)}</div>${occs}</div>`;
+    }).join('');
+
+    if (preserveOpen && preserveOpen.size) {
+      document.querySelectorAll('details.occ').forEach(d => {
+        if (preserveOpen.has(d.dataset.key)) d.open = true;
+      });
+    }
+    reportHeight();
+  }
+
+  function loadAndRender(metric, preserveOpen) {
+    if (CACHE[metric]) { render(metric, preserveOpen); return; }
+    fetch(`../data/K_appendix_screening.${metric}.json`)
+      .then(r => r.json())
+      .then(DATA => { CACHE[metric] = DATA; render(metric, preserveOpen); });
+  }
+
+  // Parent tells us to switch metric in place — keep the open sections.
+  window.addEventListener('message', e => {
+    if (!e.data || e.data.type !== 'appendix-metric' || !e.data.metric) return;
+    if (e.data.metric === currentMetric) return;
+    const keep = openKeys();
+    currentMetric = e.data.metric;
+    loadAndRender(currentMetric, keep);
+  });
+
+  loadAndRender(currentMetric);
+
+  // ── Auto-size: tell the parent portal our content height, and re-report
+  //    whenever a collapsible section opens/closes so the iframe grows/shrinks.
+  function reportHeight() {
+    const h = document.documentElement.scrollHeight;
+    parent.postMessage({ type: 'appendix-height', fig: 'K_appendix_screening', height: h }, '*');
+  }
+  document.addEventListener('toggle', e => {
+    if (e.target && e.target.tagName === 'DETAILS') reportHeight();
+  }, true);
+  window.addEventListener('load', reportHeight);
+</script>
+</body>
+</html>

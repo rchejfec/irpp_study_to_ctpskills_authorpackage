@@ -174,6 +174,23 @@ ascending for reproducibility.
   exactly; the 2.04 is a data-vintage or draft artifact (the working repo never
   matched the authors' published numbers either). Directionally consistent; we
   trust our internally-verified formula.
+- **"Shared competencies" count from the full LQ matrices, not `skill_gaps.csv`.**
+  The D walkthrough's featured-gap summary needs shared/gaps/total. `skill_gaps.csv`
+  holds **only gap rows** (`source_lq < 1 AND dest_lq > 1`), so counting "shared"
+  (both LQ ≥ 1) from it is structurally always **0**. The generator now reads the
+  full `lq_{domain}.csv` matrices for the source/target pair → shared = 46, gaps =
+  7, total = 166 (was 0/7/166). Presentation-layer counts only; does not touch the
+  pipeline CSVs.
+
+---
+
+## Presentation layer (figure_data/ + dist/ portal)
+
+The pipeline decisions above are separate from **how figures port and render**.
+Presentation-layer divergences — figure re-numbering, the B column filter, the J
+Skills-only pivot, the D RCA paired bars, the new K appendix, in-place metric
+switching — are documented in **`figure_data/HANDOFF_portal.md`**, the handoff for
+the polishing agent. Start there for anything about the `dist/` portal.
 
 ---
 

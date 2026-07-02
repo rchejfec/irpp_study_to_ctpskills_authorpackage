@@ -137,6 +137,9 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     iframe.figframe { border: 0; display: block; width: 1px; height: 1px; }
+    /* Full-bleed appendix: span the column, child drives height. */
+    .figframe-wrap--bleed { display: block; width: 100%; overflow: visible; }
+    .figframe-wrap--bleed > iframe.figframe { width: 100%; }
     .figframe-caption {
       font-size: 0.72rem; color: #888; margin-top: 0.35rem;
     }
@@ -295,6 +298,13 @@
         'Note: the panel currently prints “Railway transport (#13)” — under cosine the rescued rank is <strong>#14</strong>; euclidean has no comparable mid-list rescue, so only Foundry workers (#18) applies. Worth correcting in the figure or reconciling with whichever metric ships.',
       ],
     },
+    {
+      eyebrow: 'Appendix · Full viability screening (portal only)', title: 'Every community × susceptible occupation, all screens',
+      fig: 'K_appendix_screening', metricFig: true, fullBleed: true,
+      prose: [
+        'A comprehensive companion to Figure&nbsp;7’s viability panel: for <strong>each community × susceptible occupation</strong>, the top&#8209;10 skills-similar candidates (plus any hand-picks ranked deeper) with every pass/fail screen and the final classification. Sensitive to the metric toggle. Not part of the draft — a review aid.',
+      ],
+    },
   ];
 
   // A reference card: the draft sentence (with a blank), its section, and the
@@ -354,7 +364,7 @@
     }
 
     const wrap = document.createElement('div');
-    wrap.className = 'figframe-wrap';
+    wrap.className = 'figframe-wrap' + (el.fullBleed ? ' figframe-wrap--bleed' : '');
     const frame = document.createElement('iframe');
     frame.className = 'figframe';
     frame.loading = 'lazy';
@@ -397,6 +407,14 @@
     try {
       const doc = frame.contentDocument;
       if (!doc) return;
+      // Full-bleed appendix: span the column width and let the child report its
+      // own height via postMessage (grows/shrinks as sections collapse).
+      if (frame._el && frame._el.fullBleed) {
+        frame.style.width = '100%';
+        const b = doc.querySelector('.appendix');
+        if (b) frame.style.height = Math.ceil(b.scrollHeight) + 'px';
+        return;
+      }
       doc.body.classList.add('export-mode');
       const fit = () => {
         const c = doc.querySelector('.figure-container');
@@ -417,12 +435,27 @@
     } catch (e) { /* cross-origin shouldn't happen (same origin) */ }
   }
 
+  // ── Appendix iframes report their own height (collapsible content) ──
+  window.addEventListener('message', e => {
+    if (!e.data || e.data.type !== 'appendix-height') return;
+    const frame = document.querySelector(`iframe[data-fig="${e.data.fig}"]`);
+    if (frame) frame.style.height = Math.ceil(e.data.height) + 'px';
+  });
+
   // ── Metric toggle (global, sticky) ──
   const buttons = document.querySelectorAll('.metric-toggle button');
   function setMetric(metric) {
     document.body.dataset.metric = metric;
     buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.metric === metric)));
-    metricFrames.forEach(frame => { frame.src = frameSrc(frame._el); });
+    metricFrames.forEach(frame => {
+      // Full-bleed appendix switches in place (keeps expanded rows); others
+      // reload their src to re-fetch the metric's data.
+      if (frame._el && frame._el.fullBleed) {
+        frame.contentWindow.postMessage({ type: 'appendix-metric', metric }, '*');
+      } else {
+        frame.src = frameSrc(frame._el);
+      }
+    });
     updateCtx();
   }
   buttons.forEach(b => b.addEventListener('click', () => setMetric(b.dataset.metric)));

@@ -23,6 +23,9 @@ adapted for this package):
            average gap magnitude (avg_gap).
 
 Emits: J_skills_gap_table.json  (array of communities; all 4 domains).
+  Per community × domain we emit BOTH the single most-common gap (back-compat
+  key, e.g. row["Skills"]) AND a ranked top-N list (row["Skills_top"]) so the
+  presentation layer can explore showing more than one competency.
 """
 from __future__ import annotations
 
@@ -31,6 +34,9 @@ import pandas as pd
 import lib
 
 TOP_N_PER_DOMAIN = 5
+# How many ranked competencies to emit per (community, domain) for the layer to
+# explore. The single winner is still emitted under the plain domain key.
+EMIT_TOP_N = 5
 
 # skill_gaps.csv domain keys → figure domain labels.
 DOMAIN_LABEL = {
@@ -61,10 +67,11 @@ def load_pick_gaps() -> pd.DataFrame:
     return picks[picks["rk"] <= TOP_N_PER_DOMAIN]
 
 
-def top_competency(sub: pd.DataFrame) -> dict | None:
-    """Most frequent competency in a (community, domain) slice; ties by avg gap."""
+def rank_competencies(sub: pd.DataFrame) -> list[dict]:
+    """All competencies in a (community, domain) slice, ranked by frequency then
+    avg gap magnitude. Each entry: {name, n_pairs, avg_gap}."""
     if sub.empty:
-        return None
+        return []
     agg = sub.groupby("competency").apply(
         lambda g: pd.Series({
             "n_pairs": g[["source_noc", "candidate_noc"]].drop_duplicates().shape[0],
@@ -72,12 +79,10 @@ def top_competency(sub: pd.DataFrame) -> dict | None:
         }),
         include_groups=False,
     ).sort_values(["n_pairs", "avg_gap"], ascending=False)
-    winner = agg.iloc[0]
-    return {
-        "name": agg.index[0],
-        "n_pairs": int(winner["n_pairs"]),
-        "avg_gap": round(float(winner["avg_gap"]), 2),
-    }
+    return [
+        {"name": name, "n_pairs": int(r["n_pairs"]), "avg_gap": round(float(r["avg_gap"]), 2)}
+        for name, r in agg.iterrows()
+    ]
 
 
 def generate() -> None:
@@ -88,10 +93,12 @@ def generate() -> None:
         total_pairs = cdf[["source_noc", "candidate_noc"]].drop_duplicates().shape[0]
         row = {"community": comm, "total_pairs": int(total_pairs)}
         for dkey, dlabel in DOMAIN_LABEL.items():
-            cell = top_competency(cdf[cdf["domain"] == dkey])
-            if cell is not None:
-                cell["pct"] = round(100 * cell["n_pairs"] / total_pairs) if total_pairs else 0
-            row[dlabel] = cell
+            ranked = rank_competencies(cdf[cdf["domain"] == dkey])
+            for c in ranked:
+                c["pct"] = round(100 * c["n_pairs"] / total_pairs) if total_pairs else 0
+            # Back-compat single winner + ranked top-N list for the layer.
+            row[dlabel] = ranked[0] if ranked else None
+            row[f"{dlabel}_top"] = ranked[:EMIT_TOP_N]
         rows.append(row)
 
     lib.write_json("J_skills_gap_table.json", rows)

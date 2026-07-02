@@ -26,26 +26,42 @@ import pandas as pd
 
 import lib
 
+# Top-N suitable candidates per source (both metrics). Raw similarity ranking,
+# no TEER window — the heatmap is the pre-viability "suitable" pool, so it keeps
+# skills-nearest candidates regardless of training level (TEER is a downstream
+# viability filter, Step 5). This diverges from the published figure, which drew
+# its top-10 from the TEER-windowed upskill_1 list; divergence is intentional.
 TOP_N = 10
+
+# Abbreviated census-division names, keyed by cd_uid, to match the A2 map.
+# Rule: named CDs keep their name (no province suffix); numbered divisions get
+# the province/territory abbreviation; NT is the territory itself.
+CD_ABBREV = {
+    "1003": "Div. 3, NL",       # Channel-Port aux Basques (numbered division)
+    "3557": "Algoma",           # named CD
+    "3532": "Oxford",           # named CD
+    "4615": "Div. 15, MB",      # Neepawa (numbered division)
+    "4701": "Div. 1, SK",       # Estevan (numbered division)
+    "4816": "Div. 16, AB",      # Wood Buffalo (numbered division)
+    "PR61": "NT",               # Northwest Territories
+}
 
 
 def _source_communities(valid_sources: set[str]) -> dict[str, list[str]]:
-    """source_noc -> [community names], from the source->sector mapping keys.
+    """source_noc -> [abbreviated CD names], from the source->sector mapping keys.
 
-    Restricted to sources that actually appear in the heatmap. This drops
-    94213 (Industrial painters) — carried in source_sector_mapping.json but a
-    source the authors dropped (Appendix A has 15 sources, not 16; see
-    DECISIONS.md), so it has no suitable candidates and no heatmap row.
+    Row pills use the official census-division names (abbreviated) to match the
+    A2 map, not municipality names. Restricted to sources that actually appear in
+    the heatmap — this drops 94213 (Industrial painters), a source the authors
+    dropped (Appendix A has 15 sources, not 16; see DECISIONS.md).
     """
     sm = lib.load_source_sector_map()
-    co = pd.read_csv(lib.REF_DIR / "community_occupations.csv", dtype=str)
-    cd_name = dict(zip(co["cd_uid"], co["geo_label"]))
     out: dict[str, list[str]] = defaultdict(list)
     for cd_uid, src_map in sm.items():
         for src_noc in src_map:
             if src_noc not in valid_sources:
                 continue
-            name = cd_name.get(cd_uid, cd_uid)
+            name = CD_ABBREV.get(cd_uid, cd_uid)
             if name not in out[src_noc]:
                 out[src_noc].append(name)
     return dict(out)
@@ -73,13 +89,24 @@ def generate(metric: str) -> None:
                 "avg_sim": round(float(g["similarity"].mean()), 3),
             })
 
+    # Only keep a destination family (column) if more than one source occupation
+    # reaches into it — a shared landing zone is the signal the heatmap is for.
+    # Single-source columns are dropped as noise. Author-directed.
+    src_per_col: dict[str, set[str]] = defaultdict(set)
+    for c in cells:
+        src_per_col[c["dest_noc3"]].add(c["source_noc"])
+    shared_cols = {n3 for n3, srcs in src_per_col.items() if len(srcs) > 1}
+    dropped = sorted(set(src_per_col) - shared_cols)
+    cells = [c for c in cells if c["dest_noc3"] in shared_cols]
+
     payload = {
         "heatmap": cells,
         "source_communities": _source_communities({c["source_noc"] for c in cells}),
     }
     lib.write_json(f"B_suitable_heatmap.{metric}.json", payload)
     n_src = len({c["source_noc"] for c in cells})
-    print(f"[B] {metric}: {len(cells)} cells across {n_src} source occupations")
+    print(f"[B] {metric}: {len(cells)} cells, {len(shared_cols)} shared columns "
+          f"across {n_src} sources (dropped {len(dropped)} single-source cols: {dropped})")
 
 
 if __name__ == "__main__":

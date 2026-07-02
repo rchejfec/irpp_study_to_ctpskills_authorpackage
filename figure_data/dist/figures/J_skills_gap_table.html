@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Top Skills Gaps by Community</title>
+  <link rel="stylesheet" href="../theme.css">
+  <style>
+    .figure-container {
+      width: var(--fig-width);
+      height: var(--fig-height);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .intro {
+      font-size: 8.5px;
+      color: var(--clr-body-secondary);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .intro .accent { color: var(--irpp-teal); font-weight: 700; }
+
+    .rows {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── One community row ── */
+    .comm-row {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 2px;
+      border-bottom: 1px solid var(--clr-border);
+    }
+    .comm-row:last-child { border-bottom: none; }
+
+    .comm-head {
+      width: 19%;
+      flex-shrink: 0;
+    }
+    .comm-name {
+      display: block;
+      font-weight: 700;
+      font-size: 9.5px;
+      color: var(--irpp-navy);
+      line-height: 1.25;
+    }
+    .comm-count {
+      display: block;
+      font-size: 7.5px;
+      color: var(--clr-body-secondary);
+      margin-top: 1px;
+    }
+
+    /* ── Skill cells (top-N, side by side) ── */
+    .skills {
+      flex: 1;
+      display: flex;
+      gap: 7px;
+    }
+    .skill {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .skill-name {
+      font-size: 8.5px;
+      font-weight: 600;
+      color: var(--clr-body);
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+    .skill-meta {
+      font-size: 7px;
+      color: var(--clr-body-secondary);
+      margin-bottom: 2px;
+    }
+    .track { height: 4px; border-radius: 2px; background: #e6e9ec; }
+    .bar   { height: 4px; border-radius: 2px; }
+    .skill.rank1 .bar { background: var(--irpp-teal); }
+    .skill.rank2 .bar { background: #5aa9a9; }
+    .skill.rank3 .bar { background: #93c6c6; }
+    .rank-tag {
+      display: inline-block;
+      font-size: 6.5px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--irpp-teal);
+      border-radius: 2px;
+      padding: 0 3px;
+      margin-right: 3px;
+      vertical-align: 1px;
+    }
+    .skill.rank2 .rank-tag { background: #5aa9a9; }
+    .skill.rank3 .rank-tag { background: #93c6c6; }
+  </style>
+</head>
+
+<body>
+  <div class="dev-wrapper">
+    <div class="figure-container">
+      <div class="intro" id="intro"></div>
+      <div class="rows" id="rows"></div>
+    </div>
+  </div>
+
+  <script>
+    // HTML-layer only: this view keeps the SKILLS domain and shows, per community,
+    // its own top-N Skills gaps — the training-planning view for that community.
+    // Source data (all four domains) is untouched — we read row.Skills_top.
+    const DOMAIN_TOP = 'Skills_top';
+    const N = 3; // top-N skills shown per community
+
+    fetch('../data/J_skills_gap_table.json')
+      .then(r => r.json())
+      .then(DATA => {
+        document.getElementById('intro').innerHTML =
+          `Each community's <span class="accent">top ${N} Skills-domain gaps</span> across its curated ` +
+          `susceptible-to-viable transition pairs — where local training investment would reach the most pathways. ` +
+          `Bar = share of the community's pairs with that gap.`;
+
+        let html = '';
+        DATA.forEach(row => {
+          const top = (row[DOMAIN_TOP] || []).slice(0, N);
+          const skills = top.map((c, i) => `
+            <div class="skill rank${i + 1}">
+              <div class="skill-name"><span class="rank-tag">${i + 1}</span>${c.name}</div>
+              <div class="skill-meta">${c.n_pairs} of ${row.total_pairs} pairs · avg gap ${c.avg_gap}</div>
+              <div class="track"><div class="bar" style="width:${Math.round(c.pct)}%"></div></div>
+            </div>`).join('');
+          html += `
+            <div class="comm-row">
+              <div class="comm-head">
+                <span class="comm-name">${row.community}</span>
+                <span class="comm-count">${row.total_pairs} transitions</span>
+              </div>
+              <div class="skills">${skills}</div>
+            </div>`;
+        });
+        document.getElementById('rows').innerHTML = html;
+      });
+  </script>
+</body>
+
+</html>

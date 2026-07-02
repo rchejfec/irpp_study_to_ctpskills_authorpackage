@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>OaSIS Competencies Table (v2)</title>
+  <!-- REVISION (2026-06-30): Replaced "Scales of measurement" column with
+       example competencies + condensed scale ranges (0–N). Sourced from
+       OaSIS 2023 v1.0 data. Original version preserved as G_oasis_competencies.html. -->
+  <link rel="stylesheet" href="../theme.css">
+  <style>
+    .figure-container {
+      width: var(--fig-width);
+      height: auto;
+      /* Tables: fixed width, content-driven height */
+      padding: 16px 24px;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .table-wrap {
+      flex: 1;
+      overflow: hidden;
+      border: 1px solid var(--clr-border);
+      border-radius: 4px;
+    }
+
+    .oasis-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+      text-align: center;
+    }
+
+    .oasis-table th {
+      background: var(--irpp-navy);
+      color: #ffffff;
+      padding: 8px 12px;
+      font-weight: 600;
+      font-size: 10.5px;
+      letter-spacing: 0.3px;
+      border-bottom: 2px solid var(--clr-border);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .oasis-table th:last-child {
+      border-right: none;
+    }
+
+    .oasis-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--clr-border);
+      border-right: 1px solid var(--clr-border);
+      color: var(--clr-body);
+      vertical-align: middle;
+    }
+
+    .oasis-table td:last-child {
+      border-right: none;
+    }
+
+    .oasis-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .col-category {
+      font-weight: 600;
+      background: var(--clr-bg-muted);
+      width: 18%;
+    }
+
+    .col-number {
+      font-weight: 700;
+      width: 12%;
+    }
+
+    .col-examples {
+      text-align: left;
+      width: 70%;
+      line-height: 1.5;
+    }
+
+    .example-names {
+      color: var(--clr-body);
+    }
+
+    .scale-note {
+      color: var(--clr-body-secondary);
+      font-style: italic;
+      margin-left: 2px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dev-wrapper">
+    <div class="figure-container">
+      <div class="table-wrap">
+        <table class="oasis-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Count</th>
+              <th>Examples and measurement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-category">Skills</td>
+              <td class="col-number">33</td>
+              <td class="col-examples">
+                <span class="example-names">Reading Comprehension, Critical Thinking, Equipment and Tool Selection</span>
+                <span class="scale-note">— rated 0–5</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-category">Knowledge</td>
+              <td class="col-number">44</td>
+              <td class="col-examples">
+                <span class="example-names">Building and Construction, Public Safety and Security, Economics</span>
+                <span class="scale-note">— rated 0–3</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-category">Abilities</td>
+              <td class="col-number">49</td>
+              <td class="col-examples">
+                <span class="example-names">Deductive Reasoning, Manual Dexterity, Speech Clarity</span>
+                <span class="scale-note">— rated 0–5</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="col-category">Work Activities</td>
+              <td class="col-number">40</td>
+              <td class="col-examples">
+                <span class="example-names">Getting Information, Making Decisions, Training and Teaching</span>
+                <span class="scale-note">— rated 0–5</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

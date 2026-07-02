@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TO26 — Figure review &amp; fact-check</title>
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    :root { --page-max: 900px; }
+    body {
+      margin: 0;
+      background: #f4f5f7;
+      color: var(--clr-body, #1a1a2e);
+      font-family: var(--font-primary, system-ui, sans-serif);
+    }
+
+    /* ── Global sticky metric switch ── */
+    .metric-bar {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem;
+      padding: 0.6rem 1.2rem;
+      background: var(--irpp-navy, #0f2c46);
+      color: #fff;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.18);
+      transition: padding 0.18s ease;
+    }
+    .metric-bar.compact { padding: 0.35rem 1.2rem; }
+    .metric-bar__title { font-weight: 700; font-size: 0.95rem; letter-spacing: 0.02em; }
+    .metric-bar__ctx { font-size: 0.72rem; opacity: 0.7; margin-left: 0.6rem; font-weight: 400; }
+    .metric-toggle {
+      display: inline-flex; border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 999px; overflow: hidden; font-size: 0.8rem;
+    }
+    .metric-toggle button {
+      appearance: none; border: 0; background: transparent; color: #fff;
+      padding: 0.35rem 0.95rem; cursor: pointer; font: inherit; font-weight: 600;
+      transition: background 0.15s ease;
+    }
+    .metric-toggle button[aria-pressed="true"] { background: #fff; color: var(--irpp-navy, #0f2c46); }
+    .metric-toggle button:not([aria-pressed="true"]):hover { background: rgba(255,255,255,0.12); }
+
+    /* ── Page frame ── */
+    header.intro { max-width: var(--page-max); margin: 2rem auto 1rem; padding: 0 1.2rem; }
+    header.intro h1 { font-size: 1.5rem; margin: 0 0 0.4rem; color: var(--irpp-navy, #0f2c46); }
+    header.intro p  { font-size: 0.9rem; line-height: 1.55; color: #444; margin: 0.3rem 0; }
+    .blank-inline {
+      font-weight: 700; color: var(--irpp-navy, #0f2c46);
+      background: #fff2cc; padding: 0 0.3em; border-radius: 3px;
+    }
+    main { max-width: var(--page-max); margin: 0 auto 4rem; padding: 0 1.2rem; }
+
+    /* ── Study element (fact-check + figure) ── */
+    .element { margin: 2.4rem 0; scroll-margin-top: 4rem; }
+    .element__eyebrow {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.09em; color: var(--irpp-teal, #2a8a8a); margin-bottom: 0.15rem;
+    }
+    .element__title { font-size: 1.05rem; font-weight: 700; margin: 0 0 0.9rem; color: var(--irpp-navy, #0f2c46); }
+
+    /* ── Metric reference cards (values that change between versions) ── */
+    .refs { margin: 0 0 1rem; }
+    .refcard {
+      background: #fff; border: 1px solid #e2e5e9; border-radius: 5px;
+      padding: 0.8rem 0.95rem; margin-bottom: 0.6rem;
+      border-left: 3px solid var(--irpp-teal, #2a8a8a);
+    }
+    .refcard__section {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #8a94a0; margin-bottom: 0.45rem;
+    }
+    .refcard__draft {
+      margin: 0 0 0.7rem; padding: 0; border: 0;
+      font-size: 0.9rem; line-height: 1.55; color: #333; font-style: italic;
+    }
+    .refcard__draft .blank {
+      font-style: normal; font-weight: 700; color: var(--irpp-navy, #0f2c46);
+      background: #fff2cc; padding: 0 0.35em; border-radius: 3px;
+      letter-spacing: 0.05em;
+    }
+    .refcard__values { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .metricval {
+      flex: 1 1 0; min-width: 150px;
+      display: flex; flex-direction: column; gap: 0.15rem;
+      padding: 0.55rem 0.7rem; border-radius: 4px;
+      border: 1px solid #e2e5e9; background: #fafbfc;
+      transition: all 0.15s ease;
+    }
+    .metricval__label {
+      font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #99a2ad;
+    }
+    .metricval__num { font-size: 1.05rem; font-weight: 700; color: #333; }
+    /* Highlight the column matching the active metric. */
+    body[data-metric="cosine"]    .metricval--cosine,
+    body[data-metric="euclidean"] .metricval--euclidean {
+      border-color: var(--irpp-teal, #2a8a8a);
+      background: #eaf6f6;
+      box-shadow: 0 0 0 1px var(--irpp-teal, #2a8a8a) inset;
+    }
+    body[data-metric="cosine"]    .metricval--cosine   .metricval__label,
+    body[data-metric="euclidean"] .metricval--euclidean .metricval__label { color: var(--irpp-teal, #2a8a8a); }
+    body[data-metric="cosine"]    .metricval--cosine   .metricval__num,
+    body[data-metric="euclidean"] .metricval--euclidean .metricval__num { color: var(--irpp-navy, #0f2c46); }
+    .refcard__note {
+      margin-top: 0.6rem; font-size: 0.78rem; line-height: 1.5; color: #667;
+    }
+
+    /* ── Rescued draft prose (text that reads off the figure) ── */
+    .prose {
+      margin: 0.9rem 0 0; padding: 0.85rem 1rem;
+      background: #fff; border: 1px solid #e2e5e9; border-radius: 5px;
+      border-left: 3px solid #b9c2cc;
+      max-width: 640px;
+    }
+    .prose__label {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #8a94a0; margin-bottom: 0.5rem;
+    }
+    .prose p { margin: 0 0 0.6rem; font-size: 0.86rem; line-height: 1.6; color: #333; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose em { color: var(--irpp-teal, #2a8a8a); font-style: normal; font-weight: 600; }
+    /* Metric-specific prose: show only the block matching the active metric. */
+    .metric-only { display: none; }
+    body[data-metric="cosine"]    .metric-only--cosine,
+    body[data-metric="euclidean"] .metric-only--euclidean { display: block; }
+    .metric-only__tag {
+      display: inline-block; font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--irpp-teal, #2a8a8a); border: 1px solid var(--irpp-teal, #2a8a8a);
+      border-radius: 3px; padding: 0 0.3rem; margin-right: 0.4rem; vertical-align: 1px;
+    }
+
+    /* ── Native-size figure iframe (unpadded, no duplication) ── */
+    .figframe-wrap {
+      background: #fff; border: 1px solid #e2e5e9; border-radius: 4px;
+      padding: 0; overflow: auto; display: inline-block; max-width: 100%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    iframe.figframe { border: 0; display: block; width: 1px; height: 1px; }
+    .figframe-caption {
+      font-size: 0.72rem; color: #888; margin-top: 0.35rem;
+    }
+
+    /* ── Per-figure hand-picks toggle (author vs user) ── */
+    .pick-toggle {
+      display: flex; align-items: center; gap: 0.6rem; margin: 0 0 0.75rem;
+    }
+    .pick-toggle__label {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #8a94a0;
+    }
+    .pick-toggle__group {
+      display: inline-flex; border: 1px solid #cfd6dd; border-radius: 999px; overflow: hidden;
+    }
+    .pick-toggle__group button {
+      appearance: none; border: 0; background: #fff; color: #555;
+      padding: 0.3rem 0.85rem; cursor: pointer; font: inherit; font-size: 0.78rem; font-weight: 600;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .pick-toggle__group button[aria-pressed="true"] {
+      background: var(--irpp-navy, #0f2c46); color: #fff;
+    }
+    .pick-toggle__group button:not([aria-pressed="true"]):hover { background: #eef1f4; }
+    .metric-tag {
+      display: none; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--irpp-teal, #2a8a8a);
+    }
+    .per-metric .metric-tag { display: inline; }
+  </style>
+</head>
+<body data-metric="cosine" data-pick="author">
+
+  <div class="metric-bar" id="metricBar">
+    <div>
+      <span class="metric-bar__title">TO26 · Figure review &amp; fact-check</span>
+      <span class="metric-bar__ctx" id="metricCtx"></span>
+    </div>
+    <div class="metric-toggle" role="group" aria-label="Similarity metric">
+      <button data-metric="cosine" aria-pressed="true">Cosine</button>
+      <button data-metric="euclidean" aria-pressed="false">Euclidean</button>
+    </div>
+  </div>
+
+  <header class="intro">
+    <h1>Figure &amp; value reference</h1>
+    <p>The review draft leaves <span class="blank-inline">____</span> blanks where a number depends on the
+       similarity metric. This page fills those blanks: each figure is rendered live from our pipeline
+       output (<code>figure_data/out/</code>), in study order, and the values that <strong>change between
+       metrics</strong> are listed alongside the draft sentence they belong in.</p>
+    <p>Use the sticky switch to compare
+       <strong>cosine</strong> (the authors' stated metric) against
+       <strong>euclidean</strong> (our per-source-normalized addition). The active column is highlighted, and
+       every metric-dependent figure re-renders. Figures with no reference card have no metric-varying values.</p>
+  </header>
+
+  <main id="main"><!-- elements injected by JS --></main>
+
+  <script>
+  // ── Study-ordered elements: figure ↔ study label, plus interleaved fact-checks ──
+  // metricFig=true → iframe reloads on metric toggle (E/B/D/F2).
+  const ELEMENTS = [
+    {
+      eyebrow: 'Figure 1 · The approach follows four steps', title: 'The approach follows four steps',
+      fig: 'C2_summary', metricFig: false,
+    },
+    {
+      eyebrow: 'Figure 2 · Susceptible communities and occupations', title: 'Seven communities across Canada',
+      fig: 'A2_map', metricFig: false,
+    },
+    {
+      eyebrow: 'Table 1 · Canada’s Occupational and Skills Information System (OaSIS)', title: 'Four OaSIS categories covering 166 competencies',
+      fig: 'G2_oasis_competencies', metricFig: false,
+    },
+    {
+      eyebrow: 'Figure 3 · Measuring proximity between occupations', title: 'Skills-similar alternatives spread across occupation families',
+      fig: 'B_suitable_heatmap', metricFig: true,
+      refs: [
+        {
+          section: 'Measuring proximity between occupations',
+          draft: 'Because OaSIS already provides a balanced set of competencies, each domain was equally weighted. Proximity between occupations was calculated as simple, unweighted ____.',
+          values: { cosine: 'cosine similarity', euclidean: 'Euclidean distances' },
+          note: 'The draft names the metric here. Cosine is the authors’ stated primary metric and is comparable across sources (absolute [0,1]); euclidean distance is our per-source min-max–normalized addition. Choose the phrasing that matches the version being published.',
+        },
+        {
+          section: 'Measuring proximity between occupations',
+          draft: 'the susceptible occupation of heavy equipment operator had a high level of similarity with the occupation of crane operator … an overall skills proximity score of ____.',
+          values: { cosine: '0.97', euclidean: '1.00' },
+          note: 'Draft says 0.99, which matches neither metric exactly. Cosine 73400→72500 = 0.9702; euclidean = 1.0000 (nearest candidate, per-source min-max).',
+        },
+      ],
+    },
+    {
+      eyebrow: 'Figure 4 · Viable occupations: filtering for local viability', title: 'Successive filters narrow the pool to locally viable alternatives',
+      fig: 'F2_filtering', metricFig: true,
+      refs: [
+        {
+          section: 'Viable occupations: filtering for local viability',
+          draft: 'Starting from ranked suitable occupations, successive filters (TEER → top-30 → earnings → endorsement) narrow the pool to ____ viable alternatives within the top-30 shown for material handlers in Oxford.',
+          values: { cosine: '26 viable', euclidean: '26 viable' },
+          note: 'Scoped to the top-30 the figure actually plots, with endorsed picks counted as viable. Of the 30 shown: 26 viable (4 endorsed picks + 22 other viable) + 4 filtered/not-viable. Lands at 26 under both metrics (the top-30 sets differ slightly, but the tally matches). Earlier drafts said 104 (cosine) / 120 (euclidean) — that was viable across the full 172-candidate pool, not the top-30 shown.',
+        },
+      ],
+    },
+    {
+      eyebrow: 'Table 2 · Viable occupations by community', title: 'Viable alternatives for Estevan, at comparable & higher training levels',
+      fig: 'E_viable_table', metricFig: true, pickFig: true,
+      refs: [
+        {
+          section: 'Viable occupations by community',
+          draft: 'For each susceptible occupation in Estevan, comparable-TEER and TEER-relaxed viable alternatives, plus additional candidates grouped by NOC family (“other in top 10”), vary by metric and by whose hand-picks are shown.',
+          values: { cosine: 'cosine ranks / groupings', euclidean: 'euclidean ranks / groupings' },
+          note: 'Two independent levers on this table. Metric (global switch): changes the ranks and the "other viable in top 10" groupings. Hand-picks (toggle below): the author version shows only author picks as hand-picks; the user version shows only user picks. The non-shown endorser’s picks are not dropped — they fall into "other viable" if still within the top-10 window.',
+        },
+      ],
+    },
+    {
+      eyebrow: 'Figure 5 · Major skills gaps between susceptible and viable occupations', title: 'RCA pinpoints where each pathway requires the most upskilling',
+      fig: 'I_skills_gap_bars', metricFig: false,
+      prose: [
+        'The first example shows that <strong>material handlers</strong> would likely need to augment their skills in <em>quality control testing</em> and <em>management of material resources</em>, in particular, to transition to <strong>construction trades helpers and labourers</strong>. Material handlers already require a certain amount of these skills (the hatched portion of the columns), but construction trades helpers and labourers rely on them more intensely. Here both occupations sit at <strong>TEER 5</strong> — a similar level of education and training.',
+        'The second example shows that <strong>transport truck drivers</strong> (TEER 3) typically require less training than <strong>crane operators</strong> (TEER 2). A transition would not only need a TEER upgrade but also more intensive expertise in <em>digital literacy</em> and <em>management of personnel resources</em>.',
+        'In both examples, other job-specific requirements beyond TEER and occupation-specific skills matter too — even once skills gaps are closed, additional licences and certifications may be required (e.g. a crane operator certification).',
+      ],
+    },
+    {
+      eyebrow: 'Figure 6 · Major skills gaps: priorities for local training', title: 'Each community’s top Skills-domain gaps',
+      fig: 'J_skills_gap_table', metricFig: false,
+      prose: [
+        '<strong>Draft revision needed.</strong> This figure was narrowed to the <em>Skills</em> domain and now shows each community’s <strong>top three</strong> Skills gaps rather than a single top gap per domain — reframing it from cross-community recurrence to <em>where local training investment would reach the most transition pathways</em>. The draft paragraph (which cited Knowledge and Work-Activity examples and framed it as gaps that “recur across communities”) should be replaced. Suggested text:',
+        '<em>Zooming in on the Skills domain, the analysis points to clear local training priorities. In five of the seven communities — Algoma, Estevan, Neepawa, the Northwest Territories and Wood Buffalo — <strong>Product Design</strong> (a Skill related to designing or adapting equipment and technology) is the single most common gap across curated transition pairs. The remaining two lead elsewhere: <strong>Management of Material Resources</strong> in Channel-Port aux Basques and <strong>Quality Control Testing</strong> in Oxford. Because the figure ranks each community’s own top gaps, it reads as a shortlist for place-based training investment: the competencies that, if built locally, would unlock the most viable pathways for that community’s workers.</em>',
+        'Note the count differs from the earlier draft’s “six of seven,” which combined all four OaSIS domains; restricted to Skills, Product Design is the top gap in <strong>five of seven</strong> communities.',
+      ],
+    },
+    {
+      eyebrow: 'Figure 7 · Material handlers: an illustrative example', title: 'Sample career transition pathways for material handlers in Oxford',
+      fig: 'D_walkthrough', metricFig: true,
+      refs: [
+        {
+          section: 'Measuring proximity between occupations (same value, shown on the walkthrough)',
+          draft: 'heavy equipment operator … crane operator … overall skills proximity score of ____.',
+          values: { cosine: '0.97', euclidean: '1.00' },
+          note: 'Same 0.99 draft value as Figure 3; the walkthrough surfaces the per-candidate similarity. Cosine 0.9702, euclidean 1.0000.',
+        },
+      ],
+      prose: [
+        'The figure’s <strong>Assessment notes</strong> panel (bottom right) is hardcoded, not data-driven — so the occupations it names must be listed here per metric, because the candidate mix shown differs between cosine and euclidean.',
+        '<span class="metric-only metric-only--cosine"><span class="metric-only__tag">Cosine</span>' +
+          '<strong>Excluded on quality/outlook</strong> (few provincial workers, weak demand, or in a susceptible sector): Longshore workers, Water transport deck & engine-room crew, Oil and gas drilling servicing labourers. ' +
+          '<strong>Below the 65% earnings floor</strong>: Chain saw and skidder operators, Labourers in textile processing. ' +
+          '<strong>Rescued further down the list</strong> (skill similarity still ≥ 0.93): Railway and motor transport labourers (#14), Foundry workers (#28).</span>' +
+        '<span class="metric-only metric-only--euclidean"><span class="metric-only__tag">Euclidean</span>' +
+          '<strong>Excluded on quality/outlook</strong> (few provincial workers, weak demand, or in a susceptible sector): Labourers in mineral and metal processing, Labourers in food and beverage processing. ' +
+          '<strong>Below the 65% earnings floor</strong>: Labourers in textile processing, Labourers in chemical products processing. ' +
+          '<strong>Rescued further down the list</strong> (skill similarity still high): Foundry workers (#18).</span>',
+        'Note: the panel currently prints “Railway transport (#13)” — under cosine the rescued rank is <strong>#14</strong>; euclidean has no comparable mid-list rescue, so only Foundry workers (#18) applies. Worth correcting in the figure or reconciling with whichever metric ships.',
+      ],
+    },
+  ];
+
+  // A reference card: the draft sentence (with a blank), its section, and the
+  // cosine vs euclidean values side by side. The active metric is highlighted.
+  function refCard(r) {
+    const card = document.createElement('div');
+    card.className = 'refcard';
+    const draftHtml = r.draft.replace(/____/g, '<span class="blank">____</span>');
+    card.innerHTML =
+      `<div class="refcard__section">${r.section}</div>` +
+      `<blockquote class="refcard__draft">${draftHtml}</blockquote>` +
+      `<div class="refcard__values">` +
+        `<div class="metricval metricval--cosine" data-metric="cosine">` +
+          `<span class="metricval__label">Cosine</span>` +
+          `<span class="metricval__num">${r.values.cosine}</span></div>` +
+        `<div class="metricval metricval--euclidean" data-metric="euclidean">` +
+          `<span class="metricval__label">Euclidean</span>` +
+          `<span class="metricval__num">${r.values.euclidean}</span></div>` +
+      `</div>` +
+      (r.note ? `<div class="refcard__note">${r.note}</div>` : '');
+    return card;
+  }
+
+  const main = document.getElementById('main');
+  const metricFrames = []; // {frame, name}
+
+  const pickFrames = []; // frames that carry a ?pick= dimension
+
+  ELEMENTS.forEach(el => {
+    const sec = document.createElement('section');
+    sec.className = 'element' + (el.metricFig ? ' per-metric' : '');
+    sec.id = el.fig;
+
+    sec.innerHTML =
+      `<div class="element__eyebrow">${el.eyebrow}</div>` +
+      `<h2 class="element__title">${el.title} ` +
+      `<span class="metric-tag">· per-metric</span></h2>`;
+
+    if (el.refs && el.refs.length) {
+      const refs = document.createElement('div');
+      refs.className = 'refs';
+      el.refs.forEach(r => refs.appendChild(refCard(r)));
+      sec.appendChild(refs);
+    }
+
+    // Per-figure hand-picks toggle (author vs user), for tables that split picks.
+    if (el.pickFig) {
+      const pt = document.createElement('div');
+      pt.className = 'pick-toggle';
+      pt.innerHTML =
+        `<span class="pick-toggle__label">Hand-picks:</span>` +
+        `<div class="pick-toggle__group" role="group" aria-label="Hand-pick source">` +
+          `<button data-pick="author" aria-pressed="true">Authors only</button>` +
+          `<button data-pick="user" aria-pressed="false">Users only</button>` +
+        `</div>`;
+      sec.appendChild(pt);
+    }
+
+    const wrap = document.createElement('div');
+    wrap.className = 'figframe-wrap';
+    const frame = document.createElement('iframe');
+    frame.className = 'figframe';
+    frame.loading = 'lazy';
+    frame.title = el.title;
+    frame.dataset.fig = el.fig;
+    frame.dataset.metricFig = el.metricFig ? '1' : '0';
+    frame.dataset.pickFig = el.pickFig ? '1' : '0';
+    frame._el = el;
+    frame.src = frameSrc(el);
+    frame.addEventListener('load', () => sizeFrame(frame));
+    wrap.appendChild(frame);
+    sec.appendChild(wrap);
+
+    // Draft prose that reads off the figure (occupations, competencies, numbers),
+    // rescued from the study so the authors can slot it back in.
+    if (el.prose && el.prose.length) {
+      const pr = document.createElement('div');
+      pr.className = 'prose';
+      pr.innerHTML = `<div class="prose__label">From the draft — text referencing this figure</div>` +
+        el.prose.map(p => `<p>${p}</p>`).join('');
+      sec.appendChild(pr);
+    }
+
+    if (el.metricFig) metricFrames.push(frame);
+    if (el.pickFig) pickFrames.push(frame);
+    main.appendChild(sec);
+  });
+
+  // Build an iframe src from the element flags and current global state.
+  function frameSrc(el) {
+    const q = [];
+    if (el.metricFig) q.push(`metric=${document.body.dataset.metric}`);
+    if (el.pickFig)   q.push(`pick=${document.body.dataset.pick}`);
+    return `figures/${el.fig}.html` + (q.length ? `?${q.join('&')}` : '');
+  }
+
+  // Strip the dev wrapper (export-mode) and size the iframe to the figure's
+  // native .figure-container — no padding, no scrollbars, no duplication.
+  function sizeFrame(frame) {
+    try {
+      const doc = frame.contentDocument;
+      if (!doc) return;
+      doc.body.classList.add('export-mode');
+      const fit = () => {
+        const c = doc.querySelector('.figure-container');
+        if (!c) return;
+        // Give the iframe a roomy viewport first so the fixed-width figure
+        // lays out at its natural size, then measure and shrink-to-fit.
+        frame.style.width = '1400px';
+        frame.style.height = '1200px';
+        const r = c.getBoundingClientRect();
+        frame.style.width = Math.ceil(r.width) + 'px';
+        frame.style.height = Math.ceil(r.height) + 'px';
+      };
+      fit();
+      // Re-fit after fonts/async renders settle.
+      if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(fit);
+      setTimeout(fit, 350);
+      setTimeout(fit, 800);
+    } catch (e) { /* cross-origin shouldn't happen (same origin) */ }
+  }
+
+  // ── Metric toggle (global, sticky) ──
+  const buttons = document.querySelectorAll('.metric-toggle button');
+  function setMetric(metric) {
+    document.body.dataset.metric = metric;
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.metric === metric)));
+    metricFrames.forEach(frame => { frame.src = frameSrc(frame._el); });
+    updateCtx();
+  }
+  buttons.forEach(b => b.addEventListener('click', () => setMetric(b.dataset.metric)));
+
+  // ── Hand-picks toggle (per-figure) ──
+  document.body.dataset.pick = 'author';
+  document.querySelectorAll('.pick-toggle button').forEach(b => {
+    b.addEventListener('click', () => {
+      const pick = b.dataset.pick;
+      document.body.dataset.pick = pick;
+      document.querySelectorAll('.pick-toggle button').forEach(x =>
+        x.setAttribute('aria-pressed', String(x.dataset.pick === pick)));
+      pickFrames.forEach(frame => { frame.src = frameSrc(frame._el); });
+    });
+  });
+
+  // ── Scroll-aware: compact bar + which figure is in view ──
+  const bar = document.getElementById('metricBar');
+  const ctx = document.getElementById('metricCtx');
+  const sections = [...document.querySelectorAll('.element')];
+  function updateCtx() {
+    const metric = document.body.dataset.metric;
+    const mid = window.innerHeight / 2;
+    let current = sections[0];
+    for (const s of sections) {
+      if (s.getBoundingClientRect().top <= mid) current = s;
+    }
+    const isPer = current && current.classList.contains('per-metric');
+    ctx.textContent = current
+      ? `${current.querySelector('.element__title').firstChild.textContent.trim().slice(0, 42)}`
+        + (isPer ? ` — showing ${metric}` : ' — metric-independent')
+      : '';
+  }
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      bar.classList.toggle('compact', window.scrollY > 40);
+      updateCtx();
+      ticking = false;
+    });
+  }, { passive: true });
+
+  updateCtx();
+  </script>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Walkthrough Figure — Oxford, ON</title>
+  <link rel="stylesheet" href="../theme.css">
+  <style>
+    /* ── Figure-specific layout ── */
+    .figure-container {
+      width: var(--fig-width);
+      height: var(--fig-height);
+      padding: 0;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── 3-column structure ── */
+    .cols-left {
+      flex: 6;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      min-width: 0;
+    }
+
+    .col-right {
+      flex: 3;
+      border-left: 1px solid var(--clr-border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .col-right>.cell-rca {
+      flex: 0 0 auto;
+    }
+
+    .col-right>.cell-qual {
+      flex: 2;
+    }
+
+    /* ── R1C1: Source card ── */
+    .cell-source {
+      grid-column: 1;
+      grid-row: 1;
+      background: #faf6f0;
+      border-bottom: 1px solid #e0ddd6;
+      border-right: 1px solid var(--clr-border);
+      padding: 8px 10px 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .src-comm {
+      font-size: 7px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #999;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .src-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--irpp-navy);
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    .src-detail {
+      font-size: 8px;
+      color: #999;
+      line-height: 1.6;
+    }
+
+    .src-detail span {
+      color: #444;
+      font-weight: 500;
+    }
+
+    /* ── R2C1: Similarity bars ── */
+    .cell-similar {
+      grid-column: 1;
+      grid-row: 2;
+      border-right: 1px solid var(--clr-border);
+      padding: 4px 3px 4px 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .col-title {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--irpp-navy);
+      font-weight: 700;
+      margin-bottom: 2px;
+      margin-left: 8px;
+      flex-shrink: 0;
+    }
+
+    .col-subtitle {
+      font-size: 7.5px;
+      color: #aaa;
+      margin-bottom: 2px;
+      line-height: 1.3;
+      margin-left: 8px;
+      flex-shrink: 0;
+    }
+
+    .sim-spacer {
+      height: 4px;
+      flex-shrink: 0;
+    }
+
+    .sim-rows {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .sim-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex: 1;
+      position: relative;
+      min-height: 0;
+    }
+
+    .sim-rank {
+      width: 14px;
+      font-size: 8px;
+      color: #999;
+      text-align: right;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-right: 2px;
+    }
+
+    .sim-bar-wrap {
+      flex: 1;
+      height: 80%;
+      position: relative;
+      min-width: 0;
+    }
+
+    .sim-bar {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--irpp-navy-light);
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .sim-label {
+      font-size: 8px;
+      color: var(--clr-body);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── R1C2: Context ── */
+    .cell-context {
+      grid-column: 2;
+      grid-row: 1;
+      border-bottom: 1px solid var(--clr-border);
+      padding: 8px 10px 6px;
+      background: #fafaf8;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .ctx-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--clr-body);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .ctx-body {
+      font-size: 8px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* ── R2C2: Viability heatmap ── */
+    .cell-filtered {
+      grid-column: 2;
+      grid-row: 2;
+      padding: 4px 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hm-grid {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .hm-header {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      height: 14px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .hm-h-col {
+      font-size: 6.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #999;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .hm-data-rows {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .hm-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      flex: 1;
+      min-height: 0;
+      border-bottom: 1px solid #f2f2f2;
+    }
+
+    .hm-row:last-child {
+      border-bottom: none;
+    }
+
+    .hm-row.hm-pass {
+      background: #f0faf2;
+    }
+
+    .hm-dot {
+      text-align: center;
+      font-size: 10px;
+    }
+
+    .hm-ok {
+      color: #27ae60;
+    }
+
+    .hm-fail {
+      color: #e74c3c;
+    }
+
+    .hm-warn {
+      color: #f39c12;
+    }
+
+    /* ── R1C3: Skill gap preview ── */
+    .cell-rca {
+      padding: 8px 10px 6px;
+      background: #fff;
+      border-bottom: 1px solid var(--clr-border);
+      overflow: hidden;
+    }
+
+    .rca-title {
+      font-size: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--irpp-navy);
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .rca-pair {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--clr-body);
+      margin-bottom: 3px;
+      line-height: 1.3;
+    }
+
+    /* Header names carry the bar colours (source red, target teal) — this is the
+       legend, mirroring the I chart, so no separate swatch key is needed. */
+    .rca-pair .from {
+      color: var(--irpp-red);
+      font-weight: 700;
+    }
+
+    .rca-pair .to {
+      color: var(--irpp-teal);
+      font-weight: 700;
+    }
+
+    .rca-hint {
+      font-size: 8px;
+      color: #aaa;
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+
+    .rca-bars {
+      margin-top: 4px;
+    }
+
+    /* One competency block: label, then paired source/target bars on a shared
+       LQ scale with a 1.0 reference line (mirrors the I skills-gap chart). */
+    .rca-bar-row {
+      margin-bottom: 5px;
+    }
+
+    .rca-bar-label {
+      font-size: 7.5px;
+      color: #666;
+      margin-bottom: 1px;
+      line-height: 1.15;
+    }
+
+    /* Plot area holds both bars + the RCA=1.0 reference line. */
+    .rca-plot {
+      position: relative;
+    }
+
+    .rca-ref {
+      position: absolute;
+      top: -1px;
+      bottom: -1px;
+      width: 0;
+      border-left: 1px dashed #b9b9b9;
+      z-index: 2;
+    }
+
+    .rca-bar {
+      height: 5px;
+      border-radius: 1px;
+      margin-bottom: 1px;
+      min-width: 1px;
+    }
+    .rca-bar.src { background: var(--irpp-red); }
+    .rca-bar.tgt { background: var(--irpp-teal); }
+
+
+    /* ── R2C3: Assessment notes ── */
+    .cell-qual {
+      padding: 6px 10px 4px;
+      background: #faf9f7;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .qual-title {
+      font-size: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--irpp-navy);
+      font-weight: 700;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+
+    .qual-item {
+      margin-bottom: 3px;
+      padding-left: 6px;
+      border-left: 2px solid #ddd;
+      flex-shrink: 0;
+    }
+
+    .qual-item.up {
+      border-left-color: #27ae60;
+    }
+
+    .qual-item.down {
+      border-left-color: #e74c3c;
+    }
+
+    .qual-occ {
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--clr-body);
+    }
+
+    .qual-explain {
+      font-size: 7.5px;
+      color: #888;
+      line-height: 1.35;
+      margin-top: 1px;
+    }
+
+    .qual-arrow {
+      font-size: 7px;
+      margin-right: 2px;
+    }
+
+    .qual-arrow.up {
+      color: #27ae60;
+    }
+
+    .qual-arrow.down {
+      color: #e74c3c;
+    }
+
+    .qual-callout {
+      margin-top: auto;
+      padding: 5px 8px;
+      background: var(--clr-bg-muted);
+      border-radius: 3px;
+      border-left: 3px solid var(--irpp-navy);
+    }
+
+    .qual-callout p {
+      font-size: 7.5px;
+      color: #444;
+      line-height: 1.5;
+      font-style: italic;
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dev-wrapper">
+    <div class="figure-container">
+      <div class="cols-left" id="grid-left"></div>
+      <div class="col-right" id="grid-right"></div>
+    </div>
+  </div>
+
+  <script>
+    const METRIC = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
+
+    function buildWalkthrough(t) {
+      const cands = t.candidates;
+      const sl = t.source_lmi || {};
+      const barW = sim => ((sim - 0.70) / 0.30) * 100;
+
+      function fmt$(v) { return v != null ? '$' + Math.round(v).toLocaleString() : '\u2014'; }
+      function fmtW(v) { return v != null ? Math.round(v).toLocaleString() : '\u2014'; }
+      function trunc(s, n) { return s.length > n ? s.slice(0, n - 1) + '\u2026' : s; }
+
+      // Derive viability signals
+      const srcInc = sl.pr_income || 0;
+      function deriveFilters(c) {
+        const teer = c.teer <= t.source_teer ? 'green'
+          : c.teer === t.source_teer + 1 ? 'yellow' : 'red';
+        const wRatio = srcInc > 0 ? c.pr_income / srcInc : 0;
+        const wages = wRatio >= 1.0 ? 'green'
+          : wRatio >= 0.65 ? 'yellow' : 'red';
+        const copsRaw = (c.cops || '').toLowerCase();
+        const cops = copsRaw.includes('surplus') ? 'red' : 'green';
+        const aiRaw = (c.ai || '').toLowerCase();
+        const ai = aiRaw.includes('high') ? 'red' : 'green';
+        const qual = c.qual_signal || 'green';
+        return { teer, wages, cops, ai, qual };
+      }
+
+      // Dot sizing by provincial workers (log scale)
+      const workers = cands.map(c => c.pr_workers || 1);
+      const logMin = Math.log(Math.min(...workers));
+      const logMax = Math.log(Math.max(...workers));
+      const logRange = logMax - logMin || 1;
+      function dotSize(w) {
+        const t = (Math.log(w || 1) - logMin) / logRange;
+        return 9 + t * 7; // 9px to 16px
+      }
+      function sigDot(signal, sz) {
+        const cls = signal === 'green' ? 'hm-ok'
+          : signal === 'yellow' ? 'hm-warn' : 'hm-fail';
+        return `<div class="hm-dot ${cls}" style="font-size:${sz.toFixed(1)}px">\u25CF</div>`;
+      }
+
+      let left = '';
+      let right = '';
+
+      // ═══ R1C1: Source card ═══
+      left += `<div class="cell-source">
+      <div class="src-comm">${t.community}</div>
+      <div class="src-name">${t.source_label}</div>
+      <div class="src-detail">TEER level <span>${t.source_teer}</span></div>
+      <div class="src-detail">Provincial income: <span>${fmt$(sl.pr_income)}</span></div>
+      <div class="src-detail">Provincial workers: <span>${fmtW(sl.pr_workers)}</span></div>
+      <div class="src-detail">Sector: <span>${t.sector}</span></div>
+    </div>`;
+
+      // ═══ R2C1: Similarity bars ═══
+      left += `<div class="cell-similar">`;
+      left += `<div class="col-title">Skill-similar</div>`;
+      left += `<div class="col-subtitle">Evaluated across skills, knowledge, abilities, and work context</div>`;
+      left += `<div class="sim-spacer"></div>`;
+      left += `<div class="sim-rows">`;
+      cands.forEach(c => {
+        left += `<div class="sim-row">
+        <div class="sim-rank">${c.rank}</div>
+        <div class="sim-bar-wrap">
+          <div class="sim-bar" style="width:${barW(c.similarity)}%"></div>
+          <div class="sim-label">${trunc(c.label, 30)}</div>
+        </div>
+      </div>`;
+      });
+      left += `</div></div>`;
+
+      // ═══ R1C2: Context ═══
+      left += `<div class="cell-context">
+      <div class="ctx-title">From similar to viable</div>
+      <div class="ctx-body">
+        Each candidate is screened for economic viability: comparable income,
+        sector independence, and local presence. A qualitative review then
+        confirms community fit.
+      </div>
+    </div>`;
+
+      // ═══ R2C2: Viability heatmap ═══
+      left += `<div class="cell-filtered">`;
+      left += `<div class="col-title">Viability screening</div>`;
+      left += `<div class="col-subtitle"><span class="hm-ok">\u25CF</span><span class="hm-warn">\u25CF</span> = pass \u00a0\u00a0 size = provincial workers</div>`;
+      left += `<div class="hm-grid">`;
+      left += `<div class="hm-header">
+      <div class="hm-h-col">TEER</div>
+      <div class="hm-h-col">Wages</div>
+      <div class="hm-h-col">COPS</div>
+      <div class="hm-h-col">AI</div>
+      <div class="hm-h-col">Qual.</div>
+    </div>`;
+      left += `<div class="hm-data-rows">`;
+      cands.forEach(c => {
+        const f = deriveFilters(c);
+        const allGreen = f.teer === 'green' && f.wages !== 'red'
+          && f.cops === 'green' && f.ai === 'green' && f.qual === 'green';
+        const rowCls = allGreen ? 'hm-pass' : '';
+        const sz = dotSize(c.pr_workers);
+        left += `<div class="hm-row ${rowCls}">
+        ${sigDot(f.teer, sz)}
+        ${sigDot(f.wages, sz)}
+        ${sigDot(f.cops, sz)}
+        ${sigDot(f.ai, sz)}
+        ${sigDot(f.qual, sz)}
+      </div>`;
+      });
+      left += `</div></div></div>`;
+
+      // ═══ R1C3: Skill gap preview ═══
+      const fg = t.featured_gap;
+      right += `<div class="cell-rca">`;
+      right += `<div class="rca-title">Skill gap preview</div>`;
+      if (fg && fg.bars && fg.bars.length > 0) {
+        right += `<div class="rca-pair">
+        <span class="from">${t.source_label}</span>
+        \u2192
+        <span class="to">${trunc(fg.target_label, 26)}</span>
+      </div>`;
+        right += `<div class="rca-hint">${fg.summary.shared} shared competencies · ${fg.summary.gaps} training gaps</div>`;
+        // Paired source (susceptible) vs target (viable) LQ per competency, on a
+        // shared scale with a dashed RCA = 1.0 reference \u2014 mirrors the I chart.
+        // Shows actual reliance levels and the gap, not a normalized delta.
+        const maxLq = Math.max(...fg.bars.flatMap(b => [b.source_lq, b.target_lq]), 1.1);
+        const refPct = (1 / maxLq) * 100;
+        right += `<div class="rca-bars">`;
+        fg.bars.forEach(b => {
+          const srcPct = (b.source_lq / maxLq) * 100;
+          const tgtPct = (b.target_lq / maxLq) * 100;
+          const dimLabel = b.dimension.length > 30 ? b.dimension.slice(0, 29) + '\u2026' : b.dimension;
+          right += `<div class="rca-bar-row">
+          <div class="rca-bar-label">${dimLabel}</div>
+          <div class="rca-plot">
+            <div class="rca-ref" style="left:${refPct}%"></div>
+            <div class="rca-bar src" style="width:${srcPct}%"></div>
+            <div class="rca-bar tgt" style="width:${tgtPct}%"></div>
+          </div>
+        </div>`;
+        });
+        // Legend lives in the coloured header names (mirrors I); the dashed
+        // reference line is self-evident, so no legend row.
+        right += `</div></div>`;
+      }
+
+      // ═══ R2C3: Assessment notes ═══
+      right += `<div class="cell-qual">`;
+      right += `<div class="qual-title">Assessment notes</div>`;
+      right += `<div class="qual-item down">
+      <div class="qual-occ"><span class="qual-arrow down">↓</span> Longshore workers, Oil and gas drilling</div>
+      <div class="qual-explain">Excluded: few provincial workers, weak demand outlook, or in susceptible sector.</div>
+    </div>`;
+      right += `<div class="qual-item down">
+      <div class="qual-occ"><span class="qual-arrow down">↓</span> Textile processing, Logging labourers</div>
+      <div class="qual-explain">Provincial income below 65% of source — not economically viable.</div>
+    </div>`;
+      right += `<div class="qual-item up">
+      <div class="qual-occ"><span class="qual-arrow up">↑</span> Railway transport (#13), Foundry workers (#25)</div>
+      <div class="qual-explain">Going further down the list can reveal matches that align with community assets and plans. Skill similarity remains high (≥0.93).</div>
+    </div>`;
+      right += `<div class="qual-callout"><p>This study uses a specific analytical lens and is limited by available data. In practice, real-time local data and community consultation would further refine these transitions.</p></div>`;
+      right += `</div>`;
+
+      document.getElementById('grid-left').innerHTML = left;
+      document.getElementById('grid-right').innerHTML = right;
+    }
+
+    fetch(`../data/D_walkthrough.${METRIC}.json`)
+      .then(r => r.json())
+      .then(buildWalkthrough);
+  </script>
+</body>
+
+</html>

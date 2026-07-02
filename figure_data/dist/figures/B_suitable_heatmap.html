@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Suitable Heatmap</title>
+  <link rel="stylesheet" href="../theme.css">
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+  <style>
+    /* ── Figure-specific layout ── */
+
+    .figure-container {
+      width: var(--fig-width);
+      height: auto;
+      /* Content-driven height for this dense figure */
+      min-height: 420px;
+      padding: var(--sp-16) var(--sp-14) var(--sp-12);
+    }
+
+    /* ── Heatmap table ── */
+    .heatmap-table {
+      border-collapse: collapse;
+      font-size: var(--fs-body);
+      width: auto;
+    }
+
+    .heatmap-table th {
+      font-weight: var(--fw-medium);
+      color: var(--clr-body-secondary);
+      padding: var(--sp-4) 4px;
+      text-align: center;
+      vertical-align: bottom;
+      border-bottom: 1px solid var(--clr-border);
+    }
+
+    /* ── Rotated column headers ── */
+    .heatmap-table th.col-header {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      height: 185px;
+      white-space: normal;
+      max-width: 2.4em;
+      /* Forces wrapping into ~2 text lines */
+      font-size: 9px;
+      padding: var(--sp-6) 2px;
+      line-height: 1.3;
+      text-align: left;
+      vertical-align: bottom;
+    }
+
+    /* ── Row headers (susceptible occupation labels) ── */
+    .heatmap-table th.row-header {
+      text-align: right;
+      padding-right: var(--sp-8);
+      font-size: 9px;
+      max-width: 220px;
+      line-height: 1.3;
+      font-weight: var(--fw-medium);
+      color: var(--clr-body);
+      border-bottom: none;
+    }
+
+    /* ── Community pills ── */
+    .comm-pills {
+      display: block;
+      margin-top: 1px;
+    }
+
+    .comm-pill {
+      display: inline-block;
+      font-size: 6.5px;
+      font-weight: var(--fw-semibold);
+      letter-spacing: 0.3px;
+      padding: 0.5px 3px;
+      border-radius: 2px;
+      background: var(--clr-bg-muted);
+      border: 1px solid var(--clr-border);
+      color: var(--clr-body-secondary);
+      margin-left: 1px;
+      line-height: 1.4;
+    }
+
+    /* ── Data cells ── */
+    .heatmap-table td {
+      text-align: center;
+      padding: 2px 2px;
+      min-width: 30px;
+      font-size: var(--fs-body);
+      font-weight: var(--fw-medium);
+      border-bottom: none;
+    }
+
+    .hm-cell {
+      border-radius: 2px;
+      display: inline-block;
+      width: 26px;
+      height: 20px;
+      line-height: 20px;
+      font-size: 9px;
+      color: #fff;
+      cursor: default;
+    }
+
+    /* ── Heatmap colour scale — IRPP navy gradient ── */
+    .hm-0 {
+      background: #f0efe9;
+      color: #ccc;
+    }
+
+    .hm-1 {
+      background: var(--irpp-navy-light);
+      color: var(--clr-body);
+    }
+
+    .hm-2 {
+      background: #7a9db8;
+      color: #fff;
+    }
+
+    .hm-3 {
+      background: #4d7d9e;
+      color: #fff;
+    }
+
+    .hm-4 {
+      background: #2a6485;
+      color: #fff;
+    }
+
+    .hm-5 {
+      background: var(--irpp-navy);
+      color: #fff;
+    }
+
+    .hm-7 {
+      background: #002d44;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dev-wrapper">
+    <div class="figure-container">
+      <div id="heatmap-container"></div>
+
+    </div>
+  </div>
+
+  <script>
+    const METRIC = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
+
+    function buildHeatmap(cells, sourceComms) {
+      // Aggregate unique sources and destinations, sorted by total count
+      const destCounts = {};
+      const srcCounts = {};
+      cells.forEach(c => {
+        destCounts[c.dest_noc3] = (destCounts[c.dest_noc3] || 0) + c.count;
+        srcCounts[c.source_noc] = (srcCounts[c.source_noc] || 0) + c.count;
+      });
+      const dests = Object.keys(destCounts).sort((a, b) => destCounts[b] - destCounts[a]);
+      const sources = Object.keys(srcCounts).sort((a, b) => srcCounts[b] - srcCounts[a]);
+
+      // Labels
+      const srcLabels = {};
+      const destLabels = {};
+      cells.forEach(c => {
+        srcLabels[c.source_noc] = c.source_label;
+        destLabels[c.dest_noc3] = c.dest_label;
+      });
+
+      // Count lookup
+      const lookup = {};
+      cells.forEach(c => {
+        lookup[`${c.source_noc}|${c.dest_noc3}`] = c;
+      });
+
+      function hmClass(v) {
+        if (v === 0) return 'hm-0';
+        if (v === 1) return 'hm-1';
+        if (v === 2) return 'hm-2';
+        if (v === 3) return 'hm-3';
+        if (v <= 5) return 'hm-4';
+        if (v <= 7) return 'hm-5';
+        return 'hm-7';
+      }
+
+      let html = '<table class="heatmap-table">';
+
+      // Header row
+      html += '<tr><th></th>';
+      dests.forEach(d => {
+        html += `<th class="col-header" title="${destLabels[d]}">${destLabels[d]}</th>`;
+      });
+      html += '</tr>';
+
+      // Data rows
+      sources.forEach(s => {
+        const pills = (sourceComms && sourceComms[s])
+          ? '<span class="comm-pills">' + sourceComms[s].map(c =>
+            `<span class="comm-pill">${c}</span>`
+          ).join('') + '</span>'
+          : '';
+
+        html += `<tr><th class="row-header">${srcLabels[s]}${pills}</th>`;
+        dests.forEach(d => {
+          const cell = lookup[`${s}|${d}`];
+          const v = cell ? cell.count : 0;
+          const avgSim = cell ? cell.avg_sim : null;
+          const ttId = `tt-${s}-${d}`;
+
+          html += `<td><span class="hm-cell ${hmClass(v)}" id="${ttId}" `
+            + `data-src="${srcLabels[s]}" data-dst="${destLabels[d]}" `
+            + `data-count="${v}" data-sim="${avgSim ? avgSim.toFixed(3) : ''}">`
+            + `${v || ''}</span></td>`;
+        });
+        html += '</tr>';
+      });
+
+      html += '</table>';
+      document.getElementById('heatmap-container').innerHTML = html;
+
+      // ── Tippy tooltips on non-zero cells ──
+      document.querySelectorAll('.hm-cell:not(.hm-0)').forEach(el => {
+        const src = el.dataset.src;
+        const dst = el.dataset.dst;
+        const count = el.dataset.count;
+        const sim = el.dataset.sim;
+
+        tippy(el, {
+          theme: 'irpp',
+          animation: 'shift-away',
+          content: `<div class="tt-title">${dst}</div>`
+            + `<div class="tt-value">${count} occupation${count > 1 ? 's' : ''} from this family in the top 10 for <strong>${src}</strong></div>`
+            + (sim ? `<hr class="tt-divider"><div class="tt-value">Avg. similarity: ${sim}</div>` : ''),
+          allowHTML: true,
+          placement: 'top',
+        });
+      });
+    }
+
+    fetch(`../data/B_suitable_heatmap.${METRIC}.json`)
+      .then(r => r.json())
+      .then(DATA => buildHeatmap(DATA.heatmap, DATA.source_communities));
+  </script>
+</body>
+
+</html>

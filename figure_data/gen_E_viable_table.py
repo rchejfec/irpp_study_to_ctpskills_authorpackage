@@ -15,9 +15,18 @@ Rules confirmed with the author (2026-07-01):
   - susceptible occupations never reach status=viable, so a viable-only pool
     excludes them automatically.
 
-Emits, per metric:
-  E_viable_table.<metric>.json       — one community (figure-exact drop-in)
-  E_viable_table.all.<metric>.json   — every community, keyed by cd_uid
+Hand-picks are split by endorser: an "author" version treats only author picks as
+hand-picks, a "user" version treats only user picks. The non-active picks are not
+dropped — they remain viable, so they fall into the third "other viable" column if
+within the top-N window (author-directed, 2026-07-01).
+
+Emits, per metric × pick source (author|user):
+  E_viable_table.<pick>.<metric>.json       — one community (figure drop-in)
+  E_viable_table.all.<pick>.<metric>.json    — every community, keyed by cd_uid
+
+So four single-community files per figure slot:
+  E_viable_table.author.cosine.json / .author.euclidean.json
+  E_viable_table.user.cosine.json   / .user.euclidean.json
 
 The single-community output defaults to the community the figure currently shows
 (Estevan, cd_uid 4701).
@@ -47,12 +56,17 @@ def _pick_entry(row: pd.Series) -> dict:
     }
 
 
-def build_source(src_df: pd.DataFrame, top_n: int = OTHER_TOP_N) -> dict:
-    """Build one source occupation's row from its candidate rows."""
+def build_source(src_df: pd.DataFrame, pick_source: str,
+                 top_n: int = OTHER_TOP_N) -> dict:
+    """Build one source occupation's row from its candidate rows.
+
+    Only `pick_source` (author|user) picks are treated as hand-picks. The other
+    endorser's picks are not removed — they stay viable and can appear in "other".
+    """
     src_df = src_df.sort_values("rank")
     head = src_df.iloc[0]
 
-    picks = src_df[lib.is_pick(src_df)]
+    picks = src_df[src_df["pick_source"] == pick_source]
     comparable = [
         _pick_entry(r) for _, r in
         picks[picks["teer_class"] == "comparable"].sort_values("rank").iterrows()
@@ -62,7 +76,8 @@ def build_source(src_df: pd.DataFrame, top_n: int = OTHER_TOP_N) -> dict:
         picks[picks["teer_class"] == "aspirational"].sort_values("rank").iterrows()
     ]
 
-    # "Other": top-N viable window first, then drop pick NOCs, then group by NOC3.
+    # "Other": top-N viable window, then drop only THIS endorser's pick NOCs (so
+    # the other endorser's picks fall through into "other"), then group by NOC3.
     viable = src_df[lib.is_viable(src_df)].sort_values("rank")
     window = viable.head(top_n)
     pick_nocs = set(picks["candidate_noc"])
@@ -85,35 +100,43 @@ def build_source(src_df: pd.DataFrame, top_n: int = OTHER_TOP_N) -> dict:
     }
 
 
-def build_community(comm_df: pd.DataFrame, top_n: int = OTHER_TOP_N) -> dict:
+def build_community(comm_df: pd.DataFrame, pick_source: str,
+                    top_n: int = OTHER_TOP_N) -> dict:
     head = comm_df.iloc[0]
     sources = [
-        build_source(comm_df[comm_df["source_noc"] == s], top_n)
+        build_source(comm_df[comm_df["source_noc"] == s], pick_source, top_n)
         for s in comm_df.sort_values("source_noc")["source_noc"].unique()
     ]
     return {
         "community": head["community"],
         "cd_uid": head["cd_uid"],
+        "pick_source": pick_source,
         "sources": sources,
     }
+
+
+PICK_SOURCES = ("author", "user")
 
 
 def generate(metric: str, top_n: int = OTHER_TOP_N) -> None:
     df = lib.load_viable(metric)
 
-    # All communities, keyed by cd_uid (for the future interactive version).
-    keyed = {
-        cd: build_community(df[df["cd_uid"] == cd], top_n)
-        for cd in df["cd_uid"].unique()
-    }
-    lib.write_json(f"E_viable_table.all.{metric}.json", keyed)
+    for pick in PICK_SOURCES:
+        # All communities, keyed by cd_uid (for the future interactive version).
+        keyed = {
+            cd: build_community(df[df["cd_uid"] == cd], pick, top_n)
+            for cd in df["cd_uid"].unique()
+        }
+        lib.write_json(f"E_viable_table.all.{pick}.{metric}.json", keyed)
 
-    # Figure-exact single community drop-in.
-    single = build_community(df[df["cd_uid"] == FIGURE_COMMUNITY_CD], top_n)
-    lib.write_json(f"E_viable_table.{metric}.json", single)
+        # Figure drop-in single community.
+        single = build_community(df[df["cd_uid"] == FIGURE_COMMUNITY_CD], pick, top_n)
+        lib.write_json(f"E_viable_table.{pick}.{metric}.json", single)
 
-    print(f"[E] {metric}: {len(keyed)} communities keyed; "
-          f"single = {single['community']} ({len(single['sources'])} sources)")
+        n_picks = sum(len(s["comparable"]) + len(s["extensive"]) for s in single["sources"])
+        print(f"[E] {metric}/{pick}: {len(keyed)} communities keyed; "
+              f"single = {single['community']} ({len(single['sources'])} sources, "
+              f"{n_picks} {pick} picks)")
 
 
 if __name__ == "__main__":

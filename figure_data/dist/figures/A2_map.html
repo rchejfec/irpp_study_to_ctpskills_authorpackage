@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Census Divisions Map</title>
+<link rel="stylesheet" href="../theme.css">
+<style>
+  /* ── Figure-specific layout ── */
+
+  .figure-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Context strip ── */
+  .context-strip {
+    padding: var(--sp-8) var(--sp-14);
+    background: var(--clr-bg-muted);
+    border-bottom: 1px solid var(--clr-border);
+    font-size: var(--fs-body);
+    color: var(--clr-body);
+    line-height: var(--lh-normal);
+  }
+
+  .context-strip strong {
+    font-weight: var(--fw-semibold);
+    color: var(--clr-heading);
+  }
+
+  /* ── Main split: map + list ── */
+  .map-row {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .map-area {
+    flex: 1;
+    background: var(--clr-bg);
+    border-right: 1px solid var(--clr-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .map-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scale(1.07);
+  }
+
+  /* ── Community list panel ── */
+  .community-list {
+    width: 274px;
+    padding: var(--sp-4) var(--sp-8) var(--sp-4) var(--sp-10);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .community {
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    flex: 1;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .community:last-child {
+    border-bottom: none;
+  }
+
+  /* ── Numbered badge ── */
+  .comm-num {
+    font-size: var(--fs-label-xs);
+    font-weight: var(--fw-bold);
+    color: #fff;
+    background: var(--clr-heading);
+    border-radius: 50%;
+    width: 13px;
+    height: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .comm-body {
+    flex: 1;
+  }
+
+  /* ── Community header line ── */
+  .comm-header {
+    font-size: var(--fs-label-sm);
+    line-height: var(--lh-tight);
+  }
+
+  .comm-name {
+    font-weight: var(--fw-bold);
+    color: var(--clr-body);
+  }
+
+  .comm-sector {
+    color: var(--clr-heading);
+    font-style: italic;
+  }
+
+  /* ── Detail rows ── */
+  .comm-row {
+    font-size: 6.5px;
+    color: var(--clr-body-secondary);
+    line-height: 1.3;
+    margin-top: 1px;
+  }
+
+  .comm-key {
+    font-weight: var(--fw-bold);
+    color: var(--clr-heading);
+    text-transform: uppercase;
+    font-size: 5.5px;
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+<div class="dev-wrapper">
+  <div class="figure-container">
+
+    <div class="context-strip">
+      Using the IRPP's community susceptibility methodology, <strong>68 census divisions</strong> across Canada were identified
+      as facing elevated risk of workforce disruption from the transition to a net-zero economy.
+      Seven were selected as the focus of this study, representing a diverse cross-section of regions and economic profiles.
+    </div>
+
+    <div class="map-row">
+      <div class="map-area">
+        <img src="../assets/map/canada_communities.svg" alt="Map of seven Canadian census divisions susceptible to workforce disruption" />
+      </div>
+
+      <div class="community-list">
+
+        <div class="community">
+          <div class="comm-num">1</div>
+          <div class="comm-body">
+            <div class="comm-header"><span class="comm-name">Division No. 3, NL</span> — <span class="comm-sector">Maritime transport</span></div>
+            <div class="comm-row"><span class="comm-key">Local economy: </span>Healthcare, agriculture/fishing, transport</div>
+            <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Channel-Port aux Basques</div>
+          </div>
+        </div>
+
+        <div class="community">
+          <div class="comm-num">2</div>
+          <div class="comm-body">
+            <div class="comm-header"><span class="comm-name">Algoma, ON</span> — <span class="comm-sector">Steel manufacturing</span></div>
+            <div class="comm-row"><span class="comm-key">Local economy: </span>Healthcare, retail, manufacturing</div>
+            <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Sault Ste. Marie, Elliot Lake, Blind River</div>
+          </div>
+        </div>
+
+        <div class="community">
+          <div class="comm-num">3</div>
+          <div class="comm-body">
+            <div class="comm-header"><span class="comm-name">Oxford, ON</span> — <span class="comm-sector">Automotive manufacturing</span></div>
+            <div class="comm-row"><span class="comm-key">Local economy: </span>Manufacturing, healthcare, retail</div>
+            <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Woodstock, Ingersoll</div>
+          </div>
+        </div>
+
+        <div class="community">
+          <div class="comm-num">4</div>
+          <div class="comm-body">
+            <div class="comm-header"><span class="comm-name">Division No. 15, MB</span> — <span class="comm-sector">Food processing + agriculture</span></div>
+            <div class="comm-row"><span class="comm-key">Local economy: </span>Manufacturing, agriculture, healthcare</div>
+            <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Neepawa, Minnedosa, Carberry</div>
+          </div>
+        </div>
+
+        <div class="community">
+          <div class="comm-num">5</div>
+          <div class="comm-body">
+            <div class="comm-header"><span class="comm-name">Division No. 1, SK</span> — <span class="comm-sector">Coal + oil &amp; gas</span></div>
+            <div class="comm-row"><span class="comm-key">Local economy: </span>Agriculture, mining/oil &amp; gas, retail</div>
+            <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Estevan, Carlyle, Oxbow</div>
+          </div>
+        </div>
+
+        <div class="community">
+          <div class="comm-num">6</div>
+          <div class="comm-body">
+            <div class="comm-header"><span class="comm-name">Division No. 16, AB</span> — <span class="comm-sector">Oil sands extraction</span></div>
+            <div class="comm-row"><span class="comm-key">Local economy: </span>Mining/oil &amp; gas, retail, construction</div>
+            <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Wood Buffalo (incl. Fort McMurray)</div>
+          </div>
+        </div>
+
+        <div class="community">
+          <div class="comm-num">7</div>
+          <div class="comm-body">
+            <div class="comm-header"><span class="comm-name">Northwest Territories</span> — <span class="comm-sector">Diamond + critical mineral mining</span></div>
+            <div class="comm-row"><span class="comm-key">Local economy: </span>Public admin, healthcare, education</div>
+            <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Yellowknife, Hay River, Inuvik</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

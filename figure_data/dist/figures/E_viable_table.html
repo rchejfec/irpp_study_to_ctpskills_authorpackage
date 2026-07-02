@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Viable Matches Table — Estevan</title>
+<link rel="stylesheet" href="../theme.css">
+<style>
+  .figure-container {
+    width: var(--fig-width);
+    height: auto;  /* Tables: fixed width, content-driven height */
+    padding: 8px 12px;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Community header ── */
+  .community-header {
+    font-size: 9px; font-weight: 700; color: #fff;
+    background: var(--irpp-navy); padding: 4px 10px;
+    letter-spacing: 0.3px; flex-shrink: 0;
+  }
+
+  /* ── Table container ── */
+  .table-wrap {
+    flex: 1;
+    overflow: hidden;
+    border: 1px solid var(--clr-border);
+    border-top: none;
+  }
+
+  /* ── Table ── */
+  .viable-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5px;
+  }
+  .viable-table th {
+    background: var(--clr-bg-muted);
+    color: var(--clr-body);
+    padding: 4px 6px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid #ccc;
+  }
+  .viable-table td {
+    padding: 3px 6px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+  }
+  .viable-table .source-header td {
+    background: #f6f5f0;
+    font-weight: 700;
+    font-size: 8.5px;
+    border-bottom: 1.5px solid #ccc;
+    color: var(--clr-body);
+    padding: 4px 6px;
+  }
+
+  /* ── Cell types ── */
+  .viable-cell { font-size: 8px; }
+  .pick-comparable { border-left: 2px solid rgba(39,174,96,0.25); }
+  .pick-extensive { border-left: 2px solid rgba(226,167,34,0.25); }
+
+  .teer-badge {
+    font-size: 7px; color: #999; font-weight: 400;
+    margin-left: 4px;
+  }
+  .teer-inline {
+    font-size: 7px; color: #999;
+  }
+  .stacked-pick { margin-bottom: 1px; }
+  .noc3-count { font-weight: 700; color: var(--clr-body); }
+  .other-prose-compact {
+    font-size: 7.5px; color: #636e72; line-height: 1.45;
+  }
+</style>
+</head>
+<body>
+<div class="dev-wrapper">
+  <div class="figure-container">
+    <div class="community-header" id="comm-name">Loading…</div>
+    <div class="table-wrap">
+      <table class="viable-table" id="table-body">
+        <thead>
+          <tr>
+            <th style="width:33%">Viable (Comparable TEER)</th>
+            <th style="width:33%">Viable (TEER Relaxed)</th>
+            <th style="width:34%">Other Viable in Top 10</th>
+          </tr>
+        </thead>
+        <tbody id="table-rows"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  const _q = new URLSearchParams(location.search);
+  const METRIC = (_q.get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
+  const PICK = (_q.get('pick') === 'user') ? 'user' : 'author';
+
+  function build(comm) {
+    document.getElementById('comm-name').textContent = comm.community;
+    const tbody = document.getElementById('table-rows');
+    let html = '';
+
+    comm.sources.forEach(src => {
+      // Source header row
+      html += `<tr class="source-header"><td colspan="3">
+        ${src.source_label} <span class="teer-badge">TEER ${src.source_teer}</span>
+      </td></tr>`;
+
+      html += '<tr>';
+
+      // Comparable column
+      html += '<td class="viable-cell pick-comparable">';
+      if (src.comparable.length > 0) {
+        html += src.comparable.map(c =>
+          `<div class="stacked-pick">${c.candidate_label} <span class="teer-inline">(TEER ${c.candidate_teer})</span></div>`
+        ).join('');
+      } else { html += '<span class="teer-inline">—</span>'; }
+      html += '</td>';
+
+      // Extensive column
+      html += '<td class="viable-cell pick-extensive">';
+      if (src.extensive.length > 0) {
+        html += src.extensive.map(e =>
+          `<div class="stacked-pick">${e.candidate_label} <span class="teer-inline">(TEER ${e.candidate_teer})</span></div>`
+        ).join('');
+      } else { html += '<span class="teer-inline">—</span>'; }
+      html += '</td>';
+
+      // Other column
+      html += '<td class="viable-cell">';
+      if (src.other_count > 0 && src.other_groups && src.other_groups.length > 0) {
+        const parts = src.other_groups.map(g =>
+          `<span class="noc3-count">${g.count}</span> in ${g.noc3_label}`
+        );
+        html += `<div class="other-prose-compact">${parts.join('; ')}</div>`;
+      } else { html += '<span class="teer-inline">—</span>'; }
+      html += '</td>';
+
+      html += '</tr>';
+    });
+
+    tbody.innerHTML = html;
+  }
+
+  fetch(`../data/E_viable_table.${PICK}.${METRIC}.json`)
+    .then(r => r.json())
+    .then(build);
+</script>
+</body>
+</html>

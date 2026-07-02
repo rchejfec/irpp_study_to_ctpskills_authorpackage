@@ -127,8 +127,12 @@ def _funnel(cand: pd.DataFrame) -> dict:
         "pass_local_cd": int((teer_ok & top30 & earn_ok & cd_ok).sum()),
         "pass_ai": int((teer_ok & top30 & ai_ok).sum()),
         "pass_cops": int((teer_ok & top30 & cops_ok).sum()),
-        "endorsed": int(picks.sum()),
-        "viable": int((viable & ~picks).sum()),
+        "endorsed": int((top30 & picks).sum()),
+        # Viable is scoped to the top-30 the figure actually plots (the radial lens
+        # only shows those). Endorsed picks count as viable, so this is the full
+        # viable tally within the top-30, picks included — not "leftover". Counting
+        # viable across the full 172-candidate pool (104/120) overstated it.
+        "viable": int((top30 & viable).sum()),
     }
 
 

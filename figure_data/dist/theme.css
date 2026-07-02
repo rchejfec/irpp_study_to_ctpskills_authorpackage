@@ -1,0 +1,395 @@
+/* ════════════════════════════════════════════════════════════════
+   IRPP Study Figures — Shared Design Tokens (theme.css)
+   Tobin & Oschinski (2026) — Community Transformations Project
+
+   Every figure imports this file. Change a value here,
+   it updates everywhere.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,400&display=swap');
+
+:root {
+
+  /* ══════════════════════════════════════════════════════════════
+     1. IRPP BRAND PALETTE
+     Organised by group (1–5). Right column is primary.
+     Correct hex values derived from RGB (two Infogram labels
+     were wrong: navy and sage-dark).
+     ══════════════════════════════════════════════════════════════ */
+
+  /* ── Group 1 · Navy / Teal ── */
+  --irpp-navy:          #004667;   /* R:0   G:70  B:103  — primary brand */
+  --irpp-navy-light:    #B8C4D3;   /* R:184 G:196 B:211 */
+  --irpp-teal:          #44A3A4;   /* R:68  G:163 B:164 */
+  --irpp-teal-light:    #B5D2D3;   /* R:181 G:210 B:211 */
+
+  /* ── Group 2 · Gold / Olive ── */
+  --irpp-gold:          #DEAC28;   /* R:222 G:172 B:40  */
+  --irpp-gold-light:    #F0D8A4;   /* R:240 G:216 B:164 */
+  --irpp-olive:         #A0A638;   /* R:160 G:166 B:56  */
+  --irpp-olive-light:   #D4D4A5;   /* R:212 G:212 B:165 */
+
+  /* ── Group 3 · Grey / Orange ── */
+  --irpp-grey:          #6D6E71;   /* R:109 G:110 B:113 */
+  --irpp-grey-light:    #B8B6B7;   /* R:184 G:182 B:183 */
+  --irpp-orange:        #D36828;   /* R:211 G:104 B:40  */
+  --irpp-orange-light:  #EBBA97;   /* R:235 G:186 B:151 */
+
+  /* ── Group 4 · Sage / Red ── */
+  --irpp-sage:          #77AE99;   /* R:119 G:174 B:153  (Infogram said 774E99 — wrong) */
+  --irpp-sage-light:    #C5D8CF;   /* R:197 G:216 B:207 */
+  --irpp-red:           #CE2129;   /* R:206 G:33  B:41  */
+  --irpp-red-light:     #E7A38F;   /* R:231 G:163 B:143 */
+
+  /* ── Group 5 · Purple ── */
+  --irpp-purple:        #55425B;   /* R:85  G:66  B:91  */
+  --irpp-purple-light:  #BCB3BE;   /* R:188 G:179 B:190 */
+
+
+  /* ══════════════════════════════════════════════════════════════
+     2. SEMANTIC COLOURS — Study-specific mappings
+     These map brand colours to the study's conceptual vocabulary.
+     Change mappings here if the underlying palette changes.
+     ══════════════════════════════════════════════════════════════ */
+
+  /* ── Structural ── */
+  --clr-heading:        var(--irpp-navy);
+  --clr-body:           #1a1a2e;
+  --clr-body-secondary: var(--irpp-grey);
+  --clr-border:         #dcdcdc;
+  --clr-border-strong:  var(--irpp-navy);
+  --clr-bg:             #ffffff;
+  --clr-bg-muted:       #f8f9fb;
+  --clr-gridline:       #e8e8e8;
+
+  /* ── Susceptible (at-risk occupations) ── */
+  --clr-susceptible:       var(--irpp-red);
+  --clr-susceptible-light: var(--irpp-red-light);
+
+  /* ── Viable / positive outcomes ── */
+  --clr-viable:            var(--irpp-teal);
+  --clr-viable-light:      var(--irpp-teal-light);
+
+  /* ── TEER levels (training/education) — navy gradient ── */
+  --clr-teer-high:   var(--irpp-navy);       /* TEER 0–1: Management / University */
+  --clr-teer-mid:    #3d7a9e;                /* TEER 2–3: mid blend */
+  --clr-teer-low:    var(--irpp-navy-light);  /* TEER 4–5: lower requirements */
+
+  /* ── Earnings — sage/green gradient ── */
+  --clr-earnings-high:  #3d7a5e;             /* Well above susceptible wage */
+  --clr-earnings-mid:   var(--irpp-sage);     /* Comparable */
+  --clr-earnings-low:   var(--irpp-sage-light); /* Below threshold */
+
+  /* ── Community / local presence — gold/amber gradient ── */
+  --clr-community-endorsed: var(--irpp-gold);
+  --clr-community-present:  var(--irpp-gold-light);
+  --clr-community-absent:   #f5ecd4;
+
+  /* ── Neutral candidates ── */
+  --clr-neutral:       var(--irpp-grey);
+  --clr-neutral-light: var(--irpp-grey-light);
+
+  /* ── Chart series (for multi-line/bar charts) ── */
+  --clr-series-1: var(--irpp-navy);
+  --clr-series-2: var(--irpp-red);
+  --clr-series-3: var(--irpp-gold);
+  --clr-series-4: var(--irpp-teal);
+  --clr-series-5: var(--irpp-sage);
+  --clr-series-6: var(--irpp-orange);
+  --clr-series-7: var(--irpp-olive);
+  --clr-series-8: var(--irpp-purple);
+
+
+  /* ══════════════════════════════════════════════════════════════
+     3. TYPOGRAPHY
+     Primary: Nunito Sans (Google Fonts) — geometric sans-serif
+     closest free match to IRPP's Avenir Next LT Pro.
+     ══════════════════════════════════════════════════════════════ */
+
+  --font-primary: 'Nunito Sans', sans-serif;
+
+  /* ── Scale (figure-internal — these are SMALL by design) ── */
+  --fs-label-xs:    7px;      /* Tiny labels, source lines, caveat text */
+  --fs-label-sm:    8px;      /* Axis ticks, legend items, panel headers */
+  --fs-label:       9px;      /* Standard label / annotation */
+  --fs-body:       10px;      /* Body text inside figures */
+  --fs-body-lg:    11px;      /* Larger body / short descriptions */
+  --fs-subhead:    12px;      /* Sub-section headings within a figure */
+  --fs-head:       14px;      /* Rare: main heading inside a figure */
+
+  --fw-regular:    400;
+  --fw-medium:     500;
+  --fw-semibold:   600;
+  --fw-bold:       700;
+
+  --lh-tight:      1.25;
+  --lh-normal:     1.45;
+  --lh-relaxed:    1.6;
+
+  --ls-uppercase:  0.8px;     /* Letter-spacing for uppercase labels */
+
+
+  /* ══════════════════════════════════════════════════════════════
+     4. SPACING
+     ══════════════════════════════════════════════════════════════ */
+
+  --sp-2:   2px;
+  --sp-4:   4px;
+  --sp-6:   6px;
+  --sp-8:   8px;
+  --sp-10: 10px;
+  --sp-12: 12px;
+  --sp-14: 14px;
+  --sp-16: 16px;
+  --sp-20: 20px;
+  --sp-24: 24px;
+
+
+  /* ══════════════════════════════════════════════════════════════
+     5. FIGURE DIMENSIONS
+     Fixed sizes. Export at 2× for print (deviceScaleFactor: 2).
+     ══════════════════════════════════════════════════════════════ */
+
+  /* Standard horizontal figure (most figures) */
+  --fig-width:      680px;
+  --fig-height:     420px;
+
+  /* Wide variant (tables, networks with many nodes) */
+  --fig-width-wide:  860px;
+  --fig-height-wide: 480px;
+
+  /* Tall variant (vertical flows, stacked panels) */
+  --fig-width-tall:  680px;
+  --fig-height-tall: 600px;
+
+
+  /* ══════════════════════════════════════════════════════════════
+     6. INTERACTION — Transitions & effects
+     ══════════════════════════════════════════════════════════════ */
+
+  --transition-fast:   120ms ease-out;
+  --transition-normal: 200ms ease-out;
+  --transition-slow:   350ms ease-out;
+
+  --alpha-hover:       0.85;
+  --alpha-faded:       0.20;
+  --alpha-muted:       0.45;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED BASE STYLES
+   Applied to all figures that import this file.
+   ══════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-primary);
+  color: var(--clr-body);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* ── Figure container ──
+   The white box that IS the figure.
+   No title, source, or notes — those are handled by production.
+   ─────────────────────────────────────────────────────────── */
+
+.figure-container {
+  width: var(--fig-width);
+  height: var(--fig-height);
+  background: var(--clr-bg);
+  overflow: hidden;
+  position: relative;
+}
+
+.figure-container--wide {
+  width: var(--fig-width-wide);
+  height: var(--fig-height-wide);
+}
+
+.figure-container--tall {
+  width: var(--fig-width-tall);
+  height: var(--fig-height-tall);
+}
+
+
+/* ── Development wrapper ──
+   Grey background around the figure for visual context while editing.
+   Not included in exports.
+   ─────────────────────────────────────────────────────────── */
+
+.dev-wrapper {
+  background: #e8e8e8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED COMPONENT PATTERNS
+   Reusable classes for common figure elements.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Section labels (e.g., "CONTEXT", "STEP 1") ── */
+.section-label {
+  font-size: var(--fs-label-sm);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-uppercase);
+  color: var(--clr-heading);
+}
+
+/* ── Panel description text ── */
+.panel-text {
+  font-size: var(--fs-body);
+  color: var(--clr-body);
+  line-height: var(--lh-normal);
+}
+
+.panel-text--small {
+  font-size: var(--fs-label);
+  color: var(--clr-body-secondary);
+}
+
+/* ── Emphasis within figures ── */
+.text-emphasis {
+  font-style: italic;
+  color: var(--clr-heading);
+}
+
+/* ── Axis labels (D3/SVG) ── */
+.axis-label {
+  font-family: var(--font-primary);
+  font-size: var(--fs-label-sm);
+  fill: var(--clr-body-secondary);
+}
+
+.axis-title {
+  font-family: var(--font-primary);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  fill: var(--clr-body);
+}
+
+/* ── Gridlines ── */
+.gridline {
+  stroke: var(--clr-gridline);
+  stroke-width: 0.5;
+}
+
+/* ── Direct labels (on chart elements) ── */
+.direct-label {
+  font-family: var(--font-primary);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  fill: var(--clr-body);
+}
+
+/* ── Data markers (matching IRPP sample: square markers) ── */
+.marker-square {
+  stroke: #fff;
+  stroke-width: 1;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   TIPPY.JS THEME — "irpp"
+   Usage: tippy(el, { theme: 'irpp' })
+   Load Tippy CSS separately; these override its defaults.
+   ══════════════════════════════════════════════════════════════ */
+
+.tippy-box[data-theme~='irpp'] {
+  background-color: var(--clr-bg);
+  color: var(--clr-body);
+  border: 1px solid var(--clr-border);
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  font-family: var(--font-primary);
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  padding: var(--sp-8) var(--sp-10);
+  max-width: 260px;
+}
+
+.tippy-box[data-theme~='irpp'] .tippy-arrow {
+  color: var(--clr-bg);
+}
+
+.tippy-box[data-theme~='irpp'] .tippy-content {
+  padding: 0;
+}
+
+/* Tooltip emphasis styles */
+.tippy-box[data-theme~='irpp'] .tt-title {
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-body);
+  color: var(--clr-heading);
+  margin-bottom: var(--sp-4);
+}
+
+.tippy-box[data-theme~='irpp'] .tt-value {
+  font-size: var(--fs-label);
+  color: var(--clr-body-secondary);
+  line-height: var(--lh-relaxed);
+}
+
+.tippy-box[data-theme~='irpp'] .tt-divider {
+  border: none;
+  border-top: 1px solid var(--clr-gridline);
+  margin: var(--sp-6) 0;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   PRINT EXPORT HELPERS
+   Used by the Puppeteer export script to isolate the figure.
+   ══════════════════════════════════════════════════════════════ */
+
+body.export-mode {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+body.export-mode .dev-wrapper {
+  background: transparent;
+  padding: 0;
+  min-height: auto;
+}
+
+body.export-mode .dev-label {
+  display: none;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   @MEDIA PRINT — Fallback for browser print
+   ══════════════════════════════════════════════════════════════ */
+
+@media print {
+  body {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .dev-wrapper {
+    background: transparent !important;
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+  .dev-label {
+    display: none !important;
+  }
+}

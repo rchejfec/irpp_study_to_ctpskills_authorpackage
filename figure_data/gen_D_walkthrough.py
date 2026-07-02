@@ -103,6 +103,32 @@ def _candidate(row: pd.Series, global_susc: set[str]) -> dict:
     }
 
 
+_LQ_DOMAINS = ("skills", "knowledge", "abilities", "workactivities")
+
+
+def _lq_summary(source_noc: str, target_noc: str) -> dict:
+    """Compare the two occupations across ALL 166 competencies (from the full
+    lq_{domain}.csv matrices, not skill_gaps.csv which is gap-rows only).
+
+      shared = both occupations rely on the competency (LQ >= 1 for each)
+      gaps   = target relies on it, source does not (target LQ > 1, source < 1)
+      total  = competencies compared
+    """
+    total = shared = gaps = 0
+    for dom in _LQ_DOMAINS:
+        m = pd.read_csv(lib.OUTPUT_DIR / "skill_gaps" / f"lq_{dom}.csv", dtype=str)
+        m = m.set_index("noc")
+        if source_noc not in m.index or target_noc not in m.index:
+            continue
+        src = pd.to_numeric(m.loc[source_noc], errors="coerce")
+        tgt = pd.to_numeric(m.loc[target_noc], errors="coerce")
+        both = src.notna() & tgt.notna()
+        total += int(both.sum())
+        shared += int((both & (src >= 1) & (tgt >= 1)).sum())
+        gaps += int((both & (src < 1) & (tgt > 1)).sum())
+    return {"total": total, "gaps": gaps, "shared": shared}
+
+
 def _featured_gap(metric: str) -> dict | None:
     gaps = pd.read_csv(lib.OUTPUT_DIR / "skill_gaps" / "skill_gaps.csv", dtype=str)
     for c in ("source_lq", "dest_lq", "delta_lq"):
@@ -128,11 +154,9 @@ def _featured_gap(metric: str) -> dict | None:
     return {
         "target_noc": FEATURED_TARGET,
         "target_label": label,
-        "summary": {
-            "total": 166,
-            "gaps": int(len(pair)),
-            "shared": int(((pair["source_lq"] > 1) & (pair["dest_lq"] > 1)).sum()),
-        },
+        # shared/gaps/total computed over the full LQ matrices (skill_gaps.csv
+        # holds only gap rows, so its source_lq is always < 1 → shared was 0).
+        "summary": _lq_summary(FIGURE_SRC, FEATURED_TARGET),
         "bars": bars,
     }
 

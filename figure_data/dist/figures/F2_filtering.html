@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Figure F2 — Filtering</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="../theme.css">
+  <style>
+    /* ╔══════════════════════════════════════════════════════════════╗
+       ║  PANEL COLOURS — edit these to change dot colors per panel  ║
+       ╚══════════════════════════════════════════════════════════════╝ */
+    :root {
+      /* Panel 1: Similarity pool — greys */
+      --p1-active:       #555;                   /* top 30 — dark grey */
+      --p1-faded:        #ccc;                   /* rest — light grey */
+
+      /* Panel 2: Local presence — blues */
+      --p2-local-cd:     #1a3d6b;                /* Census Division — dark navy */
+      --p2-local-pr:     #5b8db8;                /* Province only — mid blue */
+      --p2-neither:      #a8c8e8;                /* no local presence — pale blue */
+
+      /* Panel 3: Viability screening — orange/warm */
+      --p3-pass:         #d4760a;                /* passes all — burnt orange */
+      --p3-fail-cops:    #DEAC28;                /* fails COPS — yellow */
+      --p3-fail-earn:    #CE2129;                /* fails earnings — red */
+      --p3-fail-ai:      #CE2129;                /* fails AI — red */
+
+      /* Panel 4: TEER-coloured greens + endorsed shape */
+      --p4-teer5:        #1a7a3a;                /* TEER 5 — dark green */
+      --p4-teer4:        #4aaa5e;                /* TEER 4 — mid green */
+      --p4-faded:        #ccc;                   /* susceptible — grey */
+
+      /* Centre square */
+      --centre-node:     var(--irpp-red);
+    }
+    .figure-container {
+      width: var(--fig-width);
+      height: var(--fig-height);
+      background: var(--clr-bg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+
+    .context-strip {
+      padding: 8px 14px;
+      background: var(--clr-bg-muted);
+      border-bottom: 1px solid var(--clr-border);
+      font-size: 10px;
+      color: var(--clr-body);
+      line-height: 1.45;
+    }
+
+    .context-strip strong {
+      color: var(--irpp-navy);
+    }
+
+    .panels-row {
+      display: flex;
+      padding: 6px 8px 0;
+      gap: 4px;
+    }
+
+    .panel-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .panel-label {
+      font-size: 7px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--irpp-navy);
+      margin-bottom: 2px;
+      text-align: center;
+      min-height: 2.2em;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      line-height: 1.3;
+    }
+
+    .descs-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: auto 1fr;
+      padding: 4px 8px 0;
+      row-gap: 4px;
+      column-gap: 6px;
+    }
+
+    .panel-desc {
+      display: grid;
+      grid-template-rows: subgrid;
+      grid-row: span 2;
+      line-height: 1.45;
+    }
+
+    .desc-val {
+      font-size: 7.5px;
+      color: var(--clr-body);
+      padding: 0 4px;
+      margin-bottom: 0px;
+    }
+
+    .footer-strip {
+      margin: auto 14px 10px;
+      padding: 6px 10px;
+      background: var(--clr-bg-muted);
+      border: 1px solid var(--clr-border);
+      border-radius: 3px;
+      font-size: 7.5px;
+      color: var(--clr-body);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dev-wrapper">
+    <div class="figure-container">
+      <div class="context-strip">
+        For each susceptible occupation, we first identify skill-similar alternatives across all Canadian occupations. This figure traces the filtering that follows for <strong>Material handlers</strong> (TEER 5) in <strong>Oxford, ON</strong>.
+      </div>
+
+      <div class="panels-row">
+        <div class="panel-col">
+          <div class="panel-label">Skills-Similar<br>&amp; TEER-Compatible</div>
+          <div id="p1"></div>
+        </div>
+        <div class="panel-col">
+          <div class="panel-label">Local Presence</div>
+          <div id="p2"></div>
+        </div>
+        <div class="panel-col">
+          <div class="panel-label">Outlook<br>&amp; Earnings</div>
+          <div id="p3"></div>
+        </div>
+        <div class="panel-col">
+          <div class="panel-label">Community Review</div>
+          <div id="p4"></div>
+        </div>
+      </div>
+
+      <div class="descs-row">
+        <div class="panel-desc">
+          <div class="desc-val">Starting from all skill-similar occupations, we screen for comparable training requirements (TEER ±1) and select the top ~30 most similar candidates. Across these panels, the <span style="color:#CE2129;font-weight:600">■ square</span> is the susceptible occupation, each <span style="color:#555;font-weight:600">● dot</span> is a candidate — closer to centre = more similar — and dots that <span style="color:#ccc;font-weight:600">fade</span> have been filtered out. Different use cases may apply stricter or looser thresholds.</div>
+        </div>
+        <div class="panel-desc">
+          <div class="desc-val">We screen candidates for existing local relevance. <span style="color:#1a3d6b;font-weight:600">Dark blue</span> = present in the Census Division, <span style="color:#5b8db8;font-weight:600">lighter blue</span> = present in the province but not locally. Due to data limitations, provincial-level presence is used here; finer geographic filtering could strengthen results where local data exists.</div>
+        </div>
+        <div class="panel-desc">
+          <div class="desc-val">Surviving candidates are screened for employment outlook (COPS projections) and earnings viability (≥65% of the susceptible occupation's wage). <span style="color:#d4760a;font-weight:600">Orange</span> = passes both, <span style="color:#DEAC28;font-weight:600">yellow</span> = fails outlook, <span style="color:#CE2129;font-weight:600">red</span> = fails earnings. An additional AI-exposure filter is applied but does not exclude any candidates here.</div>
+        </div>
+        <div class="panel-desc">
+          <div class="desc-val">Remaining candidates are presented for community validation, which may surface additional occupations or relax earlier filters based on local plans and goals. We exclude occupations that are themselves susceptible and <span style="color:#1a7a3a;font-weight:600">◆ highlight</span> those potentially relevant based on extrapolations from surrounding-area and community profiles. Colour denotes TEER level: <span style="color:#1a7a3a;font-weight:600">dark green</span> = TEER 5, <span style="color:#4aaa5e;font-weight:600">mid green</span> = TEER 4.</div>
+        </div>
+      </div>
+
+      <div class="footer-strip"><strong>Note:</strong> Data limitations — particularly the lack of granular local labour market information — constrain the precision of each filter and the conclusions that can be drawn. Despite this, the filtering framework itself demonstrates the potential of systematic transition planning — and a strong rationale for public investment in better local labour market data.</div>
+    </div>
+  </div>
+
+  <script>
+    // ╔══════════════════════════════════════════════════════════════╗
+    // ║  EDIT THESE to try different layouts — just change & reload ║
+    // ╚══════════════════════════════════════════════════════════════╝
+    const SEED_PANEL1 = 53;   // shuffle seed for Panel 1 (wide view)
+    const SEED_PANELS = 53;   // shuffle seed for Panels 2-4 (zoomed)
+    const JITTER = 4;    // radial jitter in px (0 = perfect rings)
+
+    // Seeded random for consistent layout
+    function sr(seed) {
+      var x = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
+      return x - Math.floor(x);
+    }
+
+    const METRIC = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
+    fetch(`../data/F2_filtering.${METRIC}.json`)
+      .then(r => r.json())
+      .then(DATA => {
+        const candidates = DATA.candidates;
+
+        const SIM_ZOOM_FLOOR = 0.85;
+        const visibleCandidates = candidates.filter(c => c.similarity >= SIM_ZOOM_FLOOR);
+        const N_VIS = visibleCandidates.length;
+
+        // Seeded shuffle helper
+        function seededShuffle(arr, seedOffset) {
+          const idx = arr.map((_, i) => i);
+          for (let i = idx.length - 1; i > 0; i--) {
+            const j = Math.floor(sr(i * 71 + seedOffset) * i);
+            [idx[i], idx[j]] = [idx[j], idx[i]];
+          }
+          return idx.map(i => arr[i]);
+        }
+
+        // Layout params
+        const lensSize = 145;
+        const cx = lensSize / 2, cy = lensSize / 2;
+        const ir = 10;
+        const outerR = lensSize / 2 - 1;
+
+        // ── Top-30 + ghost points ──
+        const top30 = visibleCandidates.filter(c => c.in_top30);
+        const nonTop30 = visibleCandidates.filter(c => !c.in_top30);
+        const simMax = Math.max(...visibleCandidates.map(c => c.similarity));
+        const simMaxT30 = Math.max(...top30.map(c => c.similarity));
+        const simMinT30 = Math.min(...top30.map(c => c.similarity));
+
+        // Inject ghost points: fake candidates that fail local presence
+        // Their similarity values are spread across the real top-30 range
+        const N_GHOSTS = 5;
+        const ghosts = Array.from({ length: N_GHOSTS }, (_, i) => ({
+          _ghost: true,
+          in_top30: true,           // so they participate in the top-30 layout
+          similarity: simMinT30 + (simMaxT30 - simMinT30) * (i + 0.5) / N_GHOSTS,
+          passes_local_cd: false,
+          passes_local_pr: false,
+          passes_cops: true,
+          passes_earnings: true,
+          passes_ai: true,
+          is_susceptible: false,
+          community_category: 'rest',
+          label: `Ghost ${i + 1}`,
+        }));
+
+        // Pool = real top-30 + ghosts → shuffle together
+        const pool = [...top30, ...ghosts];
+        const N_POOL = pool.length;
+
+        // Angular scale based on pool size (shared across all panels)
+        const aScalePool = d3.scaleLinear().domain([0, N_POOL]).range([0, 2 * Math.PI]);
+        const shuffledPool = seededShuffle(pool, SEED_PANELS);
+
+        // ── Panel 1 radial scale (wide) ──
+        const rScale1 = d3.scaleLinear()
+          .domain([1 - simMax, 1 - SIM_ZOOM_FLOOR])
+          .range([ir + 3, outerR - 4]);
+
+        // Top-30 (real only) for Panel 1: same angles as panels 2-4
+        const p1Top30 = shuffledPool.filter(c => !c._ghost).map((c) => {
+          const poolIdx = shuffledPool.indexOf(c);
+          const angle = aScalePool(poolIdx) - Math.PI / 2;
+          const r = rScale1(1 - c.similarity) + (sr(poolIdx * 37 + SEED_PANELS) - 0.5) * JITTER;
+          return { ...c, dotX: Math.cos(angle) * r, dotY: Math.sin(angle) * r };
+        });
+
+        // Non-top30 faded dots for Panel 1
+        const aScaleFaded = d3.scaleLinear().domain([0, nonTop30.length]).range([0, 2 * Math.PI]);
+        const shuffledFaded = seededShuffle(nonTop30, SEED_PANEL1);
+        const p1Faded = shuffledFaded.map((c, i) => {
+          const angle = aScaleFaded(i) - Math.PI / 2;
+          const r = rScale1(1 - c.similarity) + (sr(i * 37 + SEED_PANEL1) - 0.5) * JITTER;
+          return { ...c, dotX: Math.cos(angle) * r, dotY: Math.sin(angle) * r };
+        });
+
+        const p1Dots = [...p1Faded, ...p1Top30];
+
+        // ── Panels 2-4 radial scale (zoomed tight, domain from REAL data only) ──
+        const rScale2 = d3.scaleLinear()
+          .domain([1 - simMaxT30, 1 - simMinT30])
+          .range([ir + 3, outerR - 8]);
+
+        const p2Dots = shuffledPool.map((c, i) => {
+          const angle = aScalePool(i) - Math.PI / 2;
+          const r = rScale2(1 - c.similarity) + (sr(i * 37 + SEED_PANELS) - 0.5) * JITTER;
+          return { ...c, dotX: Math.cos(angle) * r, dotY: Math.sin(angle) * r };
+        });
+
+        // ── Read panel colours from CSS variables ──
+        const s = getComputedStyle(document.documentElement);
+        const cv = (v) => s.getPropertyValue(v).trim();
+        const P = {
+          p1Active:     cv('--p1-active'),
+          p1Faded:      cv('--p1-faded'),
+          p2LocalCd:    cv('--p2-local-cd'),
+          p2LocalPr:    cv('--p2-local-pr'),
+          p2Neither:    cv('--p2-neither'),
+          p3Pass:       cv('--p3-pass'),
+          p3FailCops:   cv('--p3-fail-cops'),
+          p3FailEarn:   cv('--p3-fail-earn'),
+          p3FailAi:     cv('--p3-fail-ai'),
+          p4Teer5:      cv('--p4-teer5'),
+          p4Teer4:      cv('--p4-teer4'),
+          p4Faded:      cv('--p4-faded'),
+          centre:       cv('--centre-node'),
+        };
+
+        // ── Opacity config ──
+        const ALPHA_ACTIVE = 1.0;
+        const ALPHA_FADED = 0.35;
+
+        // ── Panel logic ──
+        function panelState(d, panelIdx) {
+          // Ghosts are hidden everywhere except Panel 2
+          if (d._ghost && panelIdx !== 1) return { state: 'hidden' };
+
+          if (panelIdx === 0) {
+            return d.in_top30
+              ? { state: 'active', color: P.p1Active }
+              : { state: 'faded',  color: P.p1Faded };
+          }
+
+          if (panelIdx === 1) {
+            if (d.passes_local_cd) return { state: 'active', color: P.p2LocalCd };
+            if (d.passes_local_pr) return { state: 'active', color: P.p2LocalPr };
+            return { state: 'faded', color: P.p2Neither };
+          }
+
+          if (panelIdx === 2) {
+            if (!d.passes_local_cd && !d.passes_local_pr) return { state: 'hidden' };
+            if (!d.passes_cops)     return { state: 'faded', color: P.p3FailCops };
+            if (!d.passes_earnings) return { state: 'faded', color: P.p3FailEarn };
+            if (!d.passes_ai)       return { state: 'faded', color: P.p3FailAi };
+            return { state: 'active', color: P.p3Pass };
+          }
+
+          if (panelIdx === 3) {
+            if (!d.passes_local_cd && !d.passes_local_pr) return { state: 'hidden' };
+            if (!d.passes_cops || !d.passes_earnings || !d.passes_ai) return { state: 'hidden' };
+            if (d.is_susceptible) return { state: 'faded', color: P.p4Faded };
+            const teerClr = d.teer === 5 ? P.p4Teer5 : P.p4Teer4;
+            const shape = d.community_category === 'endorsed' ? 'diamond' : 'circle';
+            return { state: 'active', color: teerClr, shape };
+          }
+        }
+
+        // ── Draw panels ──
+        ['p1', 'p2', 'p3', 'p4'].forEach((pid, pi) => {
+          const el = document.getElementById(pid);
+          const svg = d3.select(el).append('svg')
+            .attr('width', lensSize).attr('height', lensSize)
+            .style('overflow', 'hidden');
+
+          svg.append('rect')
+            .attr('x', 0.5).attr('y', 0.5)
+            .attr('width', lensSize - 1).attr('height', lensSize - 1)
+            .attr('fill', '#fafafa').attr('stroke', '#ccc').attr('stroke-width', 0.8)
+            .attr('rx', 1);
+
+          const g = svg.append('g').attr('transform', `translate(${cx},${cy})`);
+          const half = lensSize / 2;
+
+          // Pick dot set: panel 1 uses wide view, panels 2-4 use zoomed top-30
+          const dots = pi === 0 ? p1Dots : p2Dots;
+
+          // Draw dots
+          dots.forEach(d => {
+            const ps = panelState(d, pi);
+            if (ps.state === 'hidden') return;
+
+            const alpha = ps.state === 'active' ? ALPHA_ACTIVE : ALPHA_FADED;
+
+            if (ps.shape === 'diamond') {
+              // Diamond (rotated square) for endorsed candidates
+              const s = 4;
+              g.append('polygon')
+                .attr('points', `${d.dotX},${d.dotY-s} ${d.dotX+s},${d.dotY} ${d.dotX},${d.dotY+s} ${d.dotX-s},${d.dotY}`)
+                .attr('fill', ps.color)
+                .attr('opacity', alpha)
+                .attr('stroke', '#fff').attr('stroke-width', 0.4);
+            } else {
+              g.append('circle')
+                .attr('cx', d.dotX).attr('cy', d.dotY)
+                .attr('r', 2.8).attr('fill', ps.color)
+                .attr('opacity', alpha)
+                .attr('stroke', '#fff').attr('stroke-width', 0.3);
+            }
+          });
+
+          // Centre node (square = susceptible occupation)
+          g.append('rect')
+            .attr('x', -4.5).attr('y', -4.5).attr('width', 9).attr('height', 9)
+            .attr('fill', P.centre).attr('stroke', '#fff').attr('stroke-width', 1)
+            .attr('rx', 1);
+        });
+      });
+  </script>
+</body>
+
+</html>

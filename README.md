@@ -113,15 +113,11 @@ mistake.
 | Enrichment columns `loc_workers`, `loc_income`, `loc_income_discount`, `ai_quadrant`, `cops_recent`, `source_pr_income` | Step 4 | Local (CD) stats and secondary attributes carried for the **presentation layer** (e.g. the F2 filtering figure's local-presence panel). No Step-5 filter uses them — filters use `pr_*`, `cops_future`, `ai_exposure_level`. |
 
 Everything under `data/` **is** used; every pipeline script is in the chain.
-See DECISIONS.md for what was deliberately **removed** from the replication
-(2016 data, NOC concordance, scoring-exploration branch, the review portal).
 
 ---
 
-## Next phase: presentation layer (not yet built)
+## Presentation Layer (Web Portal)
 
-A separate `figure_data/` layer is planned that reads these outputs and fills the
-schema behind each final report figure, per metric, so the document can be traced
-and swapped between cosine and euclidean. The final figures already exist as HTML
-in `study_TO26_consolidatingfigures/figures/` — each embeds a `const DATA` block
-that defines the schema to reproduce. See **[HANDOFF.md](HANDOFF.md)**.
+The `figure_data/` directory contains the presentation layer of this repository. It reads the pipeline outputs and populates the schema behind each final report figure.
+
+This allows the figures to be traced and toggled between `cosine` and `euclidean` metrics. The final HTML figures and their pre-generated JSON data are served as a static site out of the `figure_data/dist/` directory, which is deployed to Cloudflare Pages for author review.

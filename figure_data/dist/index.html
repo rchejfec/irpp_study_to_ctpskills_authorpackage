@@ -58,40 +58,43 @@
     }
     .element__title { font-size: 1.05rem; font-weight: 700; margin: 0 0 0.9rem; color: var(--irpp-navy, #0f2c46); }
 
-    /* ── Metric reference cards (values that change between versions) ── */
-    .refs { margin: 0 0 1rem; }
+    /* ── Ref cards: draft excerpts with metric-dependent blanks ── */
+    .refs { margin: 0.5rem 0 0.5rem; }
     .refcard {
+      margin: 0 0 0.7rem; padding: 0.7rem 0.9rem;
       background: #fff; border: 1px solid #e2e5e9; border-radius: 5px;
-      padding: 0.8rem 0.95rem; margin-bottom: 0.6rem;
       border-left: 3px solid var(--irpp-teal, #2a8a8a);
+      max-width: 640px;
     }
     .refcard__section {
-      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.07em; color: #8a94a0; margin-bottom: 0.45rem;
+      font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #8a94a0; margin-bottom: 0.35rem;
     }
     .refcard__draft {
-      margin: 0 0 0.7rem; padding: 0; border: 0;
-      font-size: 0.9rem; line-height: 1.55; color: #333; font-style: italic;
+      margin: 0; padding: 0; font-size: 0.86rem; line-height: 1.65;
+      color: #333; border: 0; quotes: none;
     }
-    .refcard__draft .blank {
-      font-style: normal; font-weight: 700; color: var(--irpp-navy, #0f2c46);
-      background: #fff2cc; padding: 0 0.35em; border-radius: 3px;
-      letter-spacing: 0.05em;
+    .blank {
+      display: inline-block; padding: 0.1rem 0.5rem; margin: 0 0.15rem;
+      background: linear-gradient(135deg, #eaf6f6, #d8f0f0);
+      border: 1px solid var(--irpp-teal, #2a8a8a);
+      border-radius: 3px; font-weight: 700; color: var(--irpp-navy, #0f2c46);
+      font-family: inherit;
     }
-    .refcard__values { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .refcard__values {
+      display: flex; gap: 0.6rem; margin-top: 0.5rem;
+    }
     .metricval {
-      flex: 1 1 0; min-width: 150px;
-      display: flex; flex-direction: column; gap: 0.15rem;
-      padding: 0.55rem 0.7rem; border-radius: 4px;
+      flex: 1; text-align: center;
+      padding: 0.45rem 0.7rem; border-radius: 4px;
       border: 1px solid #e2e5e9; background: #fafbfc;
       transition: all 0.15s ease;
     }
     .metricval__label {
-      font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.06em; color: #99a2ad;
+      font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #99a2ad; display: block; margin-bottom: 0.1rem;
     }
-    .metricval__num { font-size: 1.05rem; font-weight: 700; color: #333; }
-    /* Highlight the column matching the active metric. */
+    .metricval__num { font-size: 0.95rem; font-weight: 700; color: #333; }
     body[data-metric="cosine"]    .metricval--cosine,
     body[data-metric="euclidean"] .metricval--euclidean {
       border-color: var(--irpp-teal, #2a8a8a);
@@ -103,31 +106,40 @@
     body[data-metric="cosine"]    .metricval--cosine   .metricval__num,
     body[data-metric="euclidean"] .metricval--euclidean .metricval__num { color: var(--irpp-navy, #0f2c46); }
     .refcard__note {
-      margin-top: 0.6rem; font-size: 0.78rem; line-height: 1.5; color: #667;
+      margin-top: 0.45rem; padding-top: 0.4rem;
+      border-top: 1px dashed #e2e5e9;
+      font-size: 0.74rem; line-height: 1.5; color: #888; font-style: italic;
     }
 
-    /* ── Rescued draft prose (text that reads off the figure) ── */
+    /* ── Draft text blocks (prose referencing the figure) ── */
     .prose {
-      margin: 0.9rem 0 0; padding: 0.85rem 1rem;
+      margin: 0.6rem 0 0; padding: 0.7rem 0.9rem;
       background: #fff; border: 1px solid #e2e5e9; border-radius: 5px;
-      border-left: 3px solid #b9c2cc;
+      border-left: 3px solid #d4a852;
       max-width: 640px;
     }
     .prose__label {
-      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.07em; color: #8a94a0; margin-bottom: 0.5rem;
+      font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #c4953a; margin-bottom: 0.4rem;
     }
-    .prose p { margin: 0 0 0.6rem; font-size: 0.86rem; line-height: 1.6; color: #333; }
+    .prose p { margin: 0 0 0.55rem; font-size: 0.84rem; line-height: 1.6; color: #444; }
     .prose p:last-child { margin-bottom: 0; }
     .prose em { color: var(--irpp-teal, #2a8a8a); font-style: normal; font-weight: 600; }
-    /* Metric-specific prose: show only the block matching the active metric. */
-    .metric-only { display: none; }
+
+    /* Metric-variant spans: show only the block matching the active metric */
+    .metric-only { display: none; margin-top: 0.4rem; }
     body[data-metric="cosine"]    .metric-only--cosine,
-    body[data-metric="euclidean"] .metric-only--euclidean { display: block; }
+    body[data-metric="euclidean"] .metric-only--euclidean {
+      display: block;
+      padding: 0.5rem 0.7rem;
+      background: #f4fafa;
+      border: 1px solid #d0e8e8;
+      border-radius: 4px;
+    }
     .metric-only__tag {
-      display: inline-block; font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.06em; color: var(--irpp-teal, #2a8a8a); border: 1px solid var(--irpp-teal, #2a8a8a);
-      border-radius: 3px; padding: 0 0.3rem; margin-right: 0.4rem; vertical-align: 1px;
+      display: inline-block; font-size: 0.58rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #fff; background: var(--irpp-teal, #2a8a8a);
+      border-radius: 2px; padding: 0.05rem 0.35rem; margin-right: 0.35rem; vertical-align: 1px;
     }
 
     /* ── Native-size figure iframe (unpadded, no duplication) ── */
@@ -169,6 +181,56 @@
       letter-spacing: 0.06em; color: var(--irpp-teal, #2a8a8a);
     }
     .per-metric .metric-tag { display: inline; }
+
+    /* ── Figure captions (source + notes) ── */
+    .element__subtitle {
+      font-size: 0.88rem;
+      color: #666;
+      margin: -0.3rem 0 0.6rem;
+      line-height: 1.5;
+      font-style: italic;
+    }
+    .fig-caption {
+      margin: 0.6rem 0 0;
+      padding: 0.6rem 0.8rem;
+      background: #f8f8f6;
+      border: 1px solid #e8e6e1;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      color: #555;
+    }
+    .fig-caption__source {
+      margin-bottom: 0.3rem;
+    }
+    .fig-caption__source strong,
+    .fig-caption__notes strong {
+      color: #333;
+      font-weight: 700;
+    }
+    .fig-caption__notes {
+      color: #666;
+    }
+    .doc-text {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .doc-text h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #777;
+    }
+    .doc-text h3 {
+      margin: 0 0 1.5rem 0;
+      font-size: 1.25rem;
+      color: #222;
+    }
   </style>
 </head>
 <body data-metric="cosine" data-pick="author">
@@ -186,14 +248,8 @@
 
   <header class="intro">
     <h1>Figure &amp; value reference</h1>
-    <p>The review draft leaves <span class="blank-inline">____</span> blanks where a number depends on the
-       similarity metric. This page fills those blanks: each figure is rendered live from our pipeline
-       output (<code>figure_data/out/</code>), in study order, and the values that <strong>change between
-       metrics</strong> are listed alongside the draft sentence they belong in.</p>
-    <p>Use the sticky switch to compare
-       <strong>cosine</strong> (the authors' stated metric) against
-       <strong>euclidean</strong> (our per-source-normalized addition). The active column is highlighted, and
-       every metric-dependent figure re-renders. Figures with no reference card have no metric-varying values.</p>
+    <p>This portal brings the data and figures from the rural transitions study to life. It renders every figure directly from the pipeline outputs (<code>figure_data/out/</code>) in their respective study order, interspersed with relevant excerpts from the draft text.</p>
+    <p>Use the sticky switch at the top to toggle the underlying similarity metric between <strong>Cosine</strong> (the authors' original stated metric) and <strong>Euclidean</strong> (our per-source-normalized alternative). When toggled, all metric-dependent figures re-render instantly, and the accompanying draft text updates to reflect the accurate data under that scenario.</p>
   </header>
 
   <main id="main"><!-- elements injected by JS --></main>
@@ -203,29 +259,53 @@
   // metricFig=true → iframe reloads on metric toggle (E/B/D/F2).
   const ELEMENTS = [
     {
-      eyebrow: 'Figure 1 · The approach follows four steps', title: 'The approach follows four steps',
+      eyebrow: 'Figure 1', title: 'The approach follows four steps',
       fig: 'C2_summary', metricFig: false,
+      caption: {
+        subtitle: 'A skills-based methodology for identifying career transition pathways in communities facing economic disruption',
+        source: 'Authors.',
+        notes: 'This study uses four categories from Canada\'s Occupational and Skills Information System (OaSIS, 2023 version), covering 166 competencies across Skills, Knowledge, Abilities, and Work Activities. Viability filters include regional presence, occupational outlook, earnings differential, AI exposure, and education alignment. See Section 4 for full methodological detail.',
+      },
     },
     {
-      eyebrow: 'Figure 2 · Susceptible communities and occupations', title: 'Seven communities across Canada',
+      eyebrow: 'Figure 2', title: 'Seven communities across Canada were selected to illustrate how the approach works across different economic profiles',
       fig: 'A2_map', metricFig: false,
+      caption: {
+        source: 'Authors, based on IRPP Community Transformations Project susceptibility methodology (Chejfec et al., 2025).',
+        notes: 'Community susceptibility was assessed using 2021 Census data across three metrics: facility emissions, employment in emissions-intensive sectors, and labour force in globally traded sectors. Susceptible occupations were selected based on each community\'s dominant industrial structure. See Box 1 for methodology details.',
+      },
     },
     {
-      eyebrow: 'Table 1 · Canada’s Occupational and Skills Information System (OaSIS)', title: 'Four OaSIS categories covering 166 competencies',
+      eyebrow: 'Table 1', title: 'The study uses four OaSIS categories covering 166 competencies',
       fig: 'G2_oasis_competencies', metricFig: false,
+      caption: {
+        source: 'Employment and Social Development Canada (ESDC), Occupational and Skills Information System (OaSIS), 2023 version.',
+        notes: 'OaSIS covers seven categories in total. This study uses the four shown here. A rating of 0 is equivalent to not applicable.',
+      },
     },
     {
-      eyebrow: 'Figure 3 · Measuring proximity between occupations', title: 'Skills-similar alternatives spread across occupation families',
+      eyebrow: 'Figure 3', title: 'Each of the 16 susceptible occupations has skills-similar alternatives spread across three or more occupation families',
       fig: 'B_suitable_heatmap', metricFig: true,
+      caption: {
+        subtitle: 'Number of individual occupations from each NOC 3-digit group appearing in the top 10 most skills-similar alternatives',
+        source: 'Authors\' calculations using OaSIS (2023 version).',
+        notes: 'For each susceptible occupation (rows), the similarity algorithm identifies the 10 most skills-similar alternatives from across the Canadian labour market. These candidates are grouped by their NOC 3-digit occupation family (columns). Cell values show how many individual occupations from that family appear in the top 10. Only columns where more than one row has values are shown. Community tags indicate where each susceptible occupation is tracked in this study. These suitable candidates represent the starting pool before community-specific viability filters (Section 4.3) are applied.',
+      },
+    },
+    {
+      type: 'text',
+      section: '4. Analysis and Findings',
+      subsection: 'Measuring proximity between occupations',
       refs: [
         {
-          section: 'Measuring proximity between occupations',
-          draft: 'Because OaSIS already provides a balanced set of competencies, each domain was equally weighted. Proximity between occupations was calculated as simple, unweighted ____.',
-          values: { cosine: 'cosine similarity', euclidean: 'Euclidean distances' },
-          note: 'The draft names the metric here. Cosine is the authors’ stated primary metric and is comparable across sources (absolute [0,1]); euclidean distance is our per-source min-max–normalized addition. Choose the phrasing that matches the version being published.',
+          draft: 'Proximity between occupations was calculated as ____.',
+          values: {
+            cosine: 'unweighted cosine similarities. Our resulting similarity scores range from 0 to 1, with higher scores indicating a greater overlap in occupational requirements',
+            euclidean: 'Euclidean distances, normalized per source occupation to a 0–1 scale where 1 represents the most similar candidate in the pool (not 100% similarity). Higher scores indicate a greater overlap in occupational requirements',
+          },
+          note: 'Cosine is bounded [0,1] by definition. Euclidean distances are per-source min-max normalized, so 1.00 = nearest candidate, not identical.',
         },
         {
-          section: 'Measuring proximity between occupations',
           draft: 'the susceptible occupation of heavy equipment operator had a high level of similarity with the occupation of crane operator … an overall skills proximity score of ____.',
           values: { cosine: '0.97', euclidean: '1.00' },
           note: 'Draft says 0.99, which matches neither metric exactly. Cosine 73400→72500 = 0.9702; euclidean = 1.0000 (nearest candidate, per-source min-max).',
@@ -233,58 +313,66 @@
       ],
     },
     {
-      eyebrow: 'Figure 4 · Viable occupations: filtering for local viability', title: 'Successive filters narrow the pool to locally viable alternatives',
+      eyebrow: 'Figure 4', title: 'Starting from a ranked list of suitable occupations, successive filters narrow the pool to a focused set of locally viable alternatives',
       fig: 'F2_filtering', metricFig: true,
-      refs: [
-        {
-          section: 'Viable occupations: filtering for local viability',
-          draft: 'Starting from ranked suitable occupations, successive filters (TEER → top-30 → earnings → endorsement) narrow the pool to ____ viable alternatives within the top-30 shown for material handlers in Oxford.',
-          values: { cosine: '26 viable', euclidean: '26 viable' },
-          note: 'Scoped to the top-30 the figure actually plots, with endorsed picks counted as viable. Of the 30 shown: 26 viable (4 endorsed picks + 22 other viable) + 4 filtered/not-viable. Lands at 26 under both metrics (the top-30 sets differ slightly, but the tally matches). Earlier drafts said 104 (cosine) / 120 (euclidean) — that was viable across the full 172-candidate pool, not the top-30 shown.',
-        },
-      ],
+      caption: {
+        subtitle: 'Illustrated for material handlers (TEER 5) in Oxford, ON',
+        source: 'Authors\' calculations using OaSIS (2023 version), Census (2021), Labour Force Survey (2023), COPS projections, and Community Transformations Project profiles.',
+        notes: 'Each dot represents a candidate occupation; the red square is the susceptible occupation. Proximity to centre indicates higher skills similarity. Faded dots have been filtered out at that stage. Two additional filters — AI exposure and occupational outlook — are applied but not shown. See Section 4.3 for full filter descriptions.',
+      },
+
     },
     {
-      eyebrow: 'Table 2 · Viable occupations by community', title: 'Viable alternatives for Estevan, at comparable & higher training levels',
-      fig: 'E_viable_table', metricFig: true, pickFig: true,
-      refs: [
-        {
-          section: 'Viable occupations by community',
-          draft: 'For each susceptible occupation in Estevan, comparable-TEER and TEER-relaxed viable alternatives, plus additional candidates grouped by NOC family (“other in top 10”), vary by metric and by whose hand-picks are shown.',
-          values: { cosine: 'cosine ranks / groupings', euclidean: 'euclidean ranks / groupings' },
-          note: 'Two independent levers on this table. Metric (global switch): changes the ranks and the "other viable in top 10" groupings. Hand-picks (toggle below): the author version shows only author picks as hand-picks; the user version shows only user picks. The non-shown endorser’s picks are not dropped — they fall into "other viable" if still within the top-10 window.',
-        },
-      ],
+      eyebrow: 'Table 2', title: 'Viable alternatives identified at comparable and higher training levels for susceptible occupations',
+      fig: 'E_viable_table', metricFig: true,
+      caption: {
+        source: 'Authors\' calculations using OaSIS (2023 version), Census (2021), Labour Force Survey (2023), COPS projections, and IRPP community consultations.',
+        notes: 'Viable occupations are shown in two scenarios: those with a comparable TEER level to the susceptible occupation, and those requiring more extensive training (TEER relaxed). The third column summarizes additional viable occupations from the top 10 skills-similar candidates, grouped by NOC occupation family. Full results for all seven communities are available in Appendix K.',
+      },
+
     },
     {
-      eyebrow: 'Figure 5 · Major skills gaps between susceptible and viable occupations', title: 'RCA pinpoints where each pathway requires the most upskilling',
+      eyebrow: 'Figure 5', title: 'A revealed comparative advantage (RCA) approach pinpoints where each transition pathway requires the most upskilling',
       fig: 'I_skills_gap_bars', metricFig: false,
-      prose: [
-        'The first example shows that <strong>material handlers</strong> would likely need to augment their skills in <em>quality control testing</em> and <em>management of material resources</em>, in particular, to transition to <strong>construction trades helpers and labourers</strong>. Material handlers already require a certain amount of these skills (the hatched portion of the columns), but construction trades helpers and labourers rely on them more intensely. Here both occupations sit at <strong>TEER 5</strong> — a similar level of education and training.',
-        'The second example shows that <strong>transport truck drivers</strong> (TEER 3) typically require less training than <strong>crane operators</strong> (TEER 2). A transition would not only need a TEER upgrade but also more intensive expertise in <em>digital literacy</em> and <em>management of personnel resources</em>.',
-        'In both examples, other job-specific requirements beyond TEER and occupation-specific skills matter too — even once skills gaps are closed, additional licences and certifications may be required (e.g. a crane operator certification).',
-      ],
+      caption: {
+        subtitle: 'Two examples of how the RCA approach identifies where workers would need to build skills',
+        notes: 'Each bar shows the revealed comparative advantage (RCA) for a competency. Values above 1.0 (dashed line) indicate the occupation relies on that competency more intensely than the average across all occupations. Where the viable occupation (teal) extends beyond the susceptible occupation (red), a training gap exists. Left panel: same TEER level (5). Right panel: TEER upgrade required (3 → 2).',
+      },
+
     },
     {
-      eyebrow: 'Figure 6 · Major skills gaps: priorities for local training', title: 'Each community’s top Skills-domain gaps',
+      eyebrow: 'Figure 6', title: 'Common skill gaps across communities can inform regional training investments',
       fig: 'J_skills_gap_table', metricFig: false,
+      caption: {
+        subtitle: 'Each community\'s top three Skills-domain gaps across all susceptible-to-viable transition pairs',
+        notes: 'For each community, the figure shows the three competencies that most frequently appear as skill gaps across all curated transition pairs. Gaps are identified using a revealed comparative advantage (RCA) approach: a competency is a gap when the viable occupation\'s RCA exceeds 1 and the susceptible occupation\'s RCA is below 1. Only the ten largest gaps per pair (by magnitude) are retained, focusing on substantive training needs. Bars show each gap\'s share of the community\'s total transition pairs.',
+      },
+
+    },
+    {
+      type: 'text',
+      section: '4. Analysis and Findings',
+      subsection: 'Material handlers: An illustrative example of potential career pathways',
       prose: [
-        '<strong>Draft revision needed.</strong> This figure was narrowed to the <em>Skills</em> domain and now shows each community’s <strong>top three</strong> Skills gaps rather than a single top gap per domain — reframing it from cross-community recurrence to <em>where local training investment would reach the most transition pathways</em>. The draft paragraph (which cited Knowledge and Work-Activity examples and framed it as gaps that “recur across communities”) should be replaced. Suggested text:',
-        '<em>Zooming in on the Skills domain, the analysis points to clear local training priorities. In five of the seven communities — Algoma, Estevan, Neepawa, the Northwest Territories and Wood Buffalo — <strong>Product Design</strong> (a Skill related to designing or adapting equipment and technology) is the single most common gap across curated transition pairs. The remaining two lead elsewhere: <strong>Management of Material Resources</strong> in Channel-Port aux Basques and <strong>Quality Control Testing</strong> in Oxford. Because the figure ranks each community’s own top gaps, it reads as a shortlist for place-based training investment: the competencies that, if built locally, would unlock the most viable pathways for that community’s workers.</em>',
-        'Note the count differs from the earlier draft’s “six of seven,” which combined all four OaSIS domains; restricted to Skills, Product Design is the top gap in <strong>five of seven</strong> communities.',
+        '<strong>Step 2: Find skills-similar alternatives</strong>',
+        'Based on the skill and job characteristics of material handlers, the occupations with the closest competency overlap included <span class="metric-only metric-only--cosine"><span class="metric-only__tag">Cosine</span>chain saw and skidder operators, logging labourers, longshore workers, other labourers in manufacturing, and construction trades helpers</span><span class="metric-only metric-only--euclidean"><span class="metric-only__tag">Euclidean</span>labourers in metal fabrication, labourers in rubber and plastic products manufacturing, labourers in mineral and metal processing, and railway and motor transport labourers</span>, among others (see Appendix A). At this stage the list reflects skills proximity alone, before any local or economic considerations are applied.'
       ],
     },
     {
-      eyebrow: 'Figure 7 · Material handlers: an illustrative example', title: 'Sample career transition pathways for material handlers in Oxford',
+      eyebrow: 'Figure 7', title: 'Sample career transition pathways for material handlers in Oxford, ON',
       fig: 'D_walkthrough', metricFig: true,
-      refs: [
-        {
-          section: 'Measuring proximity between occupations (same value, shown on the walkthrough)',
-          draft: 'heavy equipment operator … crane operator … overall skills proximity score of ____.',
-          values: { cosine: '0.97', euclidean: '1.00' },
-          note: 'Same 0.99 draft value as Figure 3; the walkthrough surfaces the per-candidate similarity. Cosine 0.9702, euclidean 1.0000.',
+      caption: {
+        subtitle: 'An illustrative walkthrough from susceptible occupation to viable alternatives, including skill gap identification',
+        source: 'Authors, using OaSIS (2023 version), 2021 Census, COPS projections, and IRPP community profiles.',
+        notes: 'Left panel shows the top skill-similar occupations ranked by {{metric_name}} across 166 OaSIS competencies. Centre panel screens candidates for earnings (≥65% of source median), occupational outlook (COPS), and AI exposure. Right panel previews training gaps for a selected viable occupation using the RCA approach. Qualitative assessment notes reflect community-level context from IRPP research and extrapolations from the data.',
+        metricTemplates: {
+          cosine: { metric_name: 'cosine similarity' },
+          euclidean: { metric_name: 'Euclidean distance' },
         },
-      ],
+      },
+    },
+    {
+      type: 'text',
       prose: [
         'The figure’s <strong>Assessment notes</strong> panel (bottom right) is hardcoded, not data-driven — so the occupations it names must be listed here per metric, because the candidate mix shown differs between cosine and euclidean.',
         '<span class="metric-only metric-only--cosine"><span class="metric-only__tag">Cosine</span>' +
@@ -299,11 +387,9 @@
       ],
     },
     {
-      eyebrow: 'Appendix · Full viability screening (portal only)', title: 'Every community × susceptible occupation, all screens',
+      eyebrow: 'Appendix', title: 'Every community × susceptible occupation, all screens',
       fig: 'K_appendix_screening', metricFig: true, fullBleed: true,
-      prose: [
-        'A comprehensive companion to Figure&nbsp;7’s viability panel: for <strong>each community × susceptible occupation</strong>, the top&#8209;10 skills-similar candidates (plus any hand-picks ranked deeper) with every pass/fail screen and the final classification. Sensitive to the metric toggle. Not part of the draft — a review aid.',
-      ],
+
     },
   ];
 
@@ -314,7 +400,6 @@
     card.className = 'refcard';
     const draftHtml = r.draft.replace(/____/g, '<span class="blank">____</span>');
     card.innerHTML =
-      `<div class="refcard__section">${r.section}</div>` +
       `<blockquote class="refcard__draft">${draftHtml}</blockquote>` +
       `<div class="refcard__values">` +
         `<div class="metricval metricval--cosine" data-metric="cosine">` +
@@ -334,6 +419,35 @@
   const pickFrames = []; // frames that carry a ?pick= dimension
 
   ELEMENTS.forEach(el => {
+    if (el.type === 'text') {
+      const txt = document.createElement('div');
+      txt.className = 'doc-text';
+      if (el.section) txt.innerHTML += `<h2>${el.section}</h2>`;
+      if (el.subsection) txt.innerHTML += `<h3>${el.subsection}</h3>`;
+      
+      if (el.refs && el.refs.length) {
+        const refs = document.createElement('div');
+        refs.className = 'refs';
+        el.refs.forEach(r => refs.appendChild(refCard(r)));
+        txt.appendChild(refs);
+      }
+      
+      if (el.prose && el.prose.length) {
+        const pr = document.createElement('div');
+        pr.className = 'prose';
+        const hasMetricVariant = el.prose.some(p => p.includes('metric-only'));
+        const label = hasMetricVariant
+          ? 'Draft text — varies by metric scenario'
+          : 'Draft text — review note';
+        pr.innerHTML = `<div class="prose__label">${label}</div>` +
+          el.prose.map(p => `<p>${p}</p>`).join('');
+        txt.appendChild(pr);
+      }
+      
+      main.appendChild(txt);
+      return;
+    }
+
     const sec = document.createElement('section');
     sec.className = 'element' + (el.metricFig ? ' per-metric' : '');
     sec.id = el.fig;
@@ -341,7 +455,8 @@
     sec.innerHTML =
       `<div class="element__eyebrow">${el.eyebrow}</div>` +
       `<h2 class="element__title">${el.title} ` +
-      `<span class="metric-tag">· per-metric</span></h2>`;
+      `<span class="metric-tag">· per-metric</span></h2>` +
+      (el.caption && el.caption.subtitle ? `<p class="element__subtitle">${el.caption.subtitle}</p>` : '');
 
     if (el.refs && el.refs.length) {
       const refs = document.createElement('div');
@@ -378,22 +493,36 @@
     wrap.appendChild(frame);
     sec.appendChild(wrap);
 
-    // Draft prose that reads off the figure (occupations, competencies, numbers),
-    // rescued from the study so the authors can slot it back in.
-    if (el.prose && el.prose.length) {
-      const pr = document.createElement('div');
-      pr.className = 'prose';
-      pr.innerHTML = `<div class="prose__label">From the draft — text referencing this figure</div>` +
-        el.prose.map(p => `<p>${p}</p>`).join('');
-      sec.appendChild(pr);
+    // ── Caption block: source + notes from the draft ──
+    if (el.caption && (el.caption.source || el.caption.notes)) {
+      const cap = document.createElement('div');
+      cap.className = 'fig-caption';
+      if (el.caption.metricTemplates) {
+        cap.dataset.captionFig = el.fig;
+      }
+      let capHtml = '';
+      if (el.caption.source) capHtml += `<div class="fig-caption__source"><strong>Source:</strong> ${el.caption.source}</div>`;
+      if (el.caption.notes) {
+        let notesText = el.caption.notes;
+        // Apply metric templates for initial metric
+        if (el.caption.metricTemplates) {
+          const tpl = el.caption.metricTemplates[document.body.dataset.metric] || {};
+          Object.entries(tpl).forEach(([k, v]) => { notesText = notesText.replace(`{{${k}}}`, v); });
+        }
+        capHtml += `<div class="fig-caption__notes"><strong>Notes:</strong> <span class="fig-caption__notes-text">${notesText}</span></div>`;
+      }
+      cap.innerHTML = capHtml;
+      sec.appendChild(cap);
     }
 
+    // Prose blocks have been moved to dedicated text objects, so they are not rendered inside figures anymore.
     if (el.metricFig) metricFrames.push(frame);
     if (el.pickFig) pickFrames.push(frame);
     main.appendChild(sec);
   });
 
   // Build an iframe src from the element flags and current global state.
+  // Used only for the INITIAL load — subsequent switches use postMessage.
   function frameSrc(el) {
     const q = [];
     if (el.metricFig) q.push(`metric=${document.body.dataset.metric}`);
@@ -401,14 +530,12 @@
     return `figures/${el.fig}.html` + (q.length ? `?${q.join('&')}` : '');
   }
 
-  // Strip the dev wrapper (export-mode) and size the iframe to the figure's
-  // native .figure-container — no padding, no scrollbars, no duplication.
+  // Size the iframe to the figure's native .figure-container on initial load.
   function sizeFrame(frame) {
     try {
       const doc = frame.contentDocument;
       if (!doc) return;
-      // Full-bleed appendix: span the column width and let the child report its
-      // own height via postMessage (grows/shrinks as sections collapse).
+      // Full-bleed appendix: span the column width and let the child report height.
       if (frame._el && frame._el.fullBleed) {
         frame.style.width = '100%';
         const b = doc.querySelector('.appendix');
@@ -419,8 +546,6 @@
       const fit = () => {
         const c = doc.querySelector('.figure-container');
         if (!c) return;
-        // Give the iframe a roomy viewport first so the fixed-width figure
-        // lays out at its natural size, then measure and shrink-to-fit.
         frame.style.width = '1400px';
         frame.style.height = '1200px';
         const r = c.getBoundingClientRect();
@@ -428,18 +553,28 @@
         frame.style.height = Math.ceil(r.height) + 'px';
       };
       fit();
-      // Re-fit after fonts/async renders settle.
       if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(fit);
-      setTimeout(fit, 350);
-      setTimeout(fit, 800);
+      // Single delayed re-fit for initial load only
+      setTimeout(fit, 500);
     } catch (e) { /* cross-origin shouldn't happen (same origin) */ }
   }
 
-  // ── Appendix iframes report their own height (collapsible content) ──
+  // ── Child figures report their own size after re-renders ──
   window.addEventListener('message', e => {
-    if (!e.data || e.data.type !== 'appendix-height') return;
-    const frame = document.querySelector(`iframe[data-fig="${e.data.fig}"]`);
-    if (frame) frame.style.height = Math.ceil(e.data.height) + 'px';
+    if (!e.data) return;
+    // Appendix height reports (K)
+    if (e.data.type === 'appendix-height') {
+      const frame = document.querySelector(`iframe[data-fig="${e.data.fig}"]`);
+      if (frame) frame.style.height = Math.ceil(e.data.height) + 'px';
+    }
+    // Figure size reports (B, D, E, F2)
+    if (e.data.type === 'figure-sized') {
+      const frame = document.querySelector(`iframe[data-fig="${e.data.fig}"]`);
+      if (frame) {
+        if (e.data.width) frame.style.width = Math.ceil(e.data.width) + 'px';
+        if (e.data.height) frame.style.height = Math.ceil(e.data.height) + 'px';
+      }
+    }
   });
 
   // ── Metric toggle (global, sticky) ──
@@ -447,14 +582,24 @@
   function setMetric(metric) {
     document.body.dataset.metric = metric;
     buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.metric === metric)));
+    // Send postMessage to all per-metric iframes — no src reload
     metricFrames.forEach(frame => {
-      // Full-bleed appendix switches in place (keeps expanded rows); others
-      // reload their src to re-fetch the metric's data.
-      if (frame._el && frame._el.fullBleed) {
-        frame.contentWindow.postMessage({ type: 'appendix-metric', metric }, '*');
-      } else {
-        frame.src = frameSrc(frame._el);
-      }
+      try {
+        if (frame._el && frame._el.fullBleed) {
+          frame.contentWindow.postMessage({ type: 'appendix-metric', metric }, '*');
+        } else {
+          frame.contentWindow.postMessage({ type: 'set-metric', metric }, '*');
+        }
+      } catch (e) { /* ignore */ }
+    });
+    // Update metric-templated captions
+    ELEMENTS.forEach(el => {
+      if (!el.caption || !el.caption.metricTemplates || !el.caption.notes) return;
+      const tpl = el.caption.metricTemplates[metric] || {};
+      let notesText = el.caption.notes;
+      Object.entries(tpl).forEach(([k, v]) => { notesText = notesText.replace(`{{${k}}}`, v); });
+      const capEl = document.querySelector(`[data-caption-fig="${el.fig}"] .fig-caption__notes-text`);
+      if (capEl) capEl.textContent = notesText;
     });
     updateCtx();
   }
@@ -468,7 +613,12 @@
       document.body.dataset.pick = pick;
       document.querySelectorAll('.pick-toggle button').forEach(x =>
         x.setAttribute('aria-pressed', String(x.dataset.pick === pick)));
-      pickFrames.forEach(frame => { frame.src = frameSrc(frame._el); });
+      // Send postMessage to pick-aware iframes — no src reload
+      pickFrames.forEach(frame => {
+        try {
+          frame.contentWindow.postMessage({ type: 'set-pick', pick }, '*');
+        } catch (e) { /* ignore */ }
+      });
     });
   });
 
@@ -504,3 +654,4 @@
   </script>
 </body>
 </html>
+

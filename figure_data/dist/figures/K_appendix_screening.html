@@ -88,9 +88,10 @@
   .cand-rank { font-variant-numeric: tabular-nums; color: var(--clr-body-secondary); }
   .cand-sim  { font-variant-numeric: tabular-nums; }
 
-  /* Pass/fail dots */
-  .dot { display: inline-block; width: 13px; height: 13px; line-height: 13px; border-radius: 50%; font-size: 9px; font-weight: 700; color: #fff; }
+  /* Pass/fail/warn dots */
+  .dot { display: inline-block; width: 13px; height: 13px; line-height: 13px; border-radius: 50%; font-size: 9px; font-weight: 700; color: #fff; text-align: center; }
   .dot.pass { background: var(--irpp-teal); }
+  .dot.warn { background: #d4a852; }
   .dot.fail { background: var(--irpp-red); }
   .dot.na   { background: #ccc; }
 
@@ -113,28 +114,38 @@
   const METRIC = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
 
   const SCREENS = [
-    { key: 'passes_teer',     label: 'TEER' },
-    { key: 'passes_earnings', label: 'Earn' },
-    { key: 'passes_local_pr', label: 'Prov' },
-    { key: 'passes_local_cd', label: 'CD' },
-    { key: 'passes_cops',     label: 'COPS' },
-    { key: 'passes_ai',       label: 'AI' },
+    { key: 'screen_teer',     label: 'TEER',  type: 'bool' },
+    { key: 'screen_earnings', label: 'Earn',   type: 'bool' },
+    { key: 'screen_presence', label: 'Prov',   type: 'bool' },
+    { key: 'passes_local_cd', label: 'CD',     type: 'bool' },
+    { key: 'screen_cops',     label: 'COPS',   type: 'tri' },
+    { key: 'screen_ai',       label: 'AI',     type: 'bool' },
   ];
 
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  function dot(pass, title) {
-    const cls = pass ? 'pass' : 'fail';
-    const mark = pass ? '✓' : '✗';
+  function dot(val, title, type) {
+    if (type === 'tri') {
+      const cls = val === 'fail' ? 'fail' : val === 'warn' ? 'warn' : 'pass';
+      const mark = val === 'fail' ? '\u2717' : val === 'warn' ? '\u26A0' : '\u2713';
+      return `<span class="dot ${cls}" title="${esc(title || '')}">${mark}</span>`;
+    }
+    const cls = val ? 'pass' : 'fail';
+    const mark = val ? '\u2713' : '\u2717';
     return `<span class="dot ${cls}" title="${esc(title || '')}">${mark}</span>`;
   }
 
   function candRow(c) {
     const tds = SCREENS.map(s => {
-      let title = s.label + (c[s.key] ? ' — pass' : ' — fail');
-      if (s.key === 'passes_cops' && c.cops) title = 'COPS: ' + c.cops;
-      if (s.key === 'passes_ai' && c.ai) title = 'AI: ' + c.ai;
-      return `<td>${dot(c[s.key], title)}</td>`;
+      let title = s.label;
+      if (s.type === 'tri') {
+        title = c.cops ? 'COPS: ' + c.cops : s.label + ' \u2014 ' + c[s.key];
+      } else if (s.key === 'screen_ai' && c.ai) {
+        title = 'AI: ' + c.ai;
+      } else {
+        title = s.label + (c[s.key] ? ' \u2014 pass' : ' \u2014 fail');
+      }
+      return `<td>${dot(c[s.key], title, s.type)}</td>`;
     }).join('');
     const pick = c.pick_source ? `<span class="pick-tag">${c.pick_source}</span>` : '';
     const cls = c.in_top10 ? '' : ' class="extra"';
@@ -188,7 +199,8 @@
       `<strong>viable or handpicked</strong> candidates (plus any handpicks ranked deeper, shaded, marked <strong>*</strong>), ` +
       `each against the five screens from Figure&nbsp;7’s viability panel: TEER window, earnings (≥65%), local presence ` +
       `(provincial &amp; census-division), COPS outlook, and AI exposure. <span class="dot pass">✓</span> pass · ` +
-      `<span class="dot fail">✗</span> fail. Candidates screened out entirely (“rest”) are not shown. ` +
+      `<span class="dot warn">⚠</span> warning · ` +
+      `<span class="dot fail">✗</span> fail. Candidates screened out entirely (\u201Crest\u201D) are not shown. ` +
       `Showing the <strong>${metric}</strong> metric — switch above to compare in place (your expanded rows stay open).`;
 
     groupsEl.innerHTML = DATA.communities.map(comm => {
@@ -225,8 +237,13 @@
   // ── Auto-size: tell the parent portal our content height, and re-report
   //    whenever a collapsible section opens/closes so the iframe grows/shrinks.
   function reportHeight() {
-    const h = document.documentElement.scrollHeight;
-    parent.postMessage({ type: 'appendix-height', fig: 'K_appendix_screening', height: h }, '*');
+    // Reset body height so scrollHeight isn't inflated by the old iframe size
+    document.body.style.minHeight = '0';
+    document.body.style.height = 'auto';
+    requestAnimationFrame(() => {
+      const h = document.querySelector('.appendix').offsetHeight;
+      parent.postMessage({ type: 'appendix-height', fig: 'K_appendix_screening', height: h }, '*');
+    });
   }
   document.addEventListener('toggle', e => {
     if (e.target && e.target.tagName === 'DETAILS') reportHeight();

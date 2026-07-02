@@ -75,15 +75,18 @@ def _candidate(row: pd.Series) -> dict:
         "pr_income": None if pd.isna(row["pr_income"]) else float(row["pr_income"]),
         "pr_workers": None if pd.isna(pr_w) else float(pr_w),
         "income_ratio": None if pd.isna(disc) else round(float(disc), 4),
-        "passes_earnings": bool(disc >= EARNINGS_FLOOR) if pd.notna(disc) else False,
         "loc_workers": None if pd.isna(loc_w) else float(loc_w),
         "loc_income_discount": None if pd.isna(loc_disc) else round(float(loc_disc), 4),
-        "passes_local_pr": bool(pd.notna(pr_w) and pr_w > 0),
+        # Screen flags: read from pipeline's single source of truth.
+        "screen_teer": bool(row.get("screen_teer") in (True, "True")),
+        "screen_earnings": bool(row.get("screen_earnings") in (True, "True")),
+        "screen_presence": bool(row.get("screen_presence") in (True, "True")),
+        "screen_cops": str(row.get("screen_cops") or "pass"),  # pass|warn|fail
+        "screen_ai": bool(row.get("screen_ai") in (True, "True")),
+        # Local CD presence: presentation-layer only.
         "passes_local_cd": bool(pd.notna(loc_w) and loc_w > 0),
         "cops": cops or None,
         "ai": ai or None,
-        "passes_cops": "surplus" not in cops.lower(),
-        "passes_ai": "high" not in ai.lower(),
         "is_susceptible": row["candidate_noc"] in _COMM_SUSC,
         "status": row["status"],
         "community_category": _community_category(row),
@@ -105,16 +108,16 @@ _COMM_SUSC: set[str] = set()
 def _funnel(cand: pd.DataFrame) -> dict:
     """Sequential funnel in pipeline order; each stage counts survivors."""
     total = len(cand)
-    # In-order survivor counting mirrors the replication's cumulative funnel.
-    teer_ok = ~cand["filter_reasons"].fillna("").str.contains("teer")
+    # Use pipeline's screen_* columns as single source of truth.
+    teer_ok = cand["screen_teer"].astype(str).isin(["True"])
     top30 = cand["rank"] <= TOP_N_SIM
-    earn_ok = pd.to_numeric(cand["pr_income_discount"], errors="coerce") >= EARNINGS_FLOOR
-    prw = pd.to_numeric(cand["pr_workers"], errors="coerce")
-    pr_ok = prw.fillna(0) > 0
+    earn_ok = cand["screen_earnings"].astype(str).isin(["True"])
+    pr_ok = cand["screen_presence"].astype(str).isin(["True"])
     locw = pd.to_numeric(cand["loc_workers"], errors="coerce")
     cd_ok = locw.fillna(0) > 0
-    cops_ok = ~cand["cops_future"].fillna("").str.lower().str.contains("surplus")
-    ai_ok = ~cand["ai_exposure_level"].fillna("").str.lower().str.contains("high")
+    # COPS: warn + pass both count as passing for funnel stage counts.
+    cops_ok = cand["screen_cops"].isin(["pass", "warn"])
+    ai_ok = cand["screen_ai"].astype(str).isin(["True"])
 
     picks = lib.is_pick(cand)
     viable = lib.is_viable(cand)
@@ -128,10 +131,6 @@ def _funnel(cand: pd.DataFrame) -> dict:
         "pass_ai": int((teer_ok & top30 & ai_ok).sum()),
         "pass_cops": int((teer_ok & top30 & cops_ok).sum()),
         "endorsed": int((top30 & picks).sum()),
-        # Viable is scoped to the top-30 the figure actually plots (the radial lens
-        # only shows those). Endorsed picks count as viable, so this is the full
-        # viable tally within the top-30, picks included — not "leftover". Counting
-        # viable across the full 172-candidate pool (104/120) overstated it.
         "viable": int((top30 & viable).sum()),
     }
 

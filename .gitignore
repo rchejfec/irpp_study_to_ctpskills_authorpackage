@@ -19,8 +19,17 @@ output/
 # Verification scratch (not part of the package)
 temp/
 
-# Generated figure_data JSONs (regenerable via figure_data/generate_all.py)
-figure_data/out/
-
 # Generated figure PNGs (regenerable via figure_data/export.mjs)
 figure_data/exports/
+
+# Internal AI-dev helper docs, drafts, and reviews
+HANDOFF*.md
+DECISIONS.md
+FACTCHECK*.md
+draft.txt
+draft*.docx
+figure_text_review.txt
+
+figure_data/FACTCHECK_*
+figure_data/export.mjs
+figure_data/HANDOFF*.md

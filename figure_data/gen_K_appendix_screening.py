@@ -27,15 +27,10 @@ import pandas as pd
 import lib
 
 TOP_N = 10
-EARNINGS_FLOOR = 0.65
-
-
-def _passes_teer(row: pd.Series) -> bool:
-    return "teer" not in str(row.get("filter_reasons") or "").lower()
 
 
 def _classification(row: pd.Series) -> str:
-    if row["pick_source"] in ("author", "user"):
+    if row["pick_source"] == "author":
         return "handpicked"
     if str(row.get("status") or "").startswith("viable"):
         return "viable"
@@ -43,8 +38,6 @@ def _classification(row: pd.Series) -> str:
 
 
 def _candidate(row: pd.Series, in_top: bool) -> dict:
-    disc = pd.to_numeric(row.get("pr_income_discount"), errors="coerce")
-    pr_w = pd.to_numeric(row.get("pr_workers"), errors="coerce")
     loc_w = pd.to_numeric(row.get("loc_workers"), errors="coerce")
     cops = str(row.get("cops_future") or "")
     ai = str(row.get("ai_exposure_level") or "")
@@ -54,20 +47,19 @@ def _candidate(row: pd.Series, in_top: bool) -> dict:
         "teer": int(row["candidate_teer"]),
         "similarity": round(float(row["similarity"]), 4),
         "rank": int(row["rank"]),
-        # in_top = within the shown top-10 viable/handpicked set (not rank<=10;
-        # ranks can exceed 10 once "rest" candidates are skipped).
         "in_top10": in_top,
-        # Five Fig-7 screens (bool flags).
-        "passes_teer": _passes_teer(row),
-        "passes_earnings": bool(disc >= EARNINGS_FLOOR) if pd.notna(disc) else False,
-        "passes_local_pr": bool(pd.notna(pr_w) and pr_w > 0),
+        # Screen flags: read from pipeline's single source of truth.
+        "screen_teer": bool(row.get("screen_teer") in (True, "True")),
+        "screen_earnings": bool(row.get("screen_earnings") in (True, "True")),
+        "screen_presence": bool(row.get("screen_presence") in (True, "True")),
+        "screen_cops": str(row.get("screen_cops") or "pass"),  # pass|warn|fail
+        "screen_ai": bool(row.get("screen_ai") in (True, "True")),
+        # Local CD presence: presentation-layer only (not a pipeline filter).
         "passes_local_cd": bool(pd.notna(loc_w) and loc_w > 0),
-        "passes_cops": "surplus" not in cops.lower(),
-        "passes_ai": "high" not in ai.lower(),
-        # Labels behind the outlook/AI flags (for the tooltip / dot title).
+        # Labels behind the outlook/AI flags (for tooltip).
         "cops": cops or None,
         "ai": ai or None,
-        "pick_source": row["pick_source"] if row["pick_source"] in ("author", "user") else None,
+        "pick_source": "author" if row["pick_source"] == "author" else None,
         "classification": _classification(row),
     }
 

@@ -103,12 +103,12 @@ def _candidate(row: pd.Series, global_susc: set[str]) -> dict:
     }
 
 
-_LQ_DOMAINS = ("skills", "knowledge", "abilities", "workactivities")
+_LQ_DOMAINS = ("skills",)
 
 
 def _lq_summary(source_noc: str, target_noc: str) -> dict:
-    """Compare the two occupations across ALL 166 competencies (from the full
-    lq_{domain}.csv matrices, not skill_gaps.csv which is gap-rows only).
+    """Compare the two occupations across competencies in the Skills domain (from the
+    lq_skills.csv matrix, not skill_gaps.csv which is gap-rows only).
 
       shared = both occupations rely on the competency (LQ >= 1 for each)
       gaps   = target relies on it, source does not (target LQ > 1, source < 1)

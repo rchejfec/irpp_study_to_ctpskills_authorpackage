@@ -7,21 +7,19 @@
 <style>
   .figure-container {
     width: var(--fig-width);
-    height: auto;  /* Tables: fixed width, content-driven height */
+    height: auto;
     padding: 8px 12px;
     overflow: visible;
     display: flex;
     flex-direction: column;
   }
 
-  /* ── Community header ── */
   .community-header {
     font-size: 9px; font-weight: 700; color: #fff;
     background: var(--irpp-navy); padding: 4px 10px;
     letter-spacing: 0.3px; flex-shrink: 0;
   }
 
-  /* ── Table container ── */
   .table-wrap {
     flex: 1;
     overflow: hidden;
@@ -29,7 +27,6 @@
     border-top: none;
   }
 
-  /* ── Table ── */
   .viable-table {
     width: 100%;
     border-collapse: collapse;
@@ -60,23 +57,15 @@
     padding: 4px 6px;
   }
 
-  /* ── Cell types ── */
   .viable-cell { font-size: 8px; }
   .pick-comparable { border-left: 2px solid rgba(39,174,96,0.25); }
   .pick-extensive { border-left: 2px solid rgba(226,167,34,0.25); }
 
-  .teer-badge {
-    font-size: 7px; color: #999; font-weight: 400;
-    margin-left: 4px;
-  }
-  .teer-inline {
-    font-size: 7px; color: #999;
-  }
+  .teer-badge { font-size: 7px; color: #999; font-weight: 400; margin-left: 4px; }
+  .teer-inline { font-size: 7px; color: #999; }
   .stacked-pick { margin-bottom: 1px; }
   .noc3-count { font-weight: 700; color: var(--clr-body); }
-  .other-prose-compact {
-    font-size: 7.5px; color: #636e72; line-height: 1.45;
-  }
+  .other-prose-compact { font-size: 7.5px; color: #636e72; line-height: 1.45; }
 </style>
 </head>
 <body>
@@ -99,9 +88,11 @@
 </div>
 
 <script>
-  const _q = new URLSearchParams(location.search);
-  const METRIC = (_q.get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
-  const PICK = (_q.get('pick') === 'user') ? 'user' : 'author';
+  let currentMetric = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
+  let currentPick = (new URLSearchParams(location.search).get('pick') === 'user') ? 'user' : 'author';
+  const CACHE = {};
+
+  function cacheKey(metric, pick) { return `${pick}.${metric}`; }
 
   function build(comm) {
     document.getElementById('comm-name').textContent = comm.community;
@@ -109,7 +100,6 @@
     let html = '';
 
     comm.sources.forEach(src => {
-      // Source header row
       html += `<tr class="source-header"><td colspan="3">
         ${src.source_label} <span class="teer-badge">TEER ${src.source_teer}</span>
       </td></tr>`;
@@ -148,11 +138,36 @@
     });
 
     tbody.innerHTML = html;
+    reportSize();
   }
 
-  fetch(`../data/E_viable_table.${PICK}.${METRIC}.json`)
-    .then(r => r.json())
-    .then(build);
+  function loadAndRender(metric, pick) {
+    const key = cacheKey(metric, pick);
+    if (CACHE[key]) { build(CACHE[key]); return; }
+    fetch(`../data/E_viable_table.${pick}.${metric}.json`)
+      .then(r => r.json())
+      .then(DATA => { CACHE[key] = DATA; build(DATA); });
+  }
+
+  function reportSize() {
+    const c = document.querySelector('.figure-container');
+    if (c) parent.postMessage({ type: 'figure-sized', fig: 'E_viable_table', width: c.scrollWidth, height: c.scrollHeight }, '*');
+  }
+
+  // Listen for in-place metric or pick switch from parent
+  window.addEventListener('message', e => {
+    if (!e.data) return;
+    if (e.data.type === 'set-metric' && e.data.metric && e.data.metric !== currentMetric) {
+      currentMetric = e.data.metric;
+      loadAndRender(currentMetric, currentPick);
+    }
+    if (e.data.type === 'set-pick' && e.data.pick && e.data.pick !== currentPick) {
+      currentPick = e.data.pick;
+      loadAndRender(currentMetric, currentPick);
+    }
+  });
+
+  loadAndRender(currentMetric, currentPick);
 </script>
 </body>
 </html>

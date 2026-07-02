@@ -76,8 +76,7 @@ def rank_competencies(sub: pd.DataFrame) -> list[dict]:
         lambda g: pd.Series({
             "n_pairs": g[["source_noc", "candidate_noc"]].drop_duplicates().shape[0],
             "avg_gap": g["delta_lq"].mean(),
-        }),
-        include_groups=False,
+        })
     ).sort_values(["n_pairs", "avg_gap"], ascending=False)
     return [
         {"name": name, "n_pairs": int(r["n_pairs"]), "avg_gap": round(float(r["avg_gap"]), 2)}

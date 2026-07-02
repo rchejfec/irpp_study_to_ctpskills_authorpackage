@@ -15,7 +15,8 @@ filter_reasons; nothing is dropped from the output.
   teer      : candidate TEER delta (candidate - source) not in [-2, +1], or TEER < 2
   susceptible: candidate is itself susceptible in this community
   presence  : provincial workers <= 0 or missing
-  outlook   : COPS future outlook == surplus
+  outlook   : COPS future outlook contains 'surplus' (three-state:
+              'Strong risk of Surplus' → fail, 'Moderate risk of Surplus' → warn)
   earnings  : provincial income discount < 0.65
   ai        : AI exposure is medium or high
 
@@ -68,7 +69,9 @@ TEER_DELTA_MIN, TEER_DELTA_MAX = -2, 1
 TEER_FLOOR = 2
 EARNINGS_FLOOR = 0.65
 AI_EXCLUDE = {"medium exposure", "high exposure"}
-SURPLUS = "surplus"
+# COPS three-state: warn = still viable but flagged; fail = blocks viability.
+COPS_FAIL_SUBSTR = "strong risk of surplus"
+COPS_WARN_SUBSTR = "moderate risk of surplus"
 
 
 # ── Reference: community susceptible sets, hand-picks ─────────────────────
@@ -99,38 +102,75 @@ def load_picks() -> dict[tuple, dict]:
     return picks
 
 
-# ── Filters ───────────────────────────────────────────────────────────────
+def compute_screens(row: pd.Series, source_teer: int, susc: set[str]) -> dict:
+    """Compute all per-screen pass/fail/warn flags for one candidate.
 
-def filter_reasons(row: pd.Series, source_teer: int, susc: set[str]) -> list[str]:
-    reasons = []
+    Returns a dict with:
+      screen_teer       : bool
+      screen_susceptible: bool
+      screen_presence   : bool
+      screen_cops       : 'pass' | 'warn' | 'fail'
+      screen_earnings   : bool
+      screen_ai         : bool
+    """
+    screens = {}
 
+    # TEER window
     teer = row["candidate_teer"]
     if pd.isna(teer):
-        reasons.append("teer:unknown")
+        screens["screen_teer"] = False
     else:
         delta = int(teer) - source_teer
-        if not (TEER_DELTA_MIN <= delta <= TEER_DELTA_MAX) or int(teer) < TEER_FLOOR:
-            reasons.append("teer")
+        screens["screen_teer"] = (
+            TEER_DELTA_MIN <= delta <= TEER_DELTA_MAX and int(teer) >= TEER_FLOOR
+        )
 
-    if row["candidate_noc"] in susc:
-        reasons.append("susceptible")
+    # Susceptible sector exclusion
+    screens["screen_susceptible"] = row["candidate_noc"] not in susc
 
+    # Provincial presence
     pr_w = pd.to_numeric(row.get("pr_workers"), errors="coerce")
-    if pd.isna(pr_w) or pr_w <= 0:
-        reasons.append("presence")
+    screens["screen_presence"] = bool(pd.notna(pr_w) and pr_w > 0)
 
+    # COPS outlook (three-state)
     outlook = str(row.get("cops_future") or "").strip().lower()
-    if outlook == SURPLUS:
-        reasons.append("outlook")
+    if COPS_FAIL_SUBSTR in outlook:
+        screens["screen_cops"] = "fail"
+    elif COPS_WARN_SUBSTR in outlook:
+        screens["screen_cops"] = "warn"
+    else:
+        screens["screen_cops"] = "pass"
 
+    # Earnings floor
     disc = pd.to_numeric(row.get("pr_income_discount"), errors="coerce")
-    if pd.isna(disc) or disc < EARNINGS_FLOOR:
-        reasons.append("earnings")
+    screens["screen_earnings"] = bool(pd.notna(disc) and disc >= EARNINGS_FLOOR)
 
+    # AI exposure
     ai = str(row.get("ai_exposure_level") or "").strip().lower()
-    if ai in AI_EXCLUDE:
-        reasons.append("ai")
+    screens["screen_ai"] = ai not in AI_EXCLUDE
 
+    return screens
+
+
+def screens_to_filter_reasons(screens: dict) -> list[str]:
+    """Convert screen results to the legacy filter_reasons list.
+
+    COPS 'warn' does NOT count as a filter failure (candidate stays viable).
+    Only 'fail' blocks viability.
+    """
+    reasons = []
+    if not screens["screen_teer"]:
+        reasons.append("teer")
+    if not screens["screen_susceptible"]:
+        reasons.append("susceptible")
+    if not screens["screen_presence"]:
+        reasons.append("presence")
+    if screens["screen_cops"] == "fail":
+        reasons.append("outlook")
+    if not screens["screen_earnings"]:
+        reasons.append("earnings")
+    if not screens["screen_ai"]:
+        reasons.append("ai")
     return reasons
 
 
@@ -196,7 +236,8 @@ def build(metric: str, susc_map: dict, picks: dict) -> pd.DataFrame:
         source_teer = int(row["source_teer"]) if pd.notna(row["source_teer"]) else None
         susc = susc_map.get(cd_uid, set())
 
-        reasons = filter_reasons(row, source_teer, susc)
+        screens = compute_screens(row, source_teer, susc)
+        reasons = screens_to_filter_reasons(screens)
         passes = len(reasons) == 0
 
         pick = picks.get(row["_key"])
@@ -220,6 +261,13 @@ def build(metric: str, susc_map: dict, picks: dict) -> pd.DataFrame:
             "teer_class": teer_class,
             "passes_filters": passes,
             "filter_reasons": ", ".join(reasons),
+            # Per-screen flags (single source of truth for downstream).
+            "screen_teer": screens["screen_teer"],
+            "screen_susceptible": screens["screen_susceptible"],
+            "screen_presence": screens["screen_presence"],
+            "screen_cops": screens["screen_cops"],
+            "screen_earnings": screens["screen_earnings"],
+            "screen_ai": screens["screen_ai"],
             "pick_source": pick["pick_source"] if pick else "",
             "pick_failed_filters": bool(pick) and not passes,
             "pr_workers": row.get("pr_workers"),

@@ -16,7 +16,7 @@ import pandas as pd
 PKG_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = PKG_ROOT / "output"
 REF_DIR = PKG_ROOT / "data" / "reference"
-FIGURE_DATA_OUT = Path(__file__).resolve().parent / "out"
+FIGURE_DATA_OUT = Path(__file__).resolve().parent / "dist" / "data"
 
 METRICS = ("cosine", "euclidean")
 

@@ -9,18 +9,12 @@
     .figure-container {
       width: var(--fig-width);
       height: var(--fig-height);
-      padding: 10px 12px;
+      padding: 6px 12px;
       display: flex;
       flex-direction: column;
     }
 
-    .intro {
-      font-size: 8.5px;
-      color: var(--clr-body-secondary);
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-    .intro .accent { color: var(--irpp-teal); font-weight: 700; }
+
 
     .rows {
       flex: 1;
@@ -104,7 +98,6 @@
 <body>
   <div class="dev-wrapper">
     <div class="figure-container">
-      <div class="intro" id="intro"></div>
       <div class="rows" id="rows"></div>
     </div>
   </div>
@@ -119,18 +112,13 @@
     fetch('../data/J_skills_gap_table.json')
       .then(r => r.json())
       .then(DATA => {
-        document.getElementById('intro').innerHTML =
-          `Each community's <span class="accent">top ${N} Skills-domain gaps</span> across its curated ` +
-          `susceptible-to-viable transition pairs — where local training investment would reach the most pathways. ` +
-          `Bar = share of the community's pairs with that gap.`;
-
         let html = '';
         DATA.forEach(row => {
           const top = (row[DOMAIN_TOP] || []).slice(0, N);
           const skills = top.map((c, i) => `
             <div class="skill rank${i + 1}">
               <div class="skill-name"><span class="rank-tag">${i + 1}</span>${c.name}</div>
-              <div class="skill-meta">${c.n_pairs} of ${row.total_pairs} pairs · avg gap ${c.avg_gap}</div>
+              <div class="skill-meta">${c.n_pairs} of ${row.total_pairs} pairs</div>
               <div class="track"><div class="bar" style="width:${Math.round(c.pct)}%"></div></div>
             </div>`).join('');
           html += `

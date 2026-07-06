@@ -116,8 +116,16 @@ Everything under `data/` **is** used; every pipeline script is in the chain.
 
 ---
 
-## Presentation Layer (Web Portal)
+## Presentation Layer
 
-The `figure_data/` directory contains the presentation layer of this repository. It reads the pipeline outputs and populates the schema behind each final report figure.
+The `figure_data/` directory contains the presentation layer. It reads the
+pipeline outputs and populates the schema behind each report figure (cosine
+metric, per the authors' decision).
 
-This allows the figures to be traced and toggled between `cosine` and `euclidean` metrics. The final HTML figures and their pre-generated JSON data are served as a static site out of the `figure_data/dist/` directory, which is deployed to Cloudflare Pages for author review.
+Each figure is a self-contained HTML file in `figure_data/dist/figures/`,
+suitable for embedding via iframe. Pre-generated JSON data lives in
+`figure_data/dist/data/`. The `dist/` directory is deployed to Cloudflare Pages.
+
+See `figure_data/FIGURE_CONFIGS.md` for current dimensions, dependencies, and
+rendering details of each figure.
+

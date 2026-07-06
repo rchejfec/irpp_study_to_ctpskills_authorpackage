@@ -1,7 +1,7 @@
 """Regenerate every figure_data/ output from the pipeline's output/ CSVs.
 
 Pure consumer of output/ — run the six-step pipeline first (../run_all.py).
-Emits per-metric JSONs into figure_data/out/ for each report figure.
+Emits per-metric JSONs into figure_data/dist/data/ for each report figure.
 
   E  E_viable_table       per metric + all-communities variant
   J  J_skills_gap_table   shared (metric-independent: picks-only)
@@ -27,7 +27,7 @@ import lib
 
 
 def main() -> None:
-    print("Regenerating figure_data/out/ …\n")
+    print("Regenerating figure_data/dist/data/ …\n")
     for metric in lib.METRICS:
         gen_E_viable_table.generate(metric)
         gen_D_walkthrough.generate(metric)

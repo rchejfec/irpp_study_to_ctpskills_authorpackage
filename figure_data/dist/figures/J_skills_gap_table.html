@@ -133,6 +133,27 @@
         document.getElementById('rows').innerHTML = html;
       });
   </script>
+
+<!-- CTP WP Engine Embed Helper -->
+<script>
+  if (window.self !== window.top) {
+    document.body.classList.add('export-mode');
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+        if (c) {
+          const fig = location.pathname.split('/').pop().replace('.html', '');
+          parent.postMessage({
+            type: 'figure-sized',
+            fig: fig,
+            width: c.scrollWidth,
+            height: c.scrollHeight
+          }, '*');
+        }
+      }, 100);
+    });
+  }
+</script>
 </body>
 
 </html>

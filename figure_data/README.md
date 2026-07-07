@@ -57,12 +57,17 @@ expected and correct.
 
 - **E** comparable/relaxed split = our `teer_class`; "other" column = top-10
   viable window (per source) minus picks, grouped by NOC-3.
-- **J** = curated hand-picks only, top-5 gaps **per pair per domain** (so any
-  single domain can be shown in isolation), most-frequent competency per
-  community×domain. Diverges from the published figure's per-pair-overall rule —
-  intentional for a domain-agnostic feed.
+- **J** = curated hand-picks only, top-5 gaps **per pair per domain**,
+  most-frequent competency per community×domain. The figure renders the
+  draft's Figure-6 layout: one top competency **per OaSIS domain** (4 columns),
+  runner-ups in the tooltip. (Superseded the earlier Skills-top-3 layout,
+  2026-07-07 — the draft's narrative cites knowledge and work-activities gaps.)
 - **D** qual_signal is a community-review proxy: hand-pick → green;
   global-susceptible → red; local (CD) workers 0 → yellow.
+- **Skill-gap bars are Skills-domain only, across D and I** (matching D's
+  summary counts). D's featured target walks the full viable ranking until a
+  candidate with Skills gaps exists — near-twin sources (951xx labourers) have
+  none among their top matches.
 - **B** = top-10 suitable per source × NOC-3 family (count + avg similarity).
 - **F2** keeps the replication funnel's structure/order, values from our pipeline
   (direct provincial income, our discounts/ranks). top-30 kept as display cut.
@@ -72,6 +77,19 @@ expected and correct.
 - **94213 Industrial painters**: dropped as a source everywhere; kept as a target.
 - **Viable terminology**: "curated selection" is the approved label for hand-picks
   (supersedes "handpicked").
+
+## Tooltip layer (2026-07-07)
+
+Every figure now carries reader-facing tooltips (tippy.js, shared `irpp` theme
+from `theme.css`), keyed to what the draft's surrounding text makes a reader
+wonder: B cells name their member occupations + similarities; E picks show
+similarity/rank/earnings ratio/curation rationale, E "other" families list
+members, and E answers `set-active-pair` for community switching; I bars show
+both RCA values + the gap definition; D screening headers and RCA preview rows
+define each screen and value; J chips show frequency/avg gap + runner-ups;
+K headers/dots/pills give screen definitions, underlying values, and pick
+rationales; A2 explains the susceptibility methodology; G2 defines each OaSIS
+category. "Handpicked" → "curated" throughout K.
 
 ## Watch-outs
 

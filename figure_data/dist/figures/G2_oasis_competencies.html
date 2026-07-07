@@ -8,6 +8,9 @@
        example competencies + condensed scale ranges (0–N). Sourced from
        OaSIS 2023 v1.0 data. Original version preserved as G_oasis_competencies.html. -->
   <link rel="stylesheet" href="../theme.css">
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
   <style>
     .figure-container {
       width: var(--fig-width);
@@ -107,7 +110,7 @@
           </thead>
           <tbody>
             <tr>
-              <td class="col-category">Skills</td>
+              <td class="col-category" data-tip="&lt;div class='tt-title'&gt;Skills&lt;/div&gt;&lt;div class='tt-value'&gt;Developed capacities used in performing tasks — e.g. numeracy, instructing. Rated for the proficiency the occupation requires; 0 = not applicable.&lt;/div&gt;">Skills</td>
               <td class="col-number">33</td>
               <td class="col-examples">
                 <span class="example-names">Reading Comprehension, Critical Thinking, Equipment and Tool Selection</span>
@@ -115,7 +118,7 @@
               </td>
             </tr>
             <tr>
-              <td class="col-category">Knowledge</td>
+              <td class="col-category" data-tip="&lt;div class='tt-title'&gt;Knowledge&lt;/div&gt;&lt;div class='tt-value'&gt;Organized sets of subject-matter principles and facts the occupation draws on. Rated for the required level; 0 = not applicable.&lt;/div&gt;">Knowledge</td>
               <td class="col-number">44</td>
               <td class="col-examples">
                 <span class="example-names">Building and Construction, Public Safety and Security, Economics</span>
@@ -123,7 +126,7 @@
               </td>
             </tr>
             <tr>
-              <td class="col-category">Abilities</td>
+              <td class="col-category" data-tip="&lt;div class='tt-title'&gt;Abilities&lt;/div&gt;&lt;div class='tt-value'&gt;Enduring cognitive, physical and sensory attributes that influence performance — e.g. body flexibility, hearing sensitivity. Rated for required proficiency; 0 = not applicable.&lt;/div&gt;">Abilities</td>
               <td class="col-number">49</td>
               <td class="col-examples">
                 <span class="example-names">Deductive Reasoning, Manual Dexterity, Speech Clarity</span>
@@ -131,7 +134,7 @@
               </td>
             </tr>
             <tr>
-              <td class="col-category">Work Activities</td>
+              <td class="col-category" data-tip="&lt;div class='tt-title'&gt;Work Activities&lt;/div&gt;&lt;div class='tt-value'&gt;General types of job behaviour that cut across occupations. Rated for the complexity at which the occupation performs them; 0 = not applicable.&lt;/div&gt;">Work Activities</td>
               <td class="col-number">40</td>
               <td class="col-examples">
                 <span class="example-names">Getting Information, Making Decisions, Training and Teaching</span>
@@ -143,6 +146,18 @@
       </div>
     </div>
   </div>
+
+<script>
+  tippy.delegate(document.body, {
+    target: '[data-tip]',
+    theme: 'irpp',
+    animation: 'shift-away',
+    allowHTML: true,
+    placement: 'right',
+    appendTo: document.body,
+    content: ref => ref.getAttribute('data-tip'),
+  });
+</script>
 
 <!-- CTP WP Engine Embed Helper -->
 <script>

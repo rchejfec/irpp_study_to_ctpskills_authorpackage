@@ -42,7 +42,7 @@
       padding: var(--sp-6) 2px;
       line-height: 1.3;
       text-align: left;
-      vertical-align: bottom;
+      vertical-align: middle;
     }
 
     .heatmap-table th.row-header {
@@ -75,7 +75,7 @@
     .heatmap-table td {
       text-align: center;
       padding: 2px 2px;
-      min-width: 30px;
+      min-width: 42px;
       font-size: var(--fs-body);
       font-weight: var(--fw-medium);
       border-bottom: none;
@@ -84,7 +84,7 @@
     .hm-cell {
       border-radius: 2px;
       display: inline-block;
-      width: 26px;
+      width: 38px;
       height: 20px;
       line-height: 20px;
       font-size: 9px;
@@ -166,11 +166,8 @@
         dests.forEach(d => {
           const cell = lookup[`${s}|${d}`];
           const v = cell ? cell.count : 0;
-          const avgSim = cell ? cell.avg_sim : null;
 
-          html += `<td><span class="hm-cell ${hmClass(v)}" `
-            + `data-src="${srcLabels[s]}" data-dst="${destLabels[d]}" `
-            + `data-count="${v}" data-sim="${avgSim ? avgSim.toFixed(3) : ''}">`
+          html += `<td><span class="hm-cell ${hmClass(v)}" data-cell="${s}|${d}">`
             + `${v || ''}</span></td>`;
         });
         html += '</tr>';
@@ -179,19 +176,20 @@
       html += '</table>';
       document.getElementById('heatmap-container').innerHTML = html;
 
-      // ── Tippy tooltips on non-zero cells ──
+      // ── Tippy tooltips on non-zero cells: name the actual occupations ──
       document.querySelectorAll('.hm-cell:not(.hm-0)').forEach(el => {
-        const src = el.dataset.src;
-        const dst = el.dataset.dst;
-        const count = el.dataset.count;
-        const sim = el.dataset.sim;
+        const cell = lookup[el.dataset.cell];
+        if (!cell) return;
+        const members = (cell.members || []).map(m =>
+          `<div class="tt-value">${m.label} <span style="opacity:0.65">· ${m.sim.toFixed(3)}</span></div>`).join('');
 
         tippy(el, {
           theme: 'irpp',
           animation: 'shift-away',
-          content: `<div class="tt-title">${dst}</div>`
-            + `<div class="tt-value">${count} occupation${count > 1 ? 's' : ''} from this family in the top 10 for <strong>${src}</strong></div>`
-            + (sim ? `<hr class="tt-divider"><div class="tt-value">Avg. similarity: ${sim}</div>` : ''),
+          content: `<div class="tt-title">${cell.dest_label}</div>`
+            + `<div class="tt-value">${cell.count} of the top-10 skills matches for <strong>${cell.source_label}</strong>:</div>`
+            + members
+            + (cell.avg_sim ? `<hr class="tt-divider"><div class="tt-value">Avg. similarity: ${cell.avg_sim.toFixed(3)}</div>` : ''),
           allowHTML: true,
           placement: 'top',
         });

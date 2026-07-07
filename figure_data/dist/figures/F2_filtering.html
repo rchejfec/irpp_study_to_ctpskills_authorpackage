@@ -12,23 +12,26 @@
   <style>
     :root {
       --p1-active: #555;
-      --p1-faded: #ccc;
+      --p1-faded: #999;
       --p2-local-cd: #1a3d6b;
       --p2-local-pr: #5b8db8;
       --p2-neither: #a8c8e8;
       --p3-pass: #d4760a;
       --p3-fail-cops: #DEAC28;
       --p3-fail-earn: #CE2129;
-      --p3-fail-ai: #CE2129;
+      --p3-fail-ai: #3a3a3a;
       --p4-teer5: #1a7a3a;
       --p4-teer4: #4aaa5e;
-      --p4-faded: #ccc;
+      --p4-faded: #999;
       --centre-node: var(--irpp-red);
     }
 
     .figure-container {
       width: var(--fig-width);
-      height: var(--fig-height);
+      /* Baseline height; grows when a pair's captions run longer
+         (iframe hosts resize via the figure-sized postMessage). */
+      min-height: var(--fig-height);
+      height: auto;
       background: var(--clr-bg);
       overflow: hidden;
       display: flex;
@@ -118,7 +121,7 @@
     <div class="figure-container">
       <div class="context-strip">
         For each susceptible occupation, we first identify skill-similar alternatives across all Canadian occupations.
-        This figure traces the filtering that follows for <strong>Material handlers</strong> (TEER 5) in <strong>Oxford,
+        This figure traces the filtering that follows for <strong id="header-source-label">Material handlers</strong> (TEER <span id="header-teer">5</span>) in <strong id="header-community">Oxford,
           ON</strong>.
       </div>
 
@@ -147,31 +150,32 @@
             requirements and select the top ~30 most similar candidates. Across these panels, the <span
               style="color:#CE2129;font-weight:600">■ square</span> is the susceptible occupation, each <span
               style="color:#555;font-weight:600">● dot</span> is a candidate — closer to centre = more similar — and
-            dots that <span style="color:#ccc;font-weight:600">fade</span> have been filtered out. Different use cases
+            dots that <span style="color:#999;font-weight:600">fade</span> have been filtered out. Different use cases
             may apply stricter or looser thresholds.</div>
         </div>
         <div class="panel-desc">
           <div class="desc-val">We screen candidates for existing local relevance. <span
-              style="color:#1a3d6b;font-weight:600">Dark blue</span> = present in the Census Division, <span
-              style="color:#5b8db8;font-weight:600">lighter blue</span> = present in the province but not locally. Due
-            to data limitations, provincial-level presence is used here; finer geographic filtering could strengthen
-            results where local data exists.</div>
+              style="color:#1a3d6b;font-weight:600">Dark blue</span> = present in the Census Division. <span
+              style="color:#5b8db8;font-weight:600">Lighter blue</span> = present in the province but not locally —
+            these remain in the pool until community review.</div>
         </div>
         <div class="panel-desc">
           <div class="desc-val">Surviving candidates are screened for employment outlook (COPS projections) and earnings
             viability (≥65% of the susceptible occupation's wage). <span
               style="color:#d4760a;font-weight:600">Orange</span> = passes both, <span
               style="color:#DEAC28;font-weight:600">yellow</span> = fails outlook, <span
-              style="color:#CE2129;font-weight:600">red</span> = fails earnings. An additional AI-exposure filter is
-            applied but does not exclude any candidates here.</div>
+              style="color:#CE2129;font-weight:600">red</span> = fails earnings. <span id="ai-text">An additional
+            AI-exposure filter is applied but does not exclude any candidates here.</span></div>
         </div>
         <div class="panel-desc">
           <div class="desc-val">Remaining candidates are presented for community validation, which may surface
-            additional occupations or relax earlier filters based on local plans and goals. We exclude occupations that
+            additional occupations or relax earlier filters based on local plans and goals. Candidates without local
+            presence are excluded at this stage unless community-endorsed. We exclude occupations that
             are themselves susceptible and <span style="color:#1a7a3a;font-weight:600">◆ highlight</span> those
             potentially relevant based on extrapolations from surrounding-area and community profiles. Colour denotes
-            TEER level: <span style="color:#1a7a3a;font-weight:600">dark green</span> = TEER 5, <span
-              style="color:#4aaa5e;font-weight:600">mid green</span> = TEER 4.</div>
+            TEER level: <span style="color:#1a7a3a;font-weight:600">dark green</span> = TEER <span
+              id="teer-same">5</span> (same as source), <span
+              style="color:#4aaa5e;font-weight:600">mid green</span> = other TEER levels.</div>
         </div>
       </div>
 
@@ -194,8 +198,19 @@
 
     let currentMetric = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
     const CACHE = {};
+    let activeCd = '3532';
+    let activeSrc = '75101';
 
     function renderPanels(DATA) {
+      // Dynamic header text
+      if (DATA.source_label) document.getElementById('header-source-label').innerText = DATA.source_label;
+      if (DATA.source_teer) document.getElementById('header-teer').innerText = DATA.source_teer;
+      if (DATA.community) document.getElementById('header-community').innerText = DATA.community;
+
+      const sourceTeer = DATA.source_teer;
+      const teerSame = document.getElementById('teer-same');
+      if (teerSame && sourceTeer) teerSame.innerText = sourceTeer;
+
       // Clear existing SVGs
       ['p1', 'p2', 'p3', 'p4'].forEach(pid => {
         document.getElementById(pid).innerHTML = '';
@@ -222,8 +237,10 @@
       const top30 = visibleCandidates.filter(c => c.in_top30);
       const nonTop30 = visibleCandidates.filter(c => !c.in_top30);
       const simMax = Math.max(...visibleCandidates.map(c => c.similarity));
-      const simMaxT30 = Math.max(...top30.map(c => c.similarity));
-      const simMinT30 = Math.min(...top30.map(c => c.similarity));
+      
+      // Fallbacks in case top30 is empty
+      const simMaxT30 = top30.length ? Math.max(...top30.map(c => c.similarity)) : simMax;
+      const simMinT30 = top30.length ? Math.min(...top30.map(c => c.similarity)) : 0.85;
 
       const N_GHOSTS = 5;
       const ghosts = Array.from({ length: N_GHOSTS }, (_, i) => ({
@@ -294,24 +311,32 @@
             : { state: 'faded', color: P.p1Faded };
         }
         if (panelIdx === 1) {
-          if (d.passes_local_cd) return { state: 'active', color: P.p2LocalCd };
-          if (d.screen_presence) return { state: 'active', color: P.p2LocalPr };
+          if (d.passes_local_cd || d.community_category === 'endorsed') {
+            return { state: 'active', color: d.passes_local_cd ? P.p2LocalCd : P.p2LocalPr };
+          }
+          if (d.screen_presence) return { state: 'active', color: P.p2LocalPr }; // Stays active here!
           return { state: 'faded', color: P.p2Neither };
         }
         if (panelIdx === 2) {
-          if (!d.passes_local_cd && !d.screen_presence) return { state: 'hidden' };
+          if (!d.screen_presence) return { state: 'hidden' };
+          
           if (d.screen_cops === 'fail') return { state: 'faded', color: P.p3FailCops };
           if (!d.screen_earnings) return { state: 'faded', color: P.p3FailEarn };
           if (!d.screen_ai) return { state: 'faded', color: P.p3FailAi };
+          
           // COPS warn: show amber dot but still active (not filtered out)
           if (d.screen_cops === 'warn') return { state: 'active', color: P.p3FailCops };
           return { state: 'active', color: P.p3Pass };
         }
         if (panelIdx === 3) {
-          if (!d.passes_local_cd && !d.screen_presence) return { state: 'hidden' };
+          if (!d.screen_presence) return { state: 'hidden' };
           if (d.screen_cops === 'fail' || !d.screen_earnings || !d.screen_ai) return { state: 'hidden' };
+          
+          // Now, in Panel 4 (QUAL step), we fade out candidates that fail local presence
+          if (!d.passes_local_cd && d.community_category !== 'endorsed') return { state: 'faded', color: P.p4Faded };
+          
           if (d.is_susceptible) return { state: 'faded', color: P.p4Faded };
-          const teerClr = d.teer === 5 ? P.p4Teer5 : P.p4Teer4;
+          const teerClr = d.teer === sourceTeer ? P.p4Teer5 : P.p4Teer4;
           const shape = d.community_category === 'endorsed' ? 'diamond' : 'circle';
           return { state: 'active', color: teerClr, shape };
         }
@@ -333,7 +358,14 @@
         const g = svg.append('g').attr('transform', `translate(${cx},${cy})`);
         const dots = pi === 0 ? p1Dots : p2Dots;
 
+        let aiExcludes = 0;
+
         dots.forEach(d => {
+          // Count only dots that panel 3 shows as excluded *by AI* (they pass
+          // the earlier screens; cops/earnings failures take colour precedence).
+          if (!d._ghost && d.screen_ai === false && d.screen_presence
+            && d.screen_cops !== 'fail' && d.screen_earnings) aiExcludes++;
+
           const ps = panelState(d, pi);
           if (ps.state === 'hidden') return;
 
@@ -355,19 +387,50 @@
               .attr('stroke', '#fff').attr('stroke-width', 0.3);
           }
 
-          // Tooltip on visible non-ghost dots
-          if (!d._ghost && ps.state === 'active' && typeof tippy !== 'undefined') {
+          // Tooltip on all visible non-ghost dots (even faded ones)
+          if (!d._ghost && typeof tippy !== 'undefined') {
+            let tooltipContent = `<div class="tt-title">${d.label || ''}</div>`
+              + `<div class="tt-value">Similarity: ${d.similarity ? d.similarity.toFixed(3) : '—'}</div>`;
+
+            if (pi === 0) {
+              tooltipContent += `<div class="tt-divider"></div>`;
+              tooltipContent += `<div class="tt-value">TEER: ${d.teer !== undefined ? d.teer : 'N/A'}</div>`;
+            } else if (pi === 1) {
+              tooltipContent += `<div class="tt-divider"></div>`;
+              tooltipContent += `<div class="tt-value">Local Workers: ${d.loc_workers || 0}</div>`;
+              tooltipContent += `<div class="tt-value">Provincial Workers: ${d.pr_workers || 0}</div>`;
+            } else if (pi === 2) {
+              tooltipContent += `<div class="tt-divider"></div>`;
+              tooltipContent += `<div class="tt-value">Earnings Ratio: ${d.income_ratio !== undefined ? (d.income_ratio * 100).toFixed(1) + '%' : 'N/A'}</div>`;
+              tooltipContent += `<div class="tt-value">Outlook (COPS): ${d.cops || 'N/A'}</div>`;
+              tooltipContent += `<div class="tt-value">AI Exposure: ${d.ai !== undefined ? d.ai : 'N/A'}</div>`;
+            } else if (pi === 3) {
+              tooltipContent += `<div class="tt-divider"></div>`;
+              tooltipContent += `<div class="tt-value">Community Status: ${d.community_category || 'N/A'}</div>`;
+            }
+
             tippy(node.node(), {
               theme: 'irpp',
               animation: 'shift-away',
-              content: `<div class="tt-title">${d.label || ''}</div>`
-                + `<div class="tt-value">Similarity: ${d.similarity ? d.similarity.toFixed(3) : '—'}</div>`,
+              content: tooltipContent,
               allowHTML: true,
               placement: 'top',
               appendTo: document.body,
             });
           }
         });
+
+        if (pi === 2) {
+          const aiText = document.getElementById('ai-text');
+          if (aiText) {
+             if (aiExcludes > 0) {
+               // Fold the AI screen into the legend when it visibly excludes dots
+               aiText.innerHTML = `<span style="color:#3a3a3a;font-weight:600">Dark grey</span> = excluded by an additional AI-exposure screen.`;
+             } else {
+               aiText.innerText = `An additional AI-exposure filter is applied but does not exclude any candidates here.`;
+             }
+          }
+        }
 
         // Centre node (square = susceptible occupation)
         g.append('rect')
@@ -379,11 +442,40 @@
       reportSize();
     }
 
+    function tryRender(DATA) {
+      if (DATA && DATA[activeCd] && DATA[activeCd].sources) {
+        const sourceData = DATA[activeCd].sources.find(s => s.noc === activeSrc);
+        if (sourceData) {
+          const mappedData = {
+            source_label: sourceData.label,
+            source_teer: sourceData.teer,
+            community: sourceData.community,
+            candidates: sourceData.candidates
+          };
+          renderPanels(mappedData);
+          return;
+        }
+      }
+
+      // Clear panels if no data for this pair
+      ['p1', 'p2', 'p3', 'p4'].forEach(pid => {
+        document.getElementById(pid).innerHTML = '<div style="color:#999;font-size:12px;padding:10px;">No data</div>';
+      });
+      reportSize();
+    }
+
     function loadAndRender(metric) {
-      if (CACHE[metric]) { renderPanels(CACHE[metric]); return; }
-      fetch(`../data/F2_filtering.${metric}.json`)
+      if (CACHE[metric]) { 
+        tryRender(CACHE[metric]); 
+        return; 
+      }
+      fetch(`../data/F2_filtering.all.${metric}.json`)
         .then(r => r.json())
-        .then(DATA => { CACHE[metric] = DATA; renderPanels(DATA); });
+        .then(DATA => { 
+          const actualData = DATA.data ? DATA.data : DATA;
+          CACHE[metric] = actualData; 
+          tryRender(actualData); 
+        });
     }
 
     function reportSize() {
@@ -391,12 +483,22 @@
       if (c) parent.postMessage({ type: 'figure-sized', fig: 'F2_filtering', width: c.scrollWidth, height: c.scrollHeight }, '*');
     }
 
-    // Listen for in-place metric switch from parent
+    // Listen for in-place metric switch or pair switch from parent
     window.addEventListener('message', e => {
-      if (!e.data || e.data.type !== 'set-metric' || !e.data.metric) return;
-      if (e.data.metric === currentMetric) return;
-      currentMetric = e.data.metric;
-      loadAndRender(currentMetric);
+      if (!e.data) return;
+      let needsRender = false;
+      
+      if (e.data.type === 'set-metric' && e.data.metric && e.data.metric !== currentMetric) {
+        currentMetric = e.data.metric;
+        needsRender = true;
+      }
+      
+      if (e.data.type === 'set-active-pair') {
+        if (e.data.cd && e.data.cd !== activeCd) { activeCd = e.data.cd; needsRender = true; }
+        if (e.data.src && e.data.src !== activeSrc) { activeSrc = e.data.src; needsRender = true; }
+      }
+      
+      if (needsRender) loadAndRender(currentMetric);
     });
 
     loadAndRender(currentMetric);

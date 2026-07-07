@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <title>Appendix — Full Viability Screening</title>
 <link rel="stylesheet" href="../theme.css">
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
 <style>
   /* Scrolling appendix — not a fixed figure frame. */
   .appendix {
@@ -97,7 +100,7 @@
 
   /* Classification pill */
   .pill { display: inline-block; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; padding: 1px 6px; border-radius: 9px; }
-  .pill.handpicked { background: #eaf6f6; color: var(--irpp-teal); border: 1px solid var(--irpp-teal); }
+  .pill.curated { background: #eaf6f6; color: var(--irpp-teal); border: 1px solid var(--irpp-teal); }
   .pill.viable     { background: #eef4ea; color: #4a8a3a; border: 1px solid #4a8a3a; }
   .pick-tag { font-size: 8.5px; color: var(--clr-body-secondary); margin-left: 3px; }
 </style>
@@ -114,61 +117,88 @@
   const METRIC = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
 
   const SCREENS = [
-    { key: 'screen_teer',     label: 'TEER',  type: 'bool' },
-    { key: 'screen_earnings', label: 'Earn',   type: 'bool' },
-    { key: 'screen_presence', label: 'Prov',   type: 'bool' },
-    { key: 'passes_local_cd', label: 'CD',     type: 'bool' },
-    { key: 'screen_cops',     label: 'COPS',   type: 'tri' },
-    { key: 'screen_ai',       label: 'AI',     type: 'bool' },
+    { key: 'screen_teer',     label: 'TEER',  type: 'bool',
+      desc: 'Training alignment — the candidate’s TEER (training, education, experience and responsibilities level) falls within the accepted window around the source occupation’s TEER: comparable, or more extensive training (TEER relaxed).' },
+    { key: 'screen_earnings', label: 'Earn',   type: 'bool',
+      desc: 'Earnings differential — provincial median income is at least 65% of the source occupation’s. Below that, a transition is treated as an unviable earnings cut.' },
+    { key: 'screen_presence', label: 'Prov',   type: 'bool',
+      desc: 'Regional presence — the occupation is employed in meaningful numbers somewhere in the province or territory (2021 Census).' },
+    { key: 'passes_local_cd', label: 'CD',     type: 'bool',
+      desc: 'Local presence — the occupation is employed within the community’s own census division (2021 Census). Failing candidates can still be retained through community review.' },
+    { key: 'screen_cops',     label: 'COPS',   type: 'tri',
+      desc: 'Occupational outlook — federal COPS projections. ✗ = projected labour surplus (excluded); ⚠ = uncertain outlook (kept, flagged).' },
+    { key: 'screen_ai',       label: 'AI',     type: 'bool',
+      desc: 'AI exposure — based on Dais (2025) ratings; high-exposure occupations are excluded.' },
   ];
 
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // Attribute-escape for data-tip payloads that intentionally contain HTML.
+  const attr = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
-  function dot(val, title, type) {
+  function dot(val, tip, type) {
     if (type === 'tri') {
       const cls = val === 'fail' ? 'fail' : val === 'warn' ? 'warn' : 'pass';
       const mark = val === 'fail' ? '\u2717' : val === 'warn' ? '\u26A0' : '\u2713';
-      return `<span class="dot ${cls}" title="${esc(title || '')}">${mark}</span>`;
+      return `<span class="dot ${cls}" data-tip="${attr(tip || '')}">${mark}</span>`;
     }
     const cls = val ? 'pass' : 'fail';
     const mark = val ? '\u2713' : '\u2717';
-    return `<span class="dot ${cls}" title="${esc(title || '')}">${mark}</span>`;
+    return `<span class="dot ${cls}" data-tip="${attr(tip || '')}">${mark}</span>`;
   }
 
-  function candRow(c) {
-    const tds = SCREENS.map(s => {
-      let title = s.label;
-      if (s.type === 'tri') {
-        title = c.cops ? 'COPS: ' + c.cops : s.label + ' \u2014 ' + c[s.key];
-      } else if (s.key === 'screen_ai' && c.ai) {
-        title = 'AI: ' + c.ai;
-      } else {
-        title = s.label + (c[s.key] ? ' \u2014 pass' : ' \u2014 fail');
-      }
-      return `<td>${dot(c[s.key], title, s.type)}</td>`;
-    }).join('');
+  const fmtW = n => n == null ? 'suppressed / none recorded' : n.toLocaleString('en-CA');
+
+  // The value behind each dot, so a reviewer can audit the screen in place.
+  function dotTip(s, c, srcTeer) {
+    switch (s.key) {
+      case 'screen_teer':
+        return `<div class="tt-title">Training alignment</div><div class="tt-value">Candidate TEER ${c.teer} vs source TEER ${srcTeer} \u2014 ${c.screen_teer ? 'within window' : 'outside window'}</div>`;
+      case 'screen_earnings':
+        return `<div class="tt-title">Earnings vs source</div><div class="tt-value">${c.income_ratio != null ? (c.income_ratio * 100).toFixed(1) + '% of source median (threshold 65%)' : 'No provincial income recorded'}</div>`;
+      case 'screen_presence':
+        return `<div class="tt-title">Provincial presence</div><div class="tt-value">Provincial workers: ${fmtW(c.pr_workers)}</div>`;
+      case 'passes_local_cd':
+        return `<div class="tt-title">Local presence</div><div class="tt-value">Census-division workers: ${fmtW(c.loc_workers)}</div>`;
+      case 'screen_cops':
+        return `<div class="tt-title">Occupational outlook</div><div class="tt-value">COPS: ${c.cops || 'n/a'}</div>`;
+      case 'screen_ai':
+        return `<div class="tt-title">AI exposure</div><div class="tt-value">${c.ai || 'n/a'}</div>`;
+    }
+    return '';
+  }
+
+  function candRow(c, srcTeer) {
+    const tds = SCREENS.map(s => `<td>${dot(c[s.key], dotTip(s, c, srcTeer), s.type)}</td>`).join('');
     const pick = c.pick_source ? `<span class="pick-tag">${c.pick_source}</span>` : '';
     const cls = c.in_top10 ? '' : ' class="extra"';
+    let pillTip = '';
+    if (c.classification === 'curated') {
+      pillTip = `<div class="tt-title">Curated selection</div>`
+        + `<div class="tt-value">${c.rationale ? esc(c.rationale) : 'Retained through community review.'}</div>`
+        + (c.pick_failed_filters ? `<div class="tt-value">Retained despite failing: ${esc(c.pick_failed_filters)}</div>` : '');
+    }
+    const simTip = `<div class="tt-title">Skills proximity</div><div class="tt-value">Cosine similarity across 166 OaSIS competencies (1 = identical requirements)</div>`;
     return `<tr${cls}>
       <td class="l"><span class="cand-noc">${c.noc}</span> <span class="cand-label">${esc(c.label)}</span></td>
       <td>${c.teer}</td>
-      <td class="cand-sim">${c.similarity.toFixed(3)}</td>
+      <td class="cand-sim" data-tip="${attr(simTip)}">${c.similarity.toFixed(3)}</td>
       <td class="cand-rank">${c.in_top10 ? '#' + c.rank : '#' + c.rank + '*'}</td>
       ${tds}
-      <td><span class="pill ${c.classification}">${c.classification}</span>${pick}</td>
+      <td><span class="pill ${c.classification}"${pillTip ? ` data-tip="${attr(pillTip)}"` : ''}>${c.classification}</span>${pick}</td>
     </tr>`;
   }
 
   function occBlock(src, key) {
-    const extra = src.n_extra_picks > 0 ? ` · +${src.n_extra_picks} hand-pick${src.n_extra_picks > 1 ? 's' : ''} beyond top&#8209;10` : '';
-    const headCols = SCREENS.map(s => `<th>${s.label}</th>`).join('');
-    const rows = src.candidates.map(candRow).join('');
+    const extra = src.n_extra_picks > 0 ? ` · +${src.n_extra_picks} curated pick${src.n_extra_picks > 1 ? 's' : ''} beyond top&#8209;10` : '';
+    const headCols = SCREENS.map(s =>
+      `<th data-tip="${attr(`<div class="tt-title">${s.label}</div><div class="tt-value">${s.desc}</div>`)}">${s.label}</th>`).join('');
+    const rows = src.candidates.map(c => candRow(c, src.source_teer)).join('');
     return `<details class="occ" data-key="${key}">
       <summary>
         <span class="occ-caret">▶</span>
         <span class="occ-name">${esc(src.source_label)}</span>
         <span class="occ-teer">TEER ${src.source_teer}</span>
-        <span class="occ-meta">top ${src.n_top10} viable/handpicked${extra}</span>
+        <span class="occ-meta">top ${src.n_top10} viable/curated${extra}</span>
       </summary>
       <table class="scr-table">
         <thead><tr>
@@ -196,12 +226,12 @@
     const groupsEl = document.getElementById('groups');
     document.getElementById('intro').innerHTML =
       `Full viability screening for every <strong>community × susceptible occupation</strong> — the top&#8209;10 ` +
-      `<strong>viable or handpicked</strong> candidates (plus any handpicks ranked deeper, shaded, marked <strong>*</strong>), ` +
-      `each against the five screens from Figure&nbsp;7’s viability panel: TEER window, earnings (≥65%), local presence ` +
+      `<strong>viable or curated</strong> candidates (plus any curated picks ranked deeper, shaded, marked <strong>*</strong>), ` +
+      `each against the screens from Figure&nbsp;7’s viability panel: TEER window, earnings (≥65%), local presence ` +
       `(provincial &amp; census-division), COPS outlook, and AI exposure. <span class="dot pass">✓</span> pass · ` +
       `<span class="dot warn">⚠</span> warning · ` +
       `<span class="dot fail">✗</span> fail. Candidates screened out entirely (\u201Crest\u201D) are not shown. ` +
-      `Showing the <strong>${metric}</strong> metric — switch above to compare in place (your expanded rows stay open).`;
+      `Hover any column header, dot, or pill for the definition and the underlying value.`;
 
     groupsEl.innerHTML = DATA.communities.map(comm => {
       const occs = comm.sources.map(s => occBlock(s, comm.cd_uid + '|' + s.source_noc)).join('');
@@ -233,6 +263,18 @@
   });
 
   loadAndRender(currentMetric);
+
+  // One delegated tippy covers every data-tip element, including rows rendered
+  // after a metric switch (content is read per-show from the attribute).
+  tippy.delegate(document.body, {
+    target: '[data-tip]',
+    theme: 'irpp',
+    animation: 'shift-away',
+    allowHTML: true,
+    placement: 'top',
+    appendTo: document.body,
+    content: ref => ref.getAttribute('data-tip'),
+  });
 
   // ── Auto-size: tell the parent portal our content height, and re-report
   //    whenever a collapsible section opens/closes so the iframe grows/shrinks.

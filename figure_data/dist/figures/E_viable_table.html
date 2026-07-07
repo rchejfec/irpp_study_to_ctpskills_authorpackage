@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Viable Matches Table — Estevan</title>
+<title>Viable Matches Table</title>
 <link rel="stylesheet" href="../theme.css">
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
 <style>
   .figure-container {
     width: var(--fig-width);
@@ -76,9 +79,9 @@
       <table class="viable-table" id="table-body">
         <thead>
           <tr>
-            <th style="width:33%">Viable (Comparable TEER)</th>
-            <th style="width:33%">Viable (TEER Relaxed)</th>
-            <th style="width:34%">Other Viable in Top 10</th>
+            <th style="width:33%" data-tip="<div class='tt-title'>Comparable TEER</div><div class='tt-value'>Curated picks at a training level comparable to the source occupation — a transition without a major training upgrade.</div>">Viable (Comparable TEER)</th>
+            <th style="width:33%" data-tip="<div class='tt-title'>TEER relaxed</div><div class='tt-value'>Curated picks requiring more extensive training than the source occupation (a more demanding TEER). Beyond closing skill gaps, these may involve additional certification.</div>">Viable (TEER Relaxed)</th>
+            <th style="width:34%" data-tip="<div class='tt-title'>Other viable in top 10</div><div class='tt-value'>Remaining viable candidates in the source's top-10 skills-similarity window, grouped by NOC 3-digit occupation family. Hover a family for its members.</div>">Other Viable in Top 10</th>
           </tr>
         </thead>
         <tbody id="table-rows"></tbody>
@@ -90,9 +93,30 @@
 <script>
   let currentMetric = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
   let currentPick = (new URLSearchParams(location.search).get('pick') === 'user') ? 'user' : 'author';
+  let activeCd = (new URLSearchParams(location.search).get('cd')) || '4701';  // Estevan default
   const CACHE = {};
 
   function cacheKey(metric, pick) { return `${pick}.${metric}`; }
+
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const attr = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+
+  function pickTip(c, kind) {
+    let t = `<div class="tt-title">${esc(c.candidate_label)}</div>`
+      + `<div class="tt-value">Skills similarity: ${c.similarity != null ? c.similarity.toFixed(3) : '—'} · rank #${c.rank}</div>`;
+    if (c.income_ratio != null)
+      t += `<div class="tt-value">Earnings: ${(c.income_ratio * 100).toFixed(0)}% of source median</div>`;
+    if (c.pick_failed_filters)
+      t += `<div class="tt-value">Retained through community review despite failing: ${esc(c.pick_failed_filters)}</div>`;
+    if (c.rationale)
+      t += `<div class="tt-value"><em>${esc(c.rationale)}</em></div>`;
+    return t;
+  }
+
+  function groupTip(g) {
+    const rows = g.members.map(m => `<div class="tt-value">${esc(m.label)} (TEER ${m.teer}, #${m.rank})</div>`).join('');
+    return `<div class="tt-title">${esc(g.noc3_label)}</div>${rows}`;
+  }
 
   function build(comm) {
     document.getElementById('comm-name').textContent = comm.community;
@@ -110,7 +134,7 @@
       html += '<td class="viable-cell pick-comparable">';
       if (src.comparable.length > 0) {
         html += src.comparable.map(c =>
-          `<div class="stacked-pick">${c.candidate_label} <span class="teer-inline">(TEER ${c.candidate_teer})</span></div>`
+          `<div class="stacked-pick" data-tip="${attr(pickTip(c, 'comparable'))}">${c.candidate_label} <span class="teer-inline">(TEER ${c.candidate_teer})</span></div>`
         ).join('');
       } else { html += '<span class="teer-inline">—</span>'; }
       html += '</td>';
@@ -119,7 +143,7 @@
       html += '<td class="viable-cell pick-extensive">';
       if (src.extensive.length > 0) {
         html += src.extensive.map(e =>
-          `<div class="stacked-pick">${e.candidate_label} <span class="teer-inline">(TEER ${e.candidate_teer})</span></div>`
+          `<div class="stacked-pick" data-tip="${attr(pickTip(e, 'extensive'))}">${e.candidate_label} <span class="teer-inline">(TEER ${e.candidate_teer})</span></div>`
         ).join('');
       } else { html += '<span class="teer-inline">—</span>'; }
       html += '</td>';
@@ -128,7 +152,7 @@
       html += '<td class="viable-cell">';
       if (src.other_count > 0 && src.other_groups && src.other_groups.length > 0) {
         const parts = src.other_groups.map(g =>
-          `<span class="noc3-count">${g.count}</span> in ${g.noc3_label}`
+          `<span data-tip="${attr(groupTip(g))}"><span class="noc3-count">${g.count}</span> in ${g.noc3_label}</span>`
         );
         html += `<div class="other-prose-compact">${parts.join('; ')}</div>`;
       } else { html += '<span class="teer-inline">—</span>'; }
@@ -141,12 +165,17 @@
     reportSize();
   }
 
+  function tryRender(keyed) {
+    const comm = keyed[activeCd] || keyed[Object.keys(keyed)[0]];
+    if (comm) build(comm);
+  }
+
   function loadAndRender(metric, pick) {
     const key = cacheKey(metric, pick);
-    if (CACHE[key]) { build(CACHE[key]); return; }
-    fetch(`../data/E_viable_table.${pick}.${metric}.json`)
+    if (CACHE[key]) { tryRender(CACHE[key]); return; }
+    fetch(`../data/E_viable_table.all.${pick}.${metric}.json`)
       .then(r => r.json())
-      .then(DATA => { CACHE[key] = DATA; build(DATA); });
+      .then(DATA => { CACHE[key] = DATA; tryRender(DATA); });
   }
 
   function reportSize() {
@@ -154,7 +183,7 @@
     if (c) parent.postMessage({ type: 'figure-sized', fig: 'E_viable_table', width: c.scrollWidth, height: c.scrollHeight }, '*');
   }
 
-  // Listen for in-place metric or pick switch from parent
+  // Listen for in-place metric, pick, or community switch from parent
   window.addEventListener('message', e => {
     if (!e.data) return;
     if (e.data.type === 'set-metric' && e.data.metric && e.data.metric !== currentMetric) {
@@ -165,6 +194,20 @@
       currentPick = e.data.pick;
       loadAndRender(currentMetric, currentPick);
     }
+    if (e.data.type === 'set-active-pair' && e.data.cd && e.data.cd !== activeCd) {
+      activeCd = e.data.cd;
+      loadAndRender(currentMetric, currentPick);
+    }
+  });
+
+  tippy.delegate(document.body, {
+    target: '[data-tip]',
+    theme: 'irpp',
+    animation: 'shift-away',
+    allowHTML: true,
+    placement: 'top',
+    appendTo: document.body,
+    content: ref => ref.getAttribute('data-tip'),
   });
 
   loadAndRender(currentMetric, currentPick);

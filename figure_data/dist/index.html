@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rural Transitions Portal Prototype</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f8;
+      color: #333;
+    }
+    .header {
+      background: #fff;
+      padding: 16px 24px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .figure-block {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .figure-header {
+      padding: 12px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .controls {
+      display: flex;
+      gap: 12px;
+    }
+    select {
+      padding: 6px 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+    iframe {
+      border: none;
+      background: transparent;
+      width: 100%;
+      height: 400px; /* will auto-resize */
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <strong>Prototype Portal</strong>
+  </div>
+  
+  <div class="grid">
+    <div class="figure-block" id="block-f2">
+      <div class="figure-header">
+        <strong>Figure F2: Filtering Funnel</strong>
+        <div class="controls">
+          <select class="cd-select"></select>
+          <select class="src-select"></select>
+        </div>
+      </div>
+      <iframe id="frame-f2" src="figures/F2_filtering.html"></iframe>
+    </div>
+    
+    <div class="figure-block" id="block-d">
+      <div class="figure-header">
+        <strong>Figure D: Walkthrough</strong>
+        <div class="controls">
+          <select class="cd-select"></select>
+          <select class="src-select"></select>
+        </div>
+      </div>
+      <iframe id="frame-d" src="figures/D_walkthrough.html"></iframe>
+    </div>
+
+    <div class="figure-block" id="block-i">
+      <div class="figure-header">
+        <strong>Figure I: Skills Gap Bars</strong>
+        <div class="controls">
+          <select class="cd-select"></select>
+          <select class="src-select"></select>
+          <select class="tgt-select" style="display:none;"></select>
+        </div>
+      </div>
+      <iframe id="frame-i" src="figures/I_skills_gap_bars.html"></iframe>
+    </div>
+
+    <div class="figure-block" id="block-a2">
+      <div class="figure-header"><strong>Figure A2: Community Map</strong></div>
+      <iframe id="frame-a2" src="figures/A2_map.html"></iframe>
+    </div>
+
+    <div class="figure-block" id="block-b">
+      <div class="figure-header"><strong>Figure B: Suitable Heatmap</strong></div>
+      <iframe id="frame-b" src="figures/B_suitable_heatmap.html"></iframe>
+    </div>
+
+    <div class="figure-block" id="block-c2">
+      <div class="figure-header"><strong>Figure C2: Summary</strong></div>
+      <iframe id="frame-c2" src="figures/C2_summary.html"></iframe>
+    </div>
+
+    <div class="figure-block" id="block-e">
+      <div class="figure-header">
+        <strong>Figure E: Viable Table</strong>
+        <div class="controls"><select id="e-cd-select"></select></div>
+      </div>
+      <iframe id="frame-e" src="figures/E_viable_table.html"></iframe>
+    </div>
+
+    <div class="figure-block" id="block-g2">
+      <div class="figure-header"><strong>Figure G2: OaSIS Competencies</strong></div>
+      <iframe id="frame-g2" src="figures/G2_oasis_competencies.html"></iframe>
+    </div>
+
+    <div class="figure-block" id="block-j">
+      <div class="figure-header"><strong>Figure J: Skills Gap Table</strong></div>
+      <iframe id="frame-j" src="figures/J_skills_gap_table.html"></iframe>
+    </div>
+
+    <div class="figure-block" id="block-k">
+      <div class="figure-header"><strong>Figure K: Appendix — Screening</strong></div>
+      <iframe id="frame-k" src="figures/K_appendix_screening.html"></iframe>
+    </div>
+  </div>
+
+  <script>
+    let DATA = null;
+    let I_DATA = null;
+
+    Promise.all([
+      fetch('data/D_walkthrough.all.cosine.json').then(r => r.json()),
+      fetch('data/I_skills_gap_bars.json').then(r => r.json())
+    ]).then(([dData, iData]) => {
+      DATA = dData;
+      I_DATA = iData;
+      // Wait a small beat for iframes to load
+      setTimeout(() => {
+        setupBlock('block-f2', 'frame-f2');
+        setupBlock('block-d', 'frame-d');
+        setupBlock('block-i', 'frame-i', true);
+        setupCommunityOnly('e-cd-select', 'frame-e', '4701');
+      }, 500);
+    });
+
+    function setupBlock(blockId, frameId, isFigureI = false) {
+      const block = document.getElementById(blockId);
+      const frame = document.getElementById(frameId);
+      const cdSelect = block.querySelector('.cd-select');
+      const srcSelect = block.querySelector('.src-select');
+      const tgtSelect = block.querySelector('.tgt-select');
+
+      let currentCd = '3532';
+      let currentSrc = '75101';
+      let currentTgt = 'default';
+
+      function populateCommunities() {
+        cdSelect.innerHTML = '';
+        for (const cd in DATA) {
+          const firstSrc = Object.keys(DATA[cd])[0];
+          const name = DATA[cd][firstSrc].community;
+          const opt = document.createElement('option');
+          opt.value = cd;
+          opt.textContent = name;
+          if (cd === currentCd) opt.selected = true;
+          cdSelect.appendChild(opt);
+        }
+      }
+
+      function populateSources(cd) {
+        srcSelect.innerHTML = '';
+        const sources = DATA[cd];
+        for (const src in sources) {
+          const name = sources[src].source_label;
+          const opt = document.createElement('option');
+          opt.value = src;
+          opt.textContent = name;
+          if (src === currentSrc) opt.selected = true;
+          srcSelect.appendChild(opt);
+        }
+        if (!sources[currentSrc]) {
+          currentSrc = Object.keys(sources)[0];
+          srcSelect.value = currentSrc;
+        }
+      }
+
+      function populateTargets(cd, src) {
+        if (!tgtSelect || !I_DATA) return;
+        tgtSelect.innerHTML = '';
+        const optDef = document.createElement('option');
+        optDef.value = 'default';
+        optDef.textContent = 'Default (Side-by-Side)';
+        tgtSelect.appendChild(optDef);
+        
+        const pairs = I_DATA.pairs.filter(p => p.source_noc === src && p.communities.includes(cd));
+        for (const p of pairs) {
+          const opt = document.createElement('option');
+          opt.value = p.target_noc;
+          opt.textContent = p.target_label;
+          tgtSelect.appendChild(opt);
+        }
+        if (currentTgt !== 'default' && !pairs.find(p => p.target_noc === currentTgt)) {
+          currentTgt = 'default';
+        }
+        tgtSelect.value = currentTgt;
+        
+        if (pairs.length > 0) {
+          tgtSelect.style.display = 'inline-block';
+        } else {
+          tgtSelect.style.display = 'none';
+        }
+      }
+
+      function updateIframe() {
+        const msg = { type: 'set-active-pair', cd: currentCd, src: currentSrc, tgt: currentTgt };
+        frame.contentWindow.postMessage(msg, '*');
+      }
+
+      cdSelect.addEventListener('change', e => {
+        currentCd = e.target.value;
+        populateSources(currentCd);
+        if (isFigureI) populateTargets(currentCd, currentSrc);
+        updateIframe();
+      });
+
+      srcSelect.addEventListener('change', e => {
+        currentSrc = e.target.value;
+        if (isFigureI) populateTargets(currentCd, currentSrc);
+        updateIframe();
+      });
+
+      if (tgtSelect) {
+        tgtSelect.addEventListener('change', e => {
+          currentTgt = e.target.value;
+          updateIframe();
+        });
+      }
+
+      populateCommunities();
+      populateSources(currentCd);
+      if (isFigureI) populateTargets(currentCd, currentSrc);
+      updateIframe();
+    }
+
+    function setupCommunityOnly(selectId, frameId, defaultCd) {
+      const sel = document.getElementById(selectId);
+      const frame = document.getElementById(frameId);
+      sel.innerHTML = '';
+      for (const cd in DATA) {
+        const firstSrc = Object.keys(DATA[cd])[0];
+        const opt = document.createElement('option');
+        opt.value = cd;
+        opt.textContent = DATA[cd][firstSrc].community;
+        if (cd === defaultCd) opt.selected = true;
+        sel.appendChild(opt);
+      }
+      sel.addEventListener('change', e => {
+        frame.contentWindow.postMessage({ type: 'set-active-pair', cd: e.target.value }, '*');
+      });
+    }
+
+    window.addEventListener('message', e => {
+      if (e.data && e.data.type === 'figure-sized') {
+        const frameMap = {
+          'F2_filtering': 'frame-f2',
+          'D_walkthrough': 'frame-d',
+          'I_skills_gap_bars': 'frame-i',
+          'A2_map': 'frame-a2',
+          'B_suitable_heatmap': 'frame-b',
+          'C2_summary': 'frame-c2',
+          'E_viable_table': 'frame-e',
+          'G2_oasis_competencies': 'frame-g2',
+          'J_skills_gap_table': 'frame-j',
+          'K_appendix_screening': 'frame-k'
+        };
+        const id = frameMap[e.data.fig];
+        if (id) {
+          document.getElementById(id).style.height = (e.data.height + 2) + 'px';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -3,8 +3,11 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Top Skills Gaps by Community</title>
+  <title>Top Skill Gaps by Community and Domain</title>
   <link rel="stylesheet" href="../theme.css">
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
   <style>
     .figure-container {
       width: var(--fig-width);
@@ -75,62 +78,104 @@
       margin-bottom: 2px;
     }
     .track { height: 4px; border-radius: 2px; background: #e6e9ec; }
-    .bar   { height: 4px; border-radius: 2px; }
-    .skill.rank1 .bar { background: var(--irpp-teal); }
-    .skill.rank2 .bar { background: #5aa9a9; }
-    .skill.rank3 .bar { background: #93c6c6; }
-    .rank-tag {
-      display: inline-block;
-      font-size: 6.5px;
-      font-weight: 700;
-      color: #fff;
-      background: var(--irpp-teal);
-      border-radius: 2px;
-      padding: 0 3px;
-      margin-right: 3px;
-      vertical-align: 1px;
+    .bar   { height: 4px; border-radius: 2px; background: var(--irpp-teal); }
+
+    /* ── Domain header row ── */
+    .dom-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      padding: 2px 2px 4px;
+      border-bottom: 1.5px solid var(--irpp-navy);
+      flex-shrink: 0;
     }
-    .skill.rank2 .rank-tag { background: #5aa9a9; }
-    .skill.rank3 .rank-tag { background: #93c6c6; }
+    .dom-header .comm-head { width: 19%; flex-shrink: 0; }
+    .dom-header .doms { flex: 1; display: flex; gap: 7px; }
+    .dom-header .dom {
+      flex: 1 1 0; min-width: 0;
+      font-size: 8px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.4px; color: var(--irpp-navy);
+    }
   </style>
 </head>
 
 <body>
   <div class="dev-wrapper">
     <div class="figure-container">
+      <div class="dom-header" id="dom-header"></div>
       <div class="rows" id="rows"></div>
     </div>
   </div>
 
   <script>
-    // HTML-layer only: this view keeps the SKILLS domain and shows, per community,
-    // its own top-N Skills gaps — the training-planning view for that community.
-    // Source data (all four domains) is untouched — we read row.Skills_top.
-    const DOMAIN_TOP = 'Skills_top';
-    const N = 3; // top-N skills shown per community
+    // Matches the draft's Figure 6: the most common gap competency per community
+    // BY OaSIS DOMAIN (one column per domain). Runner-up competencies live in the
+    // tooltip (row.<Domain>_top carries the top-5 per domain).
+    const DOMAINS = [
+      { key: 'Skills', label: 'Skills',
+        desc: 'Developed capacities used in performing tasks — e.g. numeracy, critical thinking (33 competencies, proficiency 0–5).' },
+      { key: 'Knowledge', label: 'Knowledge',
+        desc: 'Organized subject-matter sets — e.g. building and construction, economics (44 competencies).' },
+      { key: 'Abilities', label: 'Abilities',
+        desc: 'Enduring attributes influencing performance — e.g. deductive reasoning, manual dexterity (49 competencies, 0–5).' },
+      { key: 'Work Activities', label: 'Work activities',
+        desc: 'General types of job behaviour — e.g. getting information, making decisions (40 competencies, complexity 0–5).' },
+    ];
+
+    const attr = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+
+    function cellTip(c, row, topList) {
+      let t = `<div class="tt-title">${c.name}</div>`
+        + `<div class="tt-value">Top gap in ${c.n_pairs} of ${row.total_pairs} curated transitions (${Math.round(c.pct)}%)</div>`
+        + `<div class="tt-value">Avg. gap size: ${c.avg_gap.toFixed(2)} (RCA difference)</div>`;
+      const runners = (topList || []).filter(x => x.name !== c.name).slice(0, 3);
+      if (runners.length) {
+        t += `<hr class="tt-divider"><div class="tt-value">Next most common:</div>`
+          + runners.map(r => `<div class="tt-value">${r.name} — ${r.n_pairs} pair${r.n_pairs > 1 ? 's' : ''}</div>`).join('');
+      }
+      return t;
+    }
 
     fetch('../data/J_skills_gap_table.json')
       .then(r => r.json())
       .then(DATA => {
+        document.getElementById('dom-header').innerHTML =
+          `<div class="comm-head"></div><div class="doms">` +
+          DOMAINS.map(d => `<div class="dom" data-tip="${attr(`<div class='tt-title'>${d.label}</div><div class='tt-value'>${d.desc}</div>`)}">${d.label}</div>`).join('') +
+          `</div>`;
+
         let html = '';
         DATA.forEach(row => {
-          const top = (row[DOMAIN_TOP] || []).slice(0, N);
-          const skills = top.map((c, i) => `
-            <div class="skill rank${i + 1}">
-              <div class="skill-name"><span class="rank-tag">${i + 1}</span>${c.name}</div>
+          const cells = DOMAINS.map(d => {
+            const c = row[d.key];
+            if (!c) return `<div class="skill"><div class="skill-meta">—</div></div>`;
+            return `
+            <div class="skill" data-tip="${attr(cellTip(c, row, row[d.key + '_top']))}">
+              <div class="skill-name">${c.name}</div>
               <div class="skill-meta">${c.n_pairs} of ${row.total_pairs} pairs</div>
               <div class="track"><div class="bar" style="width:${Math.round(c.pct)}%"></div></div>
-            </div>`).join('');
+            </div>`;
+          }).join('');
           html += `
             <div class="comm-row">
               <div class="comm-head">
                 <span class="comm-name">${row.community}</span>
                 <span class="comm-count">${row.total_pairs} transitions</span>
               </div>
-              <div class="skills">${skills}</div>
+              <div class="skills">${cells}</div>
             </div>`;
         });
         document.getElementById('rows').innerHTML = html;
+
+        tippy.delegate(document.body, {
+          target: '[data-tip]',
+          theme: 'irpp',
+          animation: 'shift-away',
+          allowHTML: true,
+          placement: 'top',
+          appendTo: document.body,
+          content: ref => ref.getAttribute('data-tip'),
+        });
       });
   </script>
 

@@ -11,7 +11,10 @@
   <style>
     .figure-container {
       width: var(--fig-width);
-      height: var(--fig-height);
+      /* Baseline height; grows if a pair's assessment notes run longer
+         (iframe hosts resize via the figure-sized postMessage). */
+      min-height: var(--fig-height);
+      height: auto;
       padding: 0;
       display: flex;
       overflow: hidden;
@@ -101,7 +104,7 @@
     .rca-pair .from { color: var(--irpp-red); font-weight: 700; }
     .rca-pair .to { color: var(--irpp-teal); font-weight: 700; }
     .rca-hint { font-size: 8px; color: #aaa; line-height: 1.3; margin-bottom: 2px; }
-    .rca-bars { margin-top: 4px; }
+    .rca-bars { margin-top: 12px; }
     .rca-bar-row { margin-bottom: 5px; }
     .rca-bar-label { font-size: 7.5px; color: #666; margin-bottom: 1px; line-height: 1.15; }
     .rca-plot { position: relative; }
@@ -180,14 +183,15 @@
 
       let left = '';
       let right = '';
+      const geoWord = (t.cd || '').startsWith('PR') ? 'Territorial' : 'Provincial';
 
       // ═══ R1C1: Source card ═══
       left += `<div class="cell-source">
       <div class="src-comm">${t.community}</div>
       <div class="src-name">${t.source_label}</div>
       <div class="src-detail">TEER level <span>${t.source_teer}</span></div>
-      <div class="src-detail">Provincial income: <span>${fmt$(sl.pr_income)}</span></div>
-      <div class="src-detail">Provincial workers: <span>${fmtW(sl.pr_workers)}</span></div>
+      <div class="src-detail">${geoWord} income: <span>${fmt$(sl.pr_income)}</span></div>
+      <div class="src-detail">${geoWord} workers: <span>${fmtW(sl.pr_workers)}</span></div>
       <div class="src-detail">Sector: <span>${t.sector}</span></div>
     </div>`;
 
@@ -223,13 +227,15 @@
       left += `<div class="col-title">Viability screening</div>`;
       left += `<div class="col-subtitle"><span class="hm-ok">\u25CF</span><span class="hm-warn">\u25CF</span> = pass \u00a0\u00a0 size = provincial workers</div>`;
       left += `<div class="hm-grid">`;
-      left += `<div class="hm-header">
-      <div class="hm-h-col">TEER</div>
-      <div class="hm-h-col">Wages</div>
-      <div class="hm-h-col">COPS</div>
-      <div class="hm-h-col">AI</div>
-      <div class="hm-h-col">Qual.</div>
-    </div>`;
+      const hmDefs = {
+        TEER: 'Training alignment — candidate TEER within the accepted window around the source occupation’s (comparable, or more extensive training).',
+        Wages: 'Earnings differential — provincial median income ≥ 65% of the source occupation’s. Amber = passes but below parity.',
+        COPS: 'Occupational outlook — federal COPS projections; fails on projected labour surplus.',
+        AI: 'AI exposure — Dais (2025) ratings; high exposure excluded.',
+        'Qual.': 'Qualitative community review — curated pick (green), susceptible-sector exclusion (red), or no local presence (amber). Approximated from IRPP community profiles.',
+      };
+      left += `<div class="hm-header">` + Object.keys(hmDefs).map(k =>
+        `<div class="hm-h-col" data-tip="${k === 'Qual.' ? 'Qual' : k}|${hmDefs[k].replace(/"/g, '&quot;')}">${k}</div>`).join('') + `</div>`;
       left += `<div class="hm-data-rows">`;
       cands.forEach(c => {
         const f = deriveFilters(c);
@@ -255,7 +261,7 @@
         right += `<div class="rca-pair">
         <span class="from">${t.source_label}</span>
         \u2192
-        <span class="to">${trunc(fg.target_label, 26)}</span>
+        <span class="to">${fg.target_label}</span>
       </div>`;
         right += `<div class="rca-hint">${fg.summary.shared} shared competencies · ${fg.summary.gaps} training gaps</div>`;
         const maxLq = Math.max(...fg.bars.flatMap(b => [b.source_lq, b.target_lq]), 1.1);
@@ -264,8 +270,9 @@
         fg.bars.forEach(b => {
           const srcPct = (b.source_lq / maxLq) * 100;
           const tgtPct = (b.target_lq / maxLq) * 100;
-          const dimLabel = b.dimension.length > 30 ? b.dimension.slice(0, 29) + '\u2026' : b.dimension;
-          right += `<div class="rca-bar-row">
+          const dimLabel = b.dimension;
+          const rowTip = `${dimLabel}|${t.source_label} RCA: ${b.source_lq.toFixed(2)} · ${fg.target_label} RCA: ${b.target_lq.toFixed(2)}. RCA > 1 = relied on more than the average occupation; the difference is the training gap.`;
+          right += `<div class="rca-bar-row" data-tip="${rowTip.replace(/"/g, '&quot;')}">
           <div class="rca-bar-label">${dimLabel}</div>
           <div class="rca-plot">
             <div class="rca-ref" style="left:${refPct}%"></div>
@@ -275,24 +282,25 @@
         </div>`;
         });
         right += `</div></div>`;
+      } else {
+        right += `<div class="rca-hint">No skill-gap data available for this pair's top matches.</div></div>`;
       }
 
       // ═══ R2C3: Assessment notes ═══
       right += `<div class="cell-qual">`;
       right += `<div class="qual-title">Assessment notes</div>`;
-      right += `<div class="qual-item down">
-      <div class="qual-occ"><span class="qual-arrow down">↓</span> Longshore workers, Oil and gas drilling</div>
-      <div class="qual-explain">Excluded: few provincial workers, weak demand outlook, or in susceptible sector.</div>
-    </div>`;
-      right += `<div class="qual-item down">
-      <div class="qual-occ"><span class="qual-arrow down">↓</span> Textile processing, Logging labourers</div>
-      <div class="qual-explain">Provincial income below 65% of source — not economically viable.</div>
-    </div>`;
-      right += `<div class="qual-item up">
-      <div class="qual-occ"><span class="qual-arrow up">↑</span> Railway transport (#13), Foundry workers (#25)</div>
-      <div class="qual-explain">Going further down the list can reveal matches that align with community assets and plans. Skill similarity remains high (≥0.93).</div>
-    </div>`;
-      right += `<div class="qual-callout"><p>This study uses a specific analytical lens and is limited by available data. In practice, real-time local data and community consultation would further refine these transitions.</p></div>`;
+      const an = t.assessment_notes || { notes: [] };
+      an.notes.forEach(note => {
+        if (note.type === 'callout') {
+          right += `<div class="qual-callout"><p>${note.explain}</p></div>`;
+        } else {
+          const arrow = note.type === 'up' ? '↑' : '↓';
+          right += `<div class="qual-item ${note.type}">
+            <div class="qual-occ"><span class="qual-arrow ${note.type}">${arrow}</span> ${note.label}</div>
+            <div class="qual-explain">${note.explain}</div>
+          </div>`;
+        }
+      });
       right += `</div>`;
 
       document.getElementById('grid-left').innerHTML = left;
@@ -312,16 +320,39 @@
             appendTo: document.body,
           });
         });
+
+        // Screening headers + RCA preview rows: "title|body" data-tips.
+        document.querySelectorAll('[data-tip]').forEach(el => {
+          if (el._tippy) return;
+          const [tipTitle, tipBody] = el.dataset.tip.split('|');
+          tippy(el, {
+            theme: 'irpp',
+            animation: 'shift-away',
+            content: `<div class="tt-title">${tipTitle}</div><div class="tt-value">${tipBody}</div>`,
+            allowHTML: true,
+            placement: 'top',
+            appendTo: document.body,
+          });
+        });
       }
 
       reportSize();
     }
 
+    let activeCd = '3532';
+    let activeSrc = '75101';
+
     function loadAndRender(metric) {
-      if (CACHE[metric]) { buildWalkthrough(CACHE[metric]); return; }
-      fetch(`../data/D_walkthrough.${metric}.json`)
+      if (CACHE[metric]) { 
+        buildWalkthrough(CACHE[metric][activeCd][activeSrc]); 
+        return; 
+      }
+      fetch(`../data/D_walkthrough.all.${metric}.json`)
         .then(r => r.json())
-        .then(DATA => { CACHE[metric] = DATA; buildWalkthrough(DATA); });
+        .then(DATA => { 
+          CACHE[metric] = DATA; 
+          buildWalkthrough(DATA[activeCd][activeSrc]); 
+        });
     }
 
     function reportSize() {
@@ -329,12 +360,22 @@
       if (c) parent.postMessage({ type: 'figure-sized', fig: 'D_walkthrough', width: c.scrollWidth, height: c.scrollHeight }, '*');
     }
 
-    // Listen for in-place metric switch from parent
+    // Listen for in-place metric switch or active pair switch from parent
     window.addEventListener('message', e => {
-      if (!e.data || e.data.type !== 'set-metric' || !e.data.metric) return;
-      if (e.data.metric === currentMetric) return;
-      currentMetric = e.data.metric;
-      loadAndRender(currentMetric);
+      if (!e.data) return;
+      let needsRender = false;
+      
+      if (e.data.type === 'set-metric' && e.data.metric && e.data.metric !== currentMetric) {
+        currentMetric = e.data.metric;
+        needsRender = true;
+      }
+      
+      if (e.data.type === 'set-active-pair') {
+        if (e.data.cd && e.data.cd !== activeCd) { activeCd = e.data.cd; needsRender = true; }
+        if (e.data.src && e.data.src !== activeSrc) { activeSrc = e.data.src; needsRender = true; }
+      }
+      
+      if (needsRender) loadAndRender(currentMetric);
     });
 
     loadAndRender(currentMetric);

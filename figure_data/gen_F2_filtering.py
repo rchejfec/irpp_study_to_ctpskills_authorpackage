@@ -1,8 +1,7 @@
-"""F2_filtering: the viability funnel for one pair (Oxford, Material handlers).
+"""F2_filtering: the viability funnel for all community/source pairs.
 
-Reproduces the schema F2_filtering.html fetches (../data/fig_f_oxford.json, a
-symlink to the replication's fig_f_75101_3532_oxford.json): {_meta, source,
-funnel, candidates[]}.
+Reproduces the funnel logic from the F2 figure, but expanded to all communities.
+Outputs a nested dictionary keyed by cd_uid -> {community, cd_uid, sources: []}.
 
 Design decision (confirmed with author): keep the replication funnel's STRUCTURE
 and filter ORDER, but populate every value from OUR pipeline.
@@ -15,10 +14,7 @@ and filter ORDER, but populate every value from OUR pipeline.
     our similarity ranks.
   - similarity_top30 kept as the display cut (in_top30 = rank <= 30).
 
-Note this diverges from the old fig_f numbers (different source income -> different
-income_ratio and pass_earnings count), by design — F2 now traces to our pipeline.
-
-Per metric: F2_filtering.<metric>.json  (ranks/similarity/discounts differ).
+Emits: F2_filtering.all.<metric>.json
 """
 from __future__ import annotations
 
@@ -26,30 +22,24 @@ import pandas as pd
 
 import lib
 
-FIGURE_CD = "3532"       # Oxford
-FIGURE_SRC = "75101"     # Material handlers
 TOP_N_SIM = 30
 EARNINGS_FLOOR = 0.65
 
 
-def _source_block() -> dict:
-    census = pd.read_csv(lib.OUTPUT_DIR / "census" / "census_2021_main.csv", dtype=str)
-    for c in ("workers_with_income", "median_total_income"):
-        census[c] = pd.to_numeric(census[c], errors="coerce")
-    pr = census[(census["geo_level"] == "province") & (census["pr_code"] == FIGURE_CD[:2])
-                & (census["noc"] == FIGURE_SRC)]
-    cd = census[(census["geo_level"] == "cd") & (census["cd_code"] == FIGURE_CD)
-                & (census["noc"] == FIGURE_SRC)]
+def _source_block(cd_uid: str, comm_name: str, src_noc: str, src_label: str, src_teer: int, census: pd.DataFrame) -> dict:
+    pr_code = cd_uid[:2]
+    pr = census[(census["geo_level"] == "province") & (census["pr_code"] == pr_code) & (census["noc"] == src_noc)]
+    cd = census[(census["geo_level"] == "cd") & (census["cd_code"] == cd_uid) & (census["noc"] == src_noc)]
 
     def g(df, col):
         return None if df.empty or pd.isna(df.iloc[0][col]) else float(df.iloc[0][col])
 
     return {
-        "noc": FIGURE_SRC,
-        "label": "Material handlers",
-        "teer": 5,
-        "community": "Oxford",
-        "cd_uid": FIGURE_CD,
+        "noc": src_noc,
+        "label": src_label,
+        "teer": src_teer,
+        "community": comm_name,
+        "cd_uid": cd_uid,
         "pr_income": g(pr, "median_total_income"),
         "pr_workers": g(pr, "workers_with_income"),
         "loc_workers": g(cd, "workers_with_income"),
@@ -81,6 +71,7 @@ def _candidate(row: pd.Series) -> dict:
         "screen_teer": bool(row.get("screen_teer") in (True, "True")),
         "screen_earnings": bool(row.get("screen_earnings") in (True, "True")),
         "screen_presence": bool(row.get("screen_presence") in (True, "True")),
+        "screen_local_presence": bool(row.get("screen_local_presence") in (True, "True")),
         "screen_cops": str(row.get("screen_cops") or "pass"),  # pass|warn|fail
         "screen_ai": bool(row.get("screen_ai") in (True, "True")),
         # Local CD presence: presentation-layer only.
@@ -113,8 +104,7 @@ def _funnel(cand: pd.DataFrame) -> dict:
     top30 = cand["rank"] <= TOP_N_SIM
     earn_ok = cand["screen_earnings"].astype(str).isin(["True"])
     pr_ok = cand["screen_presence"].astype(str).isin(["True"])
-    locw = pd.to_numeric(cand["loc_workers"], errors="coerce")
-    cd_ok = locw.fillna(0) > 0
+    cd_ok = cand["screen_local_presence"].astype(str).isin(["True"])
     # COPS: warn + pass both count as passing for funnel stage counts.
     cops_ok = cand["screen_cops"].isin(["pass", "warn"])
     ai_ok = cand["screen_ai"].astype(str).isin(["True"])
@@ -137,18 +127,42 @@ def _funnel(cand: pd.DataFrame) -> dict:
 
 def generate(metric: str) -> None:
     global _COMM_SUSC
-    _COMM_SUSC = lib.load_community_susceptible().get(FIGURE_CD, set())
+    susc_map = lib.load_community_susceptible()
+    
+    census = pd.read_csv(lib.OUTPUT_DIR / "census" / "census_2021_main.csv", dtype=str)
+    for c in ("workers_with_income", "median_total_income"):
+        census[c] = pd.to_numeric(census[c], errors="coerce")
 
     v = lib.load_viable(metric)
     en = pd.read_csv(lib.OUTPUT_DIR / "viable" / f"enriched_{metric}.csv", dtype=str)
-    pair = v[(v["cd_uid"] == FIGURE_CD) & (v["source_noc"] == FIGURE_SRC)].copy()
-    loc = en[(en["cd_uid"] == FIGURE_CD) & (en["source_noc"] == FIGURE_SRC)][
-        ["candidate_noc", "loc_workers", "loc_income_discount"]]
-    pair = pair.merge(loc, on="candidate_noc", how="left")
+    loc = en[["cd_uid", "source_noc", "candidate_noc", "loc_workers", "loc_income_discount"]]
+    v = v.merge(loc, on=["cd_uid", "source_noc", "candidate_noc"], how="left")
+
+    all_comms = {}
+
+    for cd_uid, cdf in v.groupby("cd_uid"):
+        _COMM_SUSC = susc_map.get(cd_uid, set())
+        comm_name = cdf.iloc[0]["community"]
+        sources = []
+        for src_noc, sdf in cdf.groupby("source_noc"):
+            head = sdf.iloc[0]
+            src_block = _source_block(
+                cd_uid, comm_name, src_noc, 
+                head["source_label"], int(head["source_teer"]), census
+            )
+            src_block["funnel"] = _funnel(sdf)
+            src_block["candidates"] = [_candidate(r) for _, r in sdf.sort_values("rank").iterrows()]
+            sources.append(src_block)
+            
+        all_comms[cd_uid] = {
+            "community": comm_name,
+            "cd_uid": cd_uid,
+            "sources": sources
+        }
 
     payload = {
         "_meta": {
-            "description": f"Fig F filtering data — Material handlers in Oxford ({metric})",
+            "description": f"Fig F filtering data — All communities ({metric})",
             "generated_from": "figure_data/gen_F2_filtering.py",
             "filter_order": ["teer", "similarity_top30", "earnings",
                              "local_presence", "cops", "ai"],
@@ -158,25 +172,20 @@ def generate(metric: str) -> None:
                 "income_floor": EARNINGS_FLOOR,
                 "ai_rule": "passes if not High exposure",
                 "cops_rule": "passes if not *Surplus*",
-            },
-            "note": "Structure/order from the original fig_f; values from our "
-                    "pipeline (direct provincial income, our discounts/ranks).",
+            }
         },
-        "source": _source_block(),
-        "funnel": _funnel(pair),
-        "candidates": [_candidate(r) for _, r in pair.sort_values("rank").iterrows()],
+        "data": all_comms
     }
-    lib.write_json(f"F2_filtering.{metric}.json", payload)
-    f = payload["funnel"]
-    print(f"[F2] {metric}: {f['total_all']} -> teer {f['pass_teer']} -> top30 "
-          f"{f['top30_similarity']} -> earn {f['pass_earnings']} -> "
-          f"endorsed {f['endorsed']}, viable {f['viable']}")
+    lib.write_json(f"F2_filtering.all.{metric}.json", payload)
+    
+    # Logging
+    n_pairs = sum(len(c["sources"]) for c in all_comms.values())
+    print(f"[F2] {metric}: generated {len(all_comms)} communities, {n_pairs} source funnels total")
 
 
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--metric", choices=lib.METRICS, default=None)
+    ap.add_argument("--metric", default="cosine")
     args = ap.parse_args()
-    for m in ([args.metric] if args.metric else list(lib.METRICS)):
-        generate(m)
+    generate(args.metric)

@@ -18,7 +18,7 @@ OUTPUT_DIR = PKG_ROOT / "output"
 REF_DIR = PKG_ROOT / "data" / "reference"
 FIGURE_DATA_OUT = Path(__file__).resolve().parent / "dist" / "data"
 
-METRICS = ("cosine", "euclidean")
+METRICS = ("cosine",)
 
 # ── NOC 3-digit parent labels (NOC 2021 taxonomy) ──
 # Ported verbatim from study_TO26_replication/scripts/generate_paper_table.py.

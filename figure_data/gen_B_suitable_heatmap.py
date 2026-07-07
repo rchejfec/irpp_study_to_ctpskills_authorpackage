@@ -16,7 +16,7 @@ Methodology (confirmed empirically + draft figure_plan.md "susceptible occupatio
 Also emits source_communities: which communities each source occupation belongs to
 (for the row pills), derived from source_sector_mapping.json.
 
-Per metric: B_suitable_heatmap.<metric>.json  (avg_sim differs by metric).
+Per metric: B_suitable_heatmap.<metric>.json
 """
 from __future__ import annotations
 
@@ -87,6 +87,11 @@ def generate(metric: str) -> None:
                 "dest_label": lib.noc3_label(noc3),
                 "count": int(len(g)),
                 "avg_sim": round(float(g["similarity"].mean()), 3),
+                "members": [
+                    {"label": r["candidate_label"],
+                     "sim": round(float(r["similarity"]), 3)}
+                    for _, r in g.sort_values("rank").iterrows()
+                ],
             })
 
     # Only keep a destination family (column) if more than one source occupation
@@ -112,7 +117,6 @@ def generate(metric: str) -> None:
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--metric", choices=lib.METRICS, default=None)
+    ap.add_argument("--metric", default="cosine")
     args = ap.parse_args()
-    for m in ([args.metric] if args.metric else list(lib.METRICS)):
-        generate(m)
+    generate(args.metric)

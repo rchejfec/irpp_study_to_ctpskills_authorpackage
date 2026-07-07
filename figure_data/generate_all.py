@@ -28,12 +28,12 @@ import lib
 
 def main() -> None:
     print("Regenerating figure_data/dist/data/ …\n")
-    for metric in lib.METRICS:
-        gen_E_viable_table.generate(metric)
-        gen_D_walkthrough.generate(metric)
-        gen_B_suitable_heatmap.generate(metric)
-        gen_F2_filtering.generate(metric)
-        gen_K_appendix_screening.generate(metric)
+    metric = "cosine"
+    gen_E_viable_table.generate(metric)
+    gen_D_walkthrough.generate(metric)
+    gen_B_suitable_heatmap.generate(metric)
+    gen_F2_filtering.generate(metric)
+    gen_K_appendix_screening.generate(metric)
     # Metric-independent (shared) figures:
     gen_J_skills_gap_table.generate()
     gen_I_skills_gap_bars.generate()

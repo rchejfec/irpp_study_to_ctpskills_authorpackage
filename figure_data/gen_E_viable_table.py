@@ -48,11 +48,21 @@ OTHER_TOP_N = 10
 
 
 def _pick_entry(row: pd.Series) -> dict:
+    sim = pd.to_numeric(row.get("similarity"), errors="coerce")
+    ratio = pd.to_numeric(row.get("pr_income_discount"), errors="coerce")
     return {
         "candidate_noc": row["candidate_noc"],
         "candidate_label": row["candidate_label"],
         "candidate_teer": int(row["candidate_teer"]),
         "rank": int(row["rank"]),
+        "similarity": None if pd.isna(sim) else round(float(sim), 3),
+        "income_ratio": None if pd.isna(ratio) else round(float(ratio), 3),
+        "rationale": row["rationale"] if pd.notna(row.get("rationale")) else None,
+        # pick_failed_filters is a bool; the failed screens' names are in
+        # filter_reasons. Emit the names (or None if the pick failed nothing).
+        "pick_failed_filters": row["filter_reasons"]
+            if row.get("pick_failed_filters") == "True"
+               and pd.notna(row.get("filter_reasons")) else None,
     }
 
 
@@ -85,8 +95,17 @@ def build_source(src_df: pd.DataFrame, pick_source: str,
 
     other["noc3"] = other["candidate_noc"].str[:3]
     other_groups = [
-        {"noc3": noc3, "noc3_label": lib.noc3_label(noc3), "count": int(n)}
-        for noc3, n in other.groupby("noc3").size().sort_values(ascending=False).items()
+        {
+            "noc3": noc3,
+            "noc3_label": lib.noc3_label(noc3),
+            "count": int(len(g)),
+            "members": [
+                {"label": r["candidate_label"], "teer": int(r["candidate_teer"]),
+                 "rank": int(r["rank"])}
+                for _, r in g.sort_values("rank").iterrows()
+            ],
+        }
+        for noc3, g in sorted(other.groupby("noc3"), key=lambda kv: -len(kv[1]))
     ]
 
     return {
@@ -141,10 +160,8 @@ def generate(metric: str, top_n: int = OTHER_TOP_N) -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--metric", choices=lib.METRICS, default=None,
+    ap.add_argument("--metric", default="cosine",
                     help="run one metric; default runs all")
     ap.add_argument("--top-n", type=int, default=OTHER_TOP_N)
     args = ap.parse_args()
-    metrics = [args.metric] if args.metric else list(lib.METRICS)
-    for m in metrics:
-        generate(m, args.top_n)
+    generate(args.metric, args.top_n)

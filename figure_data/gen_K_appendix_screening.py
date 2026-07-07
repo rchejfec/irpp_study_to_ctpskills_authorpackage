@@ -31,7 +31,7 @@ TOP_N = 10
 
 def _classification(row: pd.Series) -> str:
     if row["pick_source"] == "author":
-        return "handpicked"
+        return "curated"
     if str(row.get("status") or "").startswith("viable"):
         return "viable"
     return "rest"
@@ -39,6 +39,8 @@ def _classification(row: pd.Series) -> str:
 
 def _candidate(row: pd.Series, in_top: bool) -> dict:
     loc_w = pd.to_numeric(row.get("loc_workers"), errors="coerce")
+    pr_w = pd.to_numeric(row.get("pr_workers"), errors="coerce")
+    ratio = pd.to_numeric(row.get("pr_income_discount"), errors="coerce")
     cops = str(row.get("cops_future") or "")
     ai = str(row.get("ai_exposure_level") or "")
     return {
@@ -56,9 +58,16 @@ def _candidate(row: pd.Series, in_top: bool) -> dict:
         "screen_ai": bool(row.get("screen_ai") in (True, "True")),
         # Local CD presence: presentation-layer only (not a pipeline filter).
         "passes_local_cd": bool(pd.notna(loc_w) and loc_w > 0),
-        # Labels behind the outlook/AI flags (for tooltip).
+        # Values behind the flags (for tooltips).
+        "income_ratio": None if pd.isna(ratio) else round(float(ratio), 3),
+        "loc_workers": None if pd.isna(loc_w) else int(loc_w),
+        "pr_workers": None if pd.isna(pr_w) else int(pr_w),
         "cops": cops or None,
         "ai": ai or None,
+        "rationale": row["rationale"] if pd.notna(row.get("rationale")) else None,
+        "pick_failed_filters": row["filter_reasons"]
+            if row.get("pick_failed_filters") == "True"
+               and pd.notna(row.get("filter_reasons")) else None,
         "pick_source": "author" if row["pick_source"] == "author" else None,
         "classification": _classification(row),
     }
@@ -131,7 +140,6 @@ def generate(metric: str) -> None:
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--metric", choices=lib.METRICS, default=None)
+    ap.add_argument("--metric", default="cosine")
     args = ap.parse_args()
-    for m in ([args.metric] if args.metric else list(lib.METRICS)):
-        generate(m)
+    generate(args.metric)

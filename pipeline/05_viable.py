@@ -128,9 +128,13 @@ def compute_screens(row: pd.Series, source_teer: int, susc: set[str]) -> dict:
     # Susceptible sector exclusion
     screens["screen_susceptible"] = row["candidate_noc"] not in susc
 
-    # Provincial presence
+    # Provincial presence (legacy)
     pr_w = pd.to_numeric(row.get("pr_workers"), errors="coerce")
     screens["screen_presence"] = bool(pd.notna(pr_w) and pr_w > 0)
+
+    # Local presence (new global rule)
+    loc_w = pd.to_numeric(row.get("loc_workers"), errors="coerce")
+    screens["screen_local_presence"] = bool(pd.notna(loc_w) and loc_w > 0)
 
     # COPS outlook (three-state)
     outlook = str(row.get("cops_future") or "").strip().lower()
@@ -165,6 +169,8 @@ def screens_to_filter_reasons(screens: dict) -> list[str]:
         reasons.append("susceptible")
     if not screens["screen_presence"]:
         reasons.append("presence")
+    if not screens["screen_local_presence"]:
+        reasons.append("local_presence")
     if screens["screen_cops"] == "fail":
         reasons.append("outlook")
     if not screens["screen_earnings"]:
@@ -265,6 +271,7 @@ def build(metric: str, susc_map: dict, picks: dict) -> pd.DataFrame:
             "screen_teer": screens["screen_teer"],
             "screen_susceptible": screens["screen_susceptible"],
             "screen_presence": screens["screen_presence"],
+            "screen_local_presence": screens["screen_local_presence"],
             "screen_cops": screens["screen_cops"],
             "screen_earnings": screens["screen_earnings"],
             "screen_ai": screens["screen_ai"],

@@ -23,8 +23,7 @@ temp/
 figure_data/exports/
 
 # Internal AI-dev helper docs, drafts, and reviews
-HANDOFF*.md
-DECISIONS.md
+
 FACTCHECK*.md
 draft.txt
 draft*.docx

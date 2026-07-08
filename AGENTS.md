@@ -1,16 +1,33 @@
 ---
+# Project manifest — machine-readable. Tools scan for this file.
+name: study_TO26_authorpackage
+type: quant-paper
+stakes: high
 status: active
-docs:
-  readme: README.md
-  handoff: HANDOFF.md
+superseded_by:
+canonical_for: TO26 pipeline (steps 1–6, cosine), report figure data + interactive HTML figures + export PNGs, author-review decisions (see ../STRATA.md)
+created: 2026-07-01
+updated: 2026-07-07
+docs: # declare what exists; `none` means deliberately absent — don't hunt
+  spec: TARGET_SPEC.md
   decisions: DECISIONS.md
   validation: VALIDATION.md
+  handoff: HANDOFF.md
+  readme: README.md
 ---
 
-# study_TO26_authorpackage — agent manifest
+# Agent context — read this first
 
-**Initiated retroactively on 2026-07-07.** This project began ~April 2026 and
-ran for months without this manifest; do not expect the startup-file
+- **State**: read `HANDOFF.md` (freshest truth about where things stand).
+- **Trust**: read `VALIDATION.md` — unsigned rows are claims, not facts.
+- **Rationale**: `DECISIONS.md` (why things are the way they are — read before changing pipeline logic).
+- **Target**: `TARGET_SPEC.md` (what "done" means; stated 2026-07-07).
+- House defaults for this surface: `~/Programming/crossover/rc_workbench/reference/house-defaults.md`.
+- Sibling `study_TO26_*` dirs: check `../STRATA.md` and their AGENTS.md `status` before treating them as truth — most are superseded by this repo.
+
+**Initiated retroactively on 2026-07-07.** This repo began 2026-07-01 (the
+wider TO26 effort ~April 2026, see `../STRATA.md`) and ran without this
+manifest; do not expect the startup-file
 conventions to hold for anything before that date. History lives in git
 (`git log`), methodology rationale in DECISIONS.md, and point-in-time state in
 HANDOFF.md (the 2026-07-07 handoff supersedes all earlier ones).
@@ -27,8 +44,10 @@ embeddable interactive HTML + JSON.
 
 - Read **DECISIONS.md before changing pipeline logic** — several choices look
   arbitrary but are deliberate and author-confirmed.
-- `output/` is gitignored and regenerable; `data/` is inputs only (see
-  `data/PROVENANCE.md`).
+- `output/` is gitignored and regenerable; `data/` is inputs only, copied from
+  `study_TO26_replication` @ 2026-07-01 and stamped in `data/PROVENANCE.md` —
+  this repo is now the canonical holder (upstream is superseded), so data
+  fixes land here, not there.
 - Publication metric is **cosine**; gap bars are **Skills-domain only** (D and
   I); hand-picks are called **"curated selection"**, not "handpicked".
 - `dist/exports/*.png` are the approved references for each figure's *default*

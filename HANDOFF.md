@@ -25,14 +25,12 @@ all 10 figures render from validated pipeline JSONs, respond to the tester at
 `figure_data/dist/index.html` (serve `dist/` over HTTP; `file://` breaks
 fetch), and carry a full reader-facing tooltip layer.
 
-### ⚠️ Everything is UNCOMMITTED
+### Commit state: RESOLVED 2026-07-07
 
-The working tree holds two sessions of work on top of `9dcaa4f`:
-an earlier undocumented session (cosine-only generation, `.all.cosine.json`
-interactive data, `dist/export.mjs` PNG exporter, tester `index.html`,
-`screen_local_presence`) and today's session (below). Nothing since `9dcaa4f`
-is committed. Suggested slices: (1) pipeline + DECISIONS entry,
-(2) generators + data, (3) figure HTML + tester, (4) docs.
+The formerly-uncommitted two sessions of work were committed in slices
+(`bf62755` pipeline, `af1a0ca` generators+data, `01c786c` figures+tester,
+`5cc1953` docs). The manifest retrofit (AGENTS frontmatter, TARGET_SPEC,
+CLAUDE.md symlink, this mobile plan) follows in its own docs commit.
 
 ### Done 2026-07-07 (this session)
 
@@ -69,10 +67,40 @@ is committed. Suggested slices: (1) pipeline + DECISIONS entry,
    tooltip layer). Before/after snapshots in
    `temp/snapshot_{before,after}_tooltip_pass/` (gitignored).
 
+## Next workstream: mobile (planned 2026-07-07, evening session)
+
+Mobile chosen over French (layout must freeze before strings freeze; French
+NOC/OaSIS terms come from official ESDC/StatCan bilingual sources when we get
+there). Architecture agreed with Ricardo — see TARGET_SPEC.md §3 for the
+binding constraints (lossy, 2 versions, same-file render branch, iframe-width
+detection, PNGs never mobile). Step order:
+
+1. Viewport meta + width-watcher + height re-emit on mode switch (all 10
+   figures; zero desktop visual change). **No viewport meta exists today** —
+   Android Chrome font-boosting makes current phone rendering meaningless.
+2. Font hygiene: self-host Nunito Sans + tippy CSS (now Google Fonts/unpkg —
+   third-party deps on IRPP's page); raise F2's 7–7.5px text (touches
+   approved PNG states → batch with pending F2/D/J re-exports, needs sign-off).
+3. Compact render branches figure-by-figure: narrative figures (D, I, F2, C2,
+   G2, A2) reflow; dense grids (B, E, K, J) get horizontal-scroll + sticky
+   first column.
+4. Cross-browser QA (Windows scrollbar gutters, Safari subpixel hairlines in
+   B) + VALIDATION rows per mode.
+
+Cross-screen audit finding: figures are ~98% px-based with webfonts loaded
+inside the iframe — Ricardo's Mac-only visual QA is valid for desktop; the
+blind spots are only items 1–2 above plus user-set minimum font sizes.
+
+**Start the next session by running /grilling scoped to**: per-figure lossy
+content choices (what each compact figure keeps), tap-vs-hover tooltips on
+touch, exact breakpoint, placement of the "full version on desktop" note.
+`/grill-me` + `/grilling` are now installed at `~/.claude/skills/` (from
+mattpocock/skills, MIT).
+
 ## Open items, in rough priority
 
-1. **Commit the tree** (see slices above) + DECISIONS.md entry for
-   `screen_local_presence`.
+1. ~~Commit the tree + DECISIONS.md entry for `screen_local_presence`~~ —
+   done 2026-07-07 (see commit-state note above; DECISIONS covers the screen).
 2. **D assessment-notes condensing — TABLED, user will direct.** Cases for
    review: Algoma/95100 (8 boilerplate ↑ notes, column ~1,650px), Estevan/73300,
    CPAB/74201. Levers discussed: drop boilerplate lead when a rationale exists;

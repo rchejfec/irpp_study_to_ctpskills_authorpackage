@@ -75,9 +75,8 @@ there). Architecture agreed with Ricardo — see TARGET_SPEC.md §3 for the
 binding constraints (lossy, 2 versions, same-file render branch, iframe-width
 detection, PNGs never mobile). Step order:
 
-1. Viewport meta + width-watcher + height re-emit on mode switch (all 10
-   figures; zero desktop visual change). **No viewport meta exists today** —
-   Android Chrome font-boosting makes current phone rendering meaningless.
+1. Viewport meta ✅ (done, `829ed35`) + width-watcher + height re-emit on
+   mode switch (all 10 figures; zero desktop visual change).
 2. Font hygiene: self-host Nunito Sans + tippy CSS (now Google Fonts/unpkg —
    third-party deps on IRPP's page); raise F2's 7–7.5px text (touches
    approved PNG states → batch with pending F2/D/J re-exports, needs sign-off).

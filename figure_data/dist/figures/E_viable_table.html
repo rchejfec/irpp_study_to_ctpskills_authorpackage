@@ -8,6 +8,7 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>
 <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+<script src="../compact.js"></script>
 <style>
   .figure-container {
     width: var(--fig-width);
@@ -70,6 +71,53 @@
   .stacked-pick { margin-bottom: 1px; }
   .noc3-count { font-weight: 700; color: var(--clr-body); }
   .other-prose-compact { font-size: 7.5px; color: #636e72; line-height: 1.45; }
+
+  /* ── COMPACT (<640px iframe width): the three columns stack into
+     labelled blocks under each source occupation (2026-07-08 decisions). ── */
+  html.compact .figure-container { width: 100%; padding: 8px; }
+  html.compact .dev-wrapper { padding: 8px; }
+  html.compact .community-header { font-size: 13px; padding: 7px 12px; }
+  html.compact .viable-table thead { display: none; }
+  html.compact .viable-table, html.compact .viable-table tbody,
+  html.compact .viable-table tr, html.compact .viable-table td { display: block; width: 100%; }
+  html.compact .viable-table .source-header td {
+    font-size: 13px;
+    padding: 7px 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  html.compact .teer-badge { font-size: 11px; }
+  html.compact .viable-cell { padding: 6px 10px 8px; font-size: 12px; }
+  html.compact .viable-cell::before {
+    content: attr(data-col);
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--clr-body-secondary);
+    margin-bottom: 3px;
+  }
+  html.compact .pick-comparable { border-left-width: 3px; }
+  html.compact .pick-extensive { border-left-width: 3px; }
+  html.compact .stacked-pick { margin-bottom: 3px; font-size: 12px; }
+  html.compact .teer-inline { font-size: 10px; }
+  html.compact .other-prose-compact { font-size: 12px; }
+
+  /* Compact accordion: one collapsible per source occupation */
+  html.compact details.e-src { border-bottom: 1px solid #ddd; }
+  html.compact details.e-src > summary {
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    background: #f6f5f0;
+    color: var(--clr-body);
+  }
+  html.compact details.e-src > summary::-webkit-details-marker { display: none; }
+  html.compact details.e-src > summary::before { content: '▸ '; color: var(--irpp-navy); }
+  html.compact details.e-src[open] > summary::before { content: '▾ '; }
 </style>
 </head>
 <body>
@@ -122,44 +170,49 @@
   function build(comm) {
     document.getElementById('comm-name').textContent = comm.community;
     const tbody = document.getElementById('table-rows');
+    const compact = window.isCompact && window.isCompact();
     let html = '';
 
-    comm.sources.forEach(src => {
-      html += `<tr class="source-header"><td colspan="3">
-        ${src.source_label} <span class="teer-badge">TEER ${src.source_teer}</span>
-      </td></tr>`;
-
-      html += '<tr>';
-
-      // Comparable column
-      html += '<td class="viable-cell pick-comparable">';
-      if (src.comparable.length > 0) {
-        html += src.comparable.map(c =>
+    comm.sources.forEach((src, si) => {
+      // Cell contents are shared by both render modes.
+      const compCell = src.comparable.length > 0
+        ? src.comparable.map(c =>
           `<div class="stacked-pick" data-tip="${attr(pickTip(c, 'comparable'))}">${c.candidate_label} <span class="teer-inline">(TEER ${c.candidate_teer})</span></div>`
-        ).join('');
-      } else { html += '<span class="teer-inline">—</span>'; }
-      html += '</td>';
-
-      // Extensive column
-      html += '<td class="viable-cell pick-extensive">';
-      if (src.extensive.length > 0) {
-        html += src.extensive.map(e =>
+        ).join('')
+        : '<span class="teer-inline">—</span>';
+      const extCell = src.extensive.length > 0
+        ? src.extensive.map(e =>
           `<div class="stacked-pick" data-tip="${attr(pickTip(e, 'extensive'))}">${e.candidate_label} <span class="teer-inline">(TEER ${e.candidate_teer})</span></div>`
-        ).join('');
-      } else { html += '<span class="teer-inline">—</span>'; }
-      html += '</td>';
-
-      // Other column
-      html += '<td class="viable-cell">';
+        ).join('')
+        : '<span class="teer-inline">—</span>';
+      let otherCell = '<span class="teer-inline">—</span>';
       if (src.other_count > 0 && src.other_groups && src.other_groups.length > 0) {
         const parts = src.other_groups.map(g =>
           `<span data-tip="${attr(groupTip(g))}"><span class="noc3-count">${g.count}</span> in ${g.noc3_label}</span>`
         );
-        html += `<div class="other-prose-compact">${parts.join('; ')}</div>`;
-      } else { html += '<span class="teer-inline">—</span>'; }
-      html += '</td>';
+        otherCell = `<div class="other-prose-compact">${parts.join('; ')}</div>`;
+      }
 
-      html += '</tr>';
+      if (compact) {
+        // Compact: one collapsible block per source occupation, first open.
+        html += `<tr class="e-block"><td colspan="3">
+          <details class="e-src"${si === 0 ? ' open' : ''}>
+            <summary>${src.source_label} <span class="teer-badge">TEER ${src.source_teer}</span></summary>
+            <div class="viable-cell pick-comparable" data-col="Viable (comparable TEER)">${compCell}</div>
+            <div class="viable-cell pick-extensive" data-col="Viable (TEER relaxed)">${extCell}</div>
+            <div class="viable-cell" data-col="Other viable in top 10">${otherCell}</div>
+          </details>
+        </td></tr>`;
+      } else {
+        html += `<tr class="source-header"><td colspan="3">
+          ${src.source_label} <span class="teer-badge">TEER ${src.source_teer}</span>
+        </td></tr>`;
+        html += `<tr>
+          <td class="viable-cell pick-comparable" data-col="Viable (comparable TEER)">${compCell}</td>
+          <td class="viable-cell pick-extensive" data-col="Viable (TEER relaxed)">${extCell}</td>
+          <td class="viable-cell" data-col="Other viable in top 10">${otherCell}</td>
+        </tr>`;
+      }
     });
 
     tbody.innerHTML = html;
@@ -200,6 +253,11 @@
       loadAndRender(currentMetric, currentPick);
     }
   });
+
+  window.addEventListener('compactmodechange', () => loadAndRender(currentMetric, currentPick));
+  document.addEventListener('toggle', e => {
+    if (e.target && e.target.tagName === 'DETAILS') reportSize();
+  }, true);
 
   tippy.delegate(document.body, {
     target: '[data-tip]',

@@ -9,6 +9,7 @@
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+  <script src="../compact.js"></script>
   <style>
     .figure-container {
       width: var(--fig-width);
@@ -93,6 +94,34 @@
       cursor: default;
     }
 
+    /* ── COMPACT (<640px iframe width): sticky source column + horizontal
+       scroll (dense-grid treatment per 2026-07-08 decisions). ── */
+    .compact-scroll-hint { display: none; }
+
+    html.compact .figure-container { width: 100%; min-height: 0; padding: 10px 0 12px; }
+    html.compact .dev-wrapper { padding: 8px; }
+    html.compact .compact-scroll-hint {
+      display: block;
+      font-size: 11px;
+      color: var(--clr-body-secondary);
+      padding: 0 12px 6px;
+    }
+    html.compact #heatmap-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    html.compact .heatmap-table th.row-header {
+      position: sticky; left: 0; z-index: 2;
+      background: #fff;
+      font-size: 12px;
+      min-width: 138px; max-width: 138px;
+      padding-left: 10px;
+      box-shadow: 3px 0 4px -2px rgba(0, 0, 0, 0.12);
+    }
+    html.compact .heatmap-table th.col-header { font-size: 11px; height: 150px; }
+    /* Community pills dropped in compact (kept row heights near one line);
+       cell tooltips still name the member occupations. */
+    html.compact .comm-pills { display: none; }
+    html.compact .heatmap-table td { min-width: 40px; }
+    html.compact .hm-cell { width: 36px; height: 24px; line-height: 24px; font-size: 12px; }
+
     .hm-0 { background: #f0efe9; color: #ccc; }
     .hm-1 { background: var(--irpp-navy-light); color: var(--clr-body); }
     .hm-2 { background: #7a9db8; color: #fff; }
@@ -106,6 +135,7 @@
 <body>
   <div class="dev-wrapper">
     <div class="figure-container">
+      <div class="compact-scroll-hint">Swipe sideways for more destination groups →</div>
       <div id="heatmap-container"></div>
     </div>
   </div>

@@ -8,6 +8,7 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>
 <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+<script src="../compact.js"></script>
 <style>
   /* Scrolling appendix — not a fixed figure frame. */
   .appendix {
@@ -104,6 +105,30 @@
   .pill.curated { background: #eaf6f6; color: var(--irpp-teal); border: 1px solid var(--irpp-teal); }
   .pill.viable     { background: #eef4ea; color: #4a8a3a; border: 1px solid #4a8a3a; }
   .pick-tag { font-size: 8.5px; color: var(--clr-body-secondary); margin-left: 3px; }
+
+  /* ── COMPACT (<640px iframe width): each screening table scrolls
+     sideways behind a sticky candidate column (2026-07-08 decisions).
+     Collapsed state already fits a phone screen. ── */
+  html.compact .appendix { padding: 10px 8px 20px; }
+  html.compact .dev-wrapper { padding: 8px; }
+  html.compact .app-intro { font-size: 12px; }
+  html.compact .comm-title { font-size: 15px; }
+  html.compact details.occ > summary { font-size: 13px; flex-wrap: wrap; padding: 8px 10px; }
+  html.compact .occ-meta { font-size: 11px; margin-left: auto; }
+  html.compact .scr-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  html.compact .scr-table { font-size: 12px; min-width: 620px; }
+  html.compact .scr-table thead th { font-size: 10.5px; }
+  html.compact .scr-table thead th.l,
+  html.compact .scr-table tbody td.l {
+    position: sticky; left: 0; z-index: 1;
+    background: #fff;
+    min-width: 150px; max-width: 165px;
+    box-shadow: 3px 0 4px -2px rgba(0, 0, 0, 0.12);
+  }
+  html.compact .scr-table tbody tr.extra td.l { background: #fffaf2; }
+  html.compact .dot { width: 16px; height: 16px; line-height: 16px; font-size: 10px; }
+  html.compact .pill { font-size: 10px; }
+  html.compact .pick-tag { font-size: 10px; }
 </style>
 </head>
 <body>
@@ -201,7 +226,7 @@
         <span class="occ-teer">TEER ${src.source_teer}</span>
         <span class="occ-meta">top ${src.n_top10} viable/curated${extra}</span>
       </summary>
-      <table class="scr-table">
+      <div class="scr-wrap"><table class="scr-table">
         <thead><tr>
           <th class="l">Candidate occupation</th>
           <th>TEER</th><th>Sim</th><th>Rank</th>
@@ -209,7 +234,7 @@
           <th>Classification</th>
         </tr></thead>
         <tbody>${rows}</tbody>
-      </table>
+      </table></div>
     </details>`;
   }
 

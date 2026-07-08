@@ -10,6 +10,7 @@
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+  <script src="../compact.js"></script>
   <style>
     :root {
       --p1-active: #555;
@@ -114,6 +115,29 @@
       color: var(--clr-body);
       line-height: 1.6;
     }
+
+    /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
+       panels in a 2×2 grid; the four legend paragraphs collapse into
+       tap-tooltips on the panel labels (dotted underline = tappable). ── */
+    html.compact .figure-container { width: 100%; min-height: 0; }
+    html.compact .dev-wrapper { padding: 8px; }
+    html.compact .context-strip { font-size: 12px; }
+    html.compact .panels-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      row-gap: 10px;
+      padding: 10px 8px 0;
+    }
+    html.compact .panel-label {
+      font-size: 12px;
+      min-height: 0;
+      margin-bottom: 4px;
+      text-decoration: underline dotted;
+      text-underline-offset: 3px;
+      cursor: help;
+    }
+    html.compact .descs-row { display: none; }
+    html.compact .footer-strip { font-size: 11px; margin: 12px 12px 12px; }
   </style>
 </head>
 
@@ -440,6 +464,26 @@
           .attr('rx', 1);
       });
 
+      // Compact: the hidden legend paragraphs become tooltips on the panel
+      // labels (content read fresh each render — #ai-text / #teer-same are
+      // dynamic). Desktop keeps the visible paragraphs and no label tooltip.
+      const panelLabels = document.querySelectorAll('.panel-label');
+      const panelDescs = document.querySelectorAll('.panel-desc .desc-val');
+      panelLabels.forEach((lbl, i) => {
+        if (lbl._tippy) lbl._tippy.destroy();
+        if (window.isCompact && window.isCompact() && panelDescs[i] && typeof tippy !== 'undefined') {
+          tippy(lbl, {
+            theme: 'irpp',
+            animation: 'shift-away',
+            allowHTML: true,
+            placement: 'bottom',
+            maxWidth: 300,
+            appendTo: document.body,
+            content: `<div class="tt-value">${panelDescs[i].innerHTML}</div>`,
+          });
+        }
+      });
+
       reportSize();
     }
 
@@ -501,6 +545,8 @@
       
       if (needsRender) loadAndRender(currentMetric);
     });
+
+    window.addEventListener('compactmodechange', () => loadAndRender(currentMetric));
 
     loadAndRender(currentMetric);
   </script>

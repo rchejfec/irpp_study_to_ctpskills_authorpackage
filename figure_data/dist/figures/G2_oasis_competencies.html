@@ -12,6 +12,7 @@
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+  <script src="../compact.js"></script>
   <style>
     .figure-container {
       width: var(--fig-width);
@@ -94,6 +95,18 @@
       font-style: italic;
       margin-left: 2px;
     }
+
+    /* ── COMPACT (<640px iframe width): same table, phone-legible type,
+       tighter padding. Category cell tap-tooltips carry the definitions. ── */
+    html.compact .figure-container { width: 100%; padding: 10px 8px; }
+    html.compact .dev-wrapper { padding: 8px; }
+    html.compact .oasis-table { font-size: 12px; }
+    html.compact .oasis-table th { font-size: 12px; padding: 6px 8px; }
+    html.compact .oasis-table td { padding: 6px 8px; }
+    html.compact .col-category { width: 26%; text-decoration: underline dotted; text-underline-offset: 2px; }
+    html.compact .col-number { width: 13%; }
+    html.compact .col-examples { width: 61%; font-size: 12px; line-height: 1.4; }
+    html.compact .scale-note { display: block; font-size: 11px; }
   </style>
 </head>
 

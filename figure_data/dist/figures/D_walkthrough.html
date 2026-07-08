@@ -9,6 +9,7 @@
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+  <script src="../compact.js"></script>
   <style>
     .figure-container {
       width: var(--fig-width);
@@ -127,6 +128,61 @@
     .qual-arrow.down { color: #e74c3c; }
     .qual-callout { margin-top: auto; padding: 5px 8px; background: var(--clr-bg-muted); border-radius: 3px; border-left: 3px solid var(--irpp-navy); }
     .qual-callout p { font-size: 7.5px; color: #444; line-height: 1.5; font-style: italic; margin: 0; }
+
+    /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
+       stacked single column; similarity bars and the 5-screen dot matrix
+       merge into one candidate list (top 7); assessment notes trimmed to
+       the callout + 2 items. Desktop 3-column layout untouched. ── */
+    html.compact .figure-container { width: 100%; min-height: 0; display: block; }
+    html.compact .dev-wrapper { padding: 8px; }
+    html.compact .col-right { display: none; }
+    html.compact .cols-left { display: block; }
+
+    html.compact .cw-source { background: #faf6f0; border-bottom: 1px solid #e0ddd6; padding: 10px 12px; }
+    html.compact .cw-comm { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #999; font-weight: 600; }
+    html.compact .cw-name { font-size: 15px; font-weight: 700; color: var(--irpp-navy); line-height: 1.3; margin: 2px 0 4px; }
+    html.compact .cw-detail { font-size: 12px; color: #777; line-height: 1.55; }
+    html.compact .cw-detail span { color: #333; font-weight: 600; }
+
+    html.compact .cw-sec-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--irpp-navy); font-weight: 700; padding: 12px 12px 2px; }
+    html.compact .cw-legend { font-size: 11px; color: #999; padding: 0 12px 6px; line-height: 1.4; }
+    html.compact .cw-headrow {
+      display: grid; grid-template-columns: 1fr repeat(5, 32px);
+      align-items: end; padding: 0 12px 3px; border-bottom: 1px solid #ddd;
+    }
+    html.compact .cw-h-screen {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2px;
+      color: #888; text-align: center; text-decoration: underline dotted; text-underline-offset: 2px;
+    }
+    html.compact .cw-row {
+      display: grid; grid-template-columns: 1fr repeat(5, 32px);
+      align-items: center; padding: 2px 12px; border-bottom: 1px solid #f2f2f2;
+    }
+    html.compact .cw-row.cw-pass { background: #f0faf2; }
+    html.compact .cw-cand { display: flex; align-items: center; gap: 4px; min-width: 0; padding-right: 6px; }
+    html.compact .cw-rank { font-size: 11px; color: #999; font-weight: 600; width: 16px; text-align: right; flex-shrink: 0; }
+    html.compact .cw-barwrap { position: relative; flex: 1; height: 24px; min-width: 0; }
+    html.compact .cw-bar { position: absolute; left: 0; top: 0; height: 100%; background: var(--irpp-navy-light); border-radius: 2px; }
+    html.compact .cw-label { position: relative; z-index: 1; font-size: 12px; line-height: 24px; padding-left: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    html.compact .cw-dot { text-align: center; font-size: 13px; }
+    html.compact .cw-more { font-size: 11.5px; color: #999; font-style: italic; padding: 6px 12px 2px; }
+
+    /* Reused desktop cells, scaled to the 12px floor */
+    html.compact .cell-rca { border-bottom: 1px solid var(--clr-border); padding: 12px; overflow: visible; }
+    html.compact .rca-title { font-size: 12px; }
+    html.compact .rca-pair { font-size: 13px; margin-bottom: 4px; }
+    html.compact .rca-hint { font-size: 11.5px; }
+    html.compact .rca-bar-label { font-size: 11.5px; margin-bottom: 2px; }
+    html.compact .rca-bar { height: 7px; }
+    html.compact .rca-bar-row { margin-bottom: 8px; }
+    html.compact .cell-qual { padding: 12px; overflow: visible; }
+    html.compact .qual-title { font-size: 12px; }
+    html.compact .qual-item { margin-bottom: 6px; padding-left: 8px; }
+    html.compact .qual-occ { font-size: 12.5px; }
+    html.compact .qual-explain { font-size: 11.5px; }
+    html.compact .qual-arrow { font-size: 11px; }
+    html.compact .qual-callout { margin-top: 8px; }
+    html.compact .qual-callout p { font-size: 11.5px; }
   </style>
 </head>
 
@@ -142,7 +198,160 @@
     let currentMetric = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
     const CACHE = {};
 
+    // Screen definitions (shared by the desktop heatmap headers and the
+    // compact merged candidate list).
+    const hmDefs = {
+      TEER: 'Training alignment — candidate TEER within the accepted window around the source occupation’s (comparable, or more extensive training).',
+      Wages: 'Earnings differential — provincial median income ≥ 65% of the source occupation’s. Amber = passes but below parity.',
+      COPS: 'Occupational outlook — federal COPS projections; fails on projected labour surplus.',
+      AI: 'AI exposure — Dais (2025) ratings; high exposure excluded.',
+      'Qual.': 'Qualitative community review — curated pick (green), susceptible-sector exclusion (red), or no local presence (amber). Approximated from IRPP community profiles.',
+    };
+
+    // Tooltip wiring shared by both render modes.
+    function attachTips() {
+      if (typeof tippy === 'undefined') return;
+      document.querySelectorAll('[data-tt-label]').forEach(el => {
+        if (el._tippy) el._tippy.destroy();
+        tippy(el, {
+          theme: 'irpp',
+          animation: 'shift-away',
+          content: `<div class="tt-title">${el.dataset.ttLabel}</div>`
+            + `<div class="tt-value">Similarity: ${el.dataset.ttSim}</div>`
+            + `<div class="tt-value">TEER: ${el.dataset.ttTeer}</div>`,
+          allowHTML: true,
+          placement: 'right',
+          appendTo: document.body,
+        });
+      });
+
+      // Screening headers + RCA preview rows: "title|body" data-tips.
+      document.querySelectorAll('[data-tip]').forEach(el => {
+        if (el._tippy) el._tippy.destroy();
+        const [tipTitle, tipBody] = el.dataset.tip.split('|');
+        tippy(el, {
+          theme: 'irpp',
+          animation: 'shift-away',
+          content: `<div class="tt-title">${tipTitle}</div><div class="tt-value">${tipBody}</div>`,
+          allowHTML: true,
+          placement: 'top',
+          appendTo: document.body,
+        });
+      });
+    }
+
+    // ── COMPACT render branch (same data, stacked, lossy) ──
+    function buildCompactWalkthrough(t) {
+      const cands = t.candidates.slice(0, 7);
+      const nTrimmed = t.candidates.length - cands.length;
+      const sl = t.source_lmi || {};
+      const barW = sim => ((sim - 0.70) / 0.30) * 100;
+      const fmt$ = v => v != null ? '$' + Math.round(v).toLocaleString() : '—';
+      const fmtW = v => v != null ? Math.round(v).toLocaleString() : '—';
+      const geoWord = (t.cd || '').startsWith('PR') ? 'Territorial' : 'Provincial';
+
+      // Same screen derivation as the desktop heatmap.
+      const srcInc = sl.pr_income || 0;
+      function deriveFilters(c) {
+        const teer = c.teer <= t.source_teer ? 'green'
+          : c.teer === t.source_teer + 1 ? 'yellow' : 'red';
+        const wRatio = srcInc > 0 ? c.pr_income / srcInc : 0;
+        const wages = wRatio >= 1.0 ? 'green' : wRatio >= 0.65 ? 'yellow' : 'red';
+        const cops = ((c.cops || '').toLowerCase()).includes('surplus') ? 'red' : 'green';
+        const ai = ((c.ai || '').toLowerCase()).includes('high') ? 'red' : 'green';
+        const qual = c.qual_signal || 'green';
+        return { teer, wages, cops, ai, qual };
+      }
+      const dotHtml = sig => `<div class="cw-dot ${sig === 'green' ? 'hm-ok' : sig === 'yellow' ? 'hm-warn' : 'hm-fail'}">●</div>`;
+
+      let html = '';
+
+      // 1 — Source card
+      html += `<div class="cw-source">
+        <div class="cw-comm">${t.community}</div>
+        <div class="cw-name">${t.source_label}</div>
+        <div class="cw-detail">TEER level <span>${t.source_teer}</span> · Sector: <span>${t.sector}</span></div>
+        <div class="cw-detail">${geoWord} income <span>${fmt$(sl.pr_income)}</span> · workers <span>${fmtW(sl.pr_workers)}</span></div>
+      </div>`;
+
+      // 2 — Merged candidates: similarity bar + 5 screening dots per row
+      const compactHeads = { TEER: 'TEER', Wages: 'Wage', COPS: 'COPS', AI: 'AI', 'Qual.': 'Qual' };
+      html += `<div class="cw-sec-title">Skill-similar candidates &amp; screening</div>`;
+      html += `<div class="cw-legend">Bar length = skills similarity · <span class="hm-ok">●</span><span class="hm-warn">●</span> = pass, <span class="hm-fail">●</span> = fail · tap a heading or row for detail</div>`;
+      html += `<div class="cw-headrow"><div></div>` + Object.keys(hmDefs).map(k =>
+        `<div class="cw-h-screen" data-tip="${k === 'Qual.' ? 'Qual' : k}|${hmDefs[k].replace(/"/g, '&quot;')}">${compactHeads[k]}</div>`).join('') + `</div>`;
+      cands.forEach(c => {
+        const f = deriveFilters(c);
+        const allGreen = f.teer === 'green' && f.wages !== 'red'
+          && f.cops === 'green' && f.ai === 'green' && f.qual === 'green';
+        html += `<div class="cw-row ${allGreen ? 'cw-pass' : ''}" data-tt-label="${c.label}" data-tt-sim="${c.similarity.toFixed(3)}" data-tt-teer="${c.teer}">
+          <div class="cw-cand">
+            <span class="cw-rank">${c.rank}</span>
+            <div class="cw-barwrap">
+              <div class="cw-bar" style="width:${barW(c.similarity)}%"></div>
+              <div class="cw-label">${c.label}</div>
+            </div>
+          </div>
+          ${dotHtml(f.teer)}${dotHtml(f.wages)}${dotHtml(f.cops)}${dotHtml(f.ai)}${dotHtml(f.qual)}
+        </div>`;
+      });
+      if (nTrimmed > 0) html += `<div class="cw-more">+${nTrimmed} more candidate${nTrimmed > 1 ? 's' : ''} in the full (desktop) figure</div>`;
+
+      // 3 — Skill gap preview (same markup as desktop, scaled by CSS)
+      const fg = t.featured_gap;
+      html += `<div class="cell-rca">`;
+      html += `<div class="rca-title">Skill gap preview</div>`;
+      if (fg && fg.bars && fg.bars.length > 0) {
+        html += `<div class="rca-pair"><span class="from">${t.source_label}</span> → <span class="to">${fg.target_label}</span></div>`;
+        html += `<div class="rca-hint">${fg.summary.shared} shared competencies · ${fg.summary.gaps} training gaps</div>`;
+        const maxLq = Math.max(...fg.bars.flatMap(b => [b.source_lq, b.target_lq]), 1.1);
+        const refPct = (1 / maxLq) * 100;
+        html += `<div class="rca-bars">`;
+        fg.bars.forEach(b => {
+          const rowTip = `${b.dimension}|${t.source_label} RCA: ${b.source_lq.toFixed(2)} · ${fg.target_label} RCA: ${b.target_lq.toFixed(2)}. RCA > 1 = relied on more than the average occupation; the difference is the training gap.`;
+          html += `<div class="rca-bar-row" data-tip="${rowTip.replace(/"/g, '&quot;')}">
+            <div class="rca-bar-label">${b.dimension}</div>
+            <div class="rca-plot">
+              <div class="rca-ref" style="left:${refPct}%"></div>
+              <div class="rca-bar src" style="width:${(b.source_lq / maxLq) * 100}%"></div>
+              <div class="rca-bar tgt" style="width:${(b.target_lq / maxLq) * 100}%"></div>
+            </div>
+          </div>`;
+        });
+        html += `</div></div>`;
+      } else {
+        html += `<div class="rca-hint">No skill-gap data available for this pair's top matches.</div></div>`;
+      }
+
+      // 4 — Assessment notes, trimmed: first 2 items + callout
+      const an = t.assessment_notes || { notes: [] };
+      const callout = an.notes.find(n => n.type === 'callout');
+      const items = an.notes.filter(n => n.type !== 'callout');
+      const shown = items.slice(0, 2);
+      html += `<div class="cell-qual">`;
+      html += `<div class="qual-title">Assessment notes</div>`;
+      shown.forEach(note => {
+        const arrow = note.type === 'up' ? '↑' : '↓';
+        html += `<div class="qual-item ${note.type}">
+          <div class="qual-occ"><span class="qual-arrow ${note.type}">${arrow}</span> ${note.label}</div>
+          <div class="qual-explain">${note.explain}</div>
+        </div>`;
+      });
+      if (items.length > shown.length) {
+        html += `<div class="cw-more">+${items.length - shown.length} more note${items.length - shown.length > 1 ? 's' : ''} in the full (desktop) figure</div>`;
+      }
+      if (callout) html += `<div class="qual-callout"><p>${callout.explain}</p></div>`;
+      html += `</div>`;
+
+      document.getElementById('grid-left').innerHTML = html;
+      document.getElementById('grid-right').innerHTML = '';
+
+      attachTips();
+      reportSize();
+    }
+
     function buildWalkthrough(t) {
+      if (window.isCompact && window.isCompact()) { buildCompactWalkthrough(t); return; }
       const cands = t.candidates;
       const sl = t.source_lmi || {};
       const barW = sim => ((sim - 0.70) / 0.30) * 100;
@@ -228,13 +437,6 @@
       left += `<div class="col-title">Viability screening</div>`;
       left += `<div class="col-subtitle"><span class="hm-ok">\u25CF</span><span class="hm-warn">\u25CF</span> = pass \u00a0\u00a0 size = provincial workers</div>`;
       left += `<div class="hm-grid">`;
-      const hmDefs = {
-        TEER: 'Training alignment — candidate TEER within the accepted window around the source occupation’s (comparable, or more extensive training).',
-        Wages: 'Earnings differential — provincial median income ≥ 65% of the source occupation’s. Amber = passes but below parity.',
-        COPS: 'Occupational outlook — federal COPS projections; fails on projected labour surplus.',
-        AI: 'AI exposure — Dais (2025) ratings; high exposure excluded.',
-        'Qual.': 'Qualitative community review — curated pick (green), susceptible-sector exclusion (red), or no local presence (amber). Approximated from IRPP community profiles.',
-      };
       left += `<div class="hm-header">` + Object.keys(hmDefs).map(k =>
         `<div class="hm-h-col" data-tip="${k === 'Qual.' ? 'Qual' : k}|${hmDefs[k].replace(/"/g, '&quot;')}">${k}</div>`).join('') + `</div>`;
       left += `<div class="hm-data-rows">`;
@@ -307,36 +509,7 @@
       document.getElementById('grid-left').innerHTML = left;
       document.getElementById('grid-right').innerHTML = right;
 
-      // ── Tooltips on similarity bars ──
-      if (typeof tippy !== 'undefined') {
-        document.querySelectorAll('.sim-row[data-tt-label]').forEach(el => {
-          tippy(el, {
-            theme: 'irpp',
-            animation: 'shift-away',
-            content: `<div class="tt-title">${el.dataset.ttLabel}</div>`
-              + `<div class="tt-value">Similarity: ${el.dataset.ttSim}</div>`
-              + `<div class="tt-value">TEER: ${el.dataset.ttTeer}</div>`,
-            allowHTML: true,
-            placement: 'right',
-            appendTo: document.body,
-          });
-        });
-
-        // Screening headers + RCA preview rows: "title|body" data-tips.
-        document.querySelectorAll('[data-tip]').forEach(el => {
-          if (el._tippy) return;
-          const [tipTitle, tipBody] = el.dataset.tip.split('|');
-          tippy(el, {
-            theme: 'irpp',
-            animation: 'shift-away',
-            content: `<div class="tt-title">${tipTitle}</div><div class="tt-value">${tipBody}</div>`,
-            allowHTML: true,
-            placement: 'top',
-            appendTo: document.body,
-          });
-        });
-      }
-
+      attachTips();
       reportSize();
     }
 
@@ -378,6 +551,8 @@
       
       if (needsRender) loadAndRender(currentMetric);
     });
+
+    window.addEventListener('compactmodechange', () => loadAndRender(currentMetric));
 
     loadAndRender(currentMetric);
   </script>

@@ -60,11 +60,27 @@
       width: 100%;
       height: 400px; /* will auto-resize */
     }
+    /* Phone preview: constrain every iframe to 375px so each figure's own
+       width-watcher flips it into compact mode. */
+    body.phone-preview iframe {
+      width: 375px;
+      display: block;
+      margin: 0 auto;
+      border-left: 1px dashed #bbb;
+      border-right: 1px dashed #bbb;
+    }
   </style>
 </head>
 <body>
   <div class="header">
     <strong>Prototype Portal</strong>
+    <label style="font-size:14px; display:flex; align-items:center; gap:8px;">
+      Preview:
+      <select id="mode-select">
+        <option value="desktop">Desktop</option>
+        <option value="phone">Phone (375px)</option>
+      </select>
+    </label>
   </div>
   
   <div class="grid">
@@ -142,6 +158,10 @@
   </div>
 
   <script>
+    document.getElementById('mode-select').addEventListener('change', e => {
+      document.body.classList.toggle('phone-preview', e.target.value === 'phone');
+    });
+
     let DATA = null;
     let I_DATA = null;
 

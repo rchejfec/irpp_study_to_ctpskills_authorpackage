@@ -10,6 +10,7 @@
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+  <script src="../compact.js"></script>
   <style>
     .figure-container {
       width: var(--fig-width);
@@ -71,6 +72,16 @@
       flex: 1;
       position: relative;
     }
+
+    /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
+       one pathway panel instead of two side-by-side, type scaled to the
+       12px floor. The second pathway stays reachable via set-active-pair. ── */
+    html.compact .figure-container { width: 100%; height: auto; padding: 8px; }
+    html.compact .dev-wrapper { padding: 8px; }
+    html.compact .panel-header { min-height: 48px; }
+    html.compact .header-role { font-size: 10px; }
+    html.compact .header-occ { font-size: 13px; }
+    html.compact .chart-area { flex: none; height: 380px; }
   </style>
 </head>
 
@@ -125,13 +136,23 @@
     function renderPanels(allPairs) {
       const container = document.getElementById('figure-container');
       container.innerHTML = '';
-      
+
+      const compact = window.isCompact && window.isCompact();
+      // Type/spacing constants; the desktop column is the approved-PNG state.
+      const F = compact
+        ? { label: 12, wrap: 15, lineH: 15, twoLineUp: 8, axis: 10, annot: 11.5, annotRca: 11,
+            pill: 9, pillChar: 7, pillPad: 12, pillH: 16, pillY1: 24, pillY2: 34,
+            note: 12, noteLineH: 15, marginLeft: 138 }
+        : { label: 8.5, wrap: 18, lineH: 11, twoLineUp: 6, axis: 7.5, annot: 9.5, annotRca: 9,
+            pill: 7, pillChar: 5.5, pillPad: 10, pillH: 13, pillY1: 16, pillY2: 24,
+            note: 8.5, noteLineH: 12, marginLeft: 120 };
+
       let pairs = allPairs.filter(p => p.source_noc === activeSrc && p.communities.includes(activeCd));
-      
+
       if (activeTgt !== 'default') {
         pairs = pairs.filter(p => p.target_noc === activeTgt);
       } else {
-        pairs = pairs.slice(0, 2);
+        pairs = pairs.slice(0, compact ? 1 : 2);
       }
       
       if (pairs.length === 0) {
@@ -165,7 +186,7 @@
         const W = area.clientWidth || 320;
         const H = area.clientHeight || 340;
 
-        const margin = { top: 12, right: 16, bottom: 44, left: 120 };
+        const margin = { top: 12, right: 16, bottom: 44, left: F.marginLeft };
         const w = W - margin.left - margin.right;
         const h = H - margin.top - margin.bottom;
 
@@ -234,15 +255,15 @@
           }));
 
           // Y-axis label
-          const lines = wrapLabel(comp.name, 18);
-          const labelY = cy + barH / 2 - (lines.length > 1 ? 6 : 0);
+          const lines = wrapLabel(comp.name, F.wrap);
+          const labelY = cy + barH / 2 - (lines.length > 1 ? F.twoLineUp : 0);
 
           lines.forEach((line, li) => {
             g.append('text')
-              .attr('x', -8).attr('y', labelY + li * 11)
+              .attr('x', -8).attr('y', labelY + li * F.lineH)
               .attr('dy', '0.35em')
               .attr('text-anchor', 'end')
-              .attr('font-size', '8.5px')
+              .attr('font-size', F.label + 'px')
               .attr('font-weight', '600')
               .attr('fill', C.body)
               .text(line);
@@ -251,9 +272,9 @@
           // Pill
           const pillClr = comp.type === 'shared' ? C.sage : C.orange;
           const pillText = comp.type === 'shared' ? 'SHARED' : 'GAP';
-          const pillW = pillText.length * 5.5 + 10;
-          const pillH = 13;
-          const pillY = labelY + (lines.length > 1 ? 24 : 16);
+          const pillW = pillText.length * F.pillChar + F.pillPad;
+          const pillH = F.pillH;
+          const pillY = labelY + (lines.length > 1 ? F.pillY2 : F.pillY1);
 
           const pillTip = comp.type === 'shared'
             ? `<div class="tt-title">SHARED</div><div class="tt-value">Both occupations rely on this competency above the all-occupation average (RCA > 1) — an existing strength the worker carries over.</div>`
@@ -270,7 +291,7 @@
             .attr('x', -8 - pillW / 2).attr('y', pillY)
             .attr('dy', '0.35em')
             .attr('text-anchor', 'middle')
-            .attr('font-size', '7px').attr('font-weight', '700')
+            .attr('font-size', F.pill + 'px').attr('font-weight', '700')
             .attr('fill', '#fff').attr('letter-spacing', '0.6px')
             .text(pillText);
         });
@@ -288,9 +309,9 @@
           ];
           noteLines.forEach((line, li) => {
             g.append('text')
-              .attr('x', 4).attr('y', noteY + li * 12)
+              .attr('x', 4).attr('y', noteY + li * F.noteLineH)
               .attr('text-anchor', 'start')
-              .attr('font-size', '8.5px')
+              .attr('font-size', F.note + 'px')
               .attr('font-style', 'italic')
               .attr('fill', '#999')
               .text(line);
@@ -304,7 +325,7 @@
         xAxis.call(
           d3.axisBottom(x).ticks(3).tickSize(4)
             .tickFormat(d => d.toFixed(1))
-        ).attr('font-size', '7.5px');
+        ).attr('font-size', F.axis + 'px');
 
         xAxis.select('.domain').attr('stroke', C.border);
         xAxis.selectAll('.tick line').attr('stroke', C.border);
@@ -312,21 +333,21 @@
         const annotY = 26;
         g.append('text')
           .attr('x', 0).attr('y', h + annotY)
-          .attr('font-size', '9.5px').attr('fill', C.bodySec)
+          .attr('font-size', F.annot + 'px').attr('fill', C.bodySec)
           .attr('font-weight', '600')
           .text('← Less reliance');
 
         g.append('text')
           .attr('x', w).attr('y', h + annotY)
           .attr('text-anchor', 'end')
-          .attr('font-size', '9.5px').attr('fill', C.bodySec)
+          .attr('font-size', F.annot + 'px').attr('fill', C.bodySec)
           .attr('font-weight', '600')
           .text('More reliance →');
 
         g.append('text')
-          .attr('x', w / 2).attr('y', h + annotY)
+          .attr('x', w / 2).attr('y', h + annotY + (compact ? 15 : 0))
           .attr('text-anchor', 'middle')
-          .attr('font-size', '9px').attr('fill', C.bodySec)
+          .attr('font-size', F.annotRca + 'px').attr('fill', C.bodySec)
           .text('RCA');
       });
       
@@ -361,6 +382,8 @@
       
       if (needsRender && CACHE.PAIRS) renderPanels(CACHE.PAIRS);
     });
+
+    window.addEventListener('compactmodechange', () => { if (CACHE.PAIRS) renderPanels(CACHE.PAIRS); });
 
     loadAndRender();
   </script>

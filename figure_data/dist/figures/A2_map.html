@@ -8,6 +8,7 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>
 <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+<script src="../compact.js"></script>
 <style>
   /* ── Figure-specific layout ── */
 
@@ -128,6 +129,29 @@
     font-size: 5.5px;
     letter-spacing: 0.3px;
   }
+
+  /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
+     map on top, community list stacked below; the "local economy" detail
+     row is dropped (sector stays in the header line). ── */
+  html.compact .figure-container { width: 100%; height: auto; }
+  html.compact .dev-wrapper { padding: 8px; }
+  html.compact .context-strip { font-size: 12px; }
+  html.compact .map-row { flex-direction: column; }
+  html.compact .map-area {
+    flex: none;
+    height: 200px;
+    border-right: none;
+    border-bottom: 1px solid var(--clr-border);
+    padding: 4px 0;
+  }
+  html.compact .map-area img { transform: none; }
+  html.compact .community-list { width: 100%; padding: 4px 12px 8px; }
+  html.compact .community { flex: none; padding: 5px 0; gap: 8px; }
+  html.compact .comm-num { width: 17px; height: 17px; font-size: 10px; }
+  html.compact .comm-header { font-size: 12px; }
+  html.compact .comm-row { font-size: 11px; margin-top: 2px; }
+  html.compact .comm-row--econ { display: none; }
+  html.compact .comm-key { font-size: 9px; }
 </style>
 </head>
 <body>
@@ -151,7 +175,7 @@
           <div class="comm-num">1</div>
           <div class="comm-body">
             <div class="comm-header"><span class="comm-name">Division No. 3, NL</span> — <span class="comm-sector">Maritime transport</span></div>
-            <div class="comm-row"><span class="comm-key">Local economy: </span>Healthcare, agriculture/fishing, transport</div>
+            <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Healthcare, agriculture/fishing, transport</div>
             <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Channel-Port aux Basques</div>
           </div>
         </div>
@@ -160,7 +184,7 @@
           <div class="comm-num">2</div>
           <div class="comm-body">
             <div class="comm-header"><span class="comm-name">Algoma, ON</span> — <span class="comm-sector">Steel manufacturing</span></div>
-            <div class="comm-row"><span class="comm-key">Local economy: </span>Healthcare, retail, manufacturing</div>
+            <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Healthcare, retail, manufacturing</div>
             <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Sault Ste. Marie, Elliot Lake, Blind River</div>
           </div>
         </div>
@@ -169,7 +193,7 @@
           <div class="comm-num">3</div>
           <div class="comm-body">
             <div class="comm-header"><span class="comm-name">Oxford, ON</span> — <span class="comm-sector">Automotive manufacturing</span></div>
-            <div class="comm-row"><span class="comm-key">Local economy: </span>Manufacturing, healthcare, retail</div>
+            <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Manufacturing, healthcare, retail</div>
             <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Woodstock, Ingersoll</div>
           </div>
         </div>
@@ -178,7 +202,7 @@
           <div class="comm-num">4</div>
           <div class="comm-body">
             <div class="comm-header"><span class="comm-name">Division No. 15, MB</span> — <span class="comm-sector">Food processing + agriculture</span></div>
-            <div class="comm-row"><span class="comm-key">Local economy: </span>Manufacturing, agriculture, healthcare</div>
+            <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Manufacturing, agriculture, healthcare</div>
             <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Neepawa, Minnedosa, Carberry</div>
           </div>
         </div>
@@ -187,7 +211,7 @@
           <div class="comm-num">5</div>
           <div class="comm-body">
             <div class="comm-header"><span class="comm-name">Division No. 1, SK</span> — <span class="comm-sector">Coal + oil &amp; gas</span></div>
-            <div class="comm-row"><span class="comm-key">Local economy: </span>Agriculture, mining/oil &amp; gas, retail</div>
+            <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Agriculture, mining/oil &amp; gas, retail</div>
             <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Estevan, Carlyle, Oxbow</div>
           </div>
         </div>
@@ -196,7 +220,7 @@
           <div class="comm-num">6</div>
           <div class="comm-body">
             <div class="comm-header"><span class="comm-name">Division No. 16, AB</span> — <span class="comm-sector">Oil sands extraction</span></div>
-            <div class="comm-row"><span class="comm-key">Local economy: </span>Mining/oil &amp; gas, retail, construction</div>
+            <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Mining/oil &amp; gas, retail, construction</div>
             <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Wood Buffalo (incl. Fort McMurray)</div>
           </div>
         </div>
@@ -205,7 +229,7 @@
           <div class="comm-num">7</div>
           <div class="comm-body">
             <div class="comm-header"><span class="comm-name">Northwest Territories</span> — <span class="comm-sector">Diamond + critical mineral mining</span></div>
-            <div class="comm-row"><span class="comm-key">Local economy: </span>Public admin, healthcare, education</div>
+            <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Public admin, healthcare, education</div>
             <div class="comm-row"><span class="comm-key">Notable municipalities: </span>Yellowknife, Hay River, Inuvik</div>
           </div>
         </div>

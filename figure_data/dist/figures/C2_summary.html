@@ -10,6 +10,7 @@
        embedded output sub-elements inline. Original version preserved as
        C_summary.html. Layout: Option E from prototyping session. -->
   <link rel="stylesheet" href="../theme.css">
+  <script src="../compact.js"></script>
   <style>
     .figure-container {
       width: var(--fig-width);
@@ -169,6 +170,36 @@
       margin: 0;
       padding: 0;
     }
+
+    /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
+       drop the three context prose blocks (one-line intro instead), stack
+       the four method steps vertically. ── */
+    .compact-intro { display: none; }
+
+    html.compact .figure-container { width: 100%; height: auto; }
+    html.compact .dev-wrapper { padding: 8px; }
+    html.compact .top-tier { display: none; }
+    html.compact .svg-overlay { display: none; }
+
+    html.compact .compact-intro {
+      display: block;
+      padding: 12px 14px;
+      background: var(--clr-bg-muted);
+      border-bottom: 2px solid var(--irpp-navy);
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--clr-body);
+    }
+    html.compact .compact-intro em { font-style: italic; color: var(--irpp-navy); }
+
+    html.compact .bottom-tier { padding: 10px 12px 12px; }
+    html.compact .flow { flex-direction: column; }
+    html.compact .flow-step { flex: none; padding: 10px 12px 12px; }
+    html.compact .flow-arrow { justify-content: center; padding: 2px 0; font-size: 0; }
+    html.compact .flow-arrow::before { content: '↓'; font-size: 14px; color: var(--clr-body-tertiary, #999); }
+    html.compact .step-num { font-size: 11px; }
+    html.compact .step-title { font-size: 14px; }
+    html.compact .step-detail { font-size: 12px; }
   </style>
 </head>
 
@@ -216,6 +247,13 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- COMPACT-ONLY intro (replaces the three context blocks below 640px) -->
+      <div class="compact-intro">
+        Where structural change is concentrated in a dominant local industry, a
+        skills-based approach can identify <em>viable career transitions</em> and
+        the <em>training investments</em> to support them — in four steps.
       </div>
 
       <!-- BOTTOM TIER: SOLUTION FLOW (4 steps, clean) -->

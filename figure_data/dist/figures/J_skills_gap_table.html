@@ -4,11 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Top Skill Gaps by Community and Domain</title>
+  <title>Top Skills Gaps by Community</title>
   <link rel="stylesheet" href="../theme.css">
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+  <script src="../compact.js"></script>
   <style>
     .figure-container {
       width: var(--fig-width);
@@ -79,49 +80,66 @@
       margin-bottom: 2px;
     }
     .track { height: 4px; border-radius: 2px; background: #e6e9ec; }
-    .bar   { height: 4px; border-radius: 2px; background: var(--irpp-teal); }
+    .bar   { height: 4px; border-radius: 2px; }
+    .skill.rank1 .bar { background: var(--irpp-teal); }
+    .skill.rank2 .bar { background: #5aa9a9; }
+    .skill.rank3 .bar { background: #93c6c6; }
+    .rank-tag {
+      display: inline-block;
+      font-size: 6.5px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--irpp-teal);
+      border-radius: 2px;
+      padding: 0 3px;
+      margin-right: 3px;
+      vertical-align: 1px;
+    }
+    .skill.rank2 .rank-tag { background: #5aa9a9; }
+    .skill.rank3 .rank-tag { background: #93c6c6; }
 
-    /* ── Domain header row ── */
-    .dom-header {
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-      padding: 2px 2px 4px;
-      border-bottom: 1.5px solid var(--irpp-navy);
-      flex-shrink: 0;
+    /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
+       one featured (rank-1) Skills gap per community; ranks 2–3 collapse
+       into a one-line "Also:" list, full detail in the tap-tooltip. ── */
+    .skill-also { display: none; }
+
+    html.compact .figure-container { width: 100%; height: auto; padding: 8px 12px 12px; }
+    html.compact .dev-wrapper { padding: 8px; }
+    html.compact .comm-row { flex: none; padding: 8px 2px; gap: 12px; align-items: center; }
+    html.compact .comm-head { width: 38%; }
+    html.compact .comm-name { font-size: 13px; }
+    html.compact .comm-count { font-size: 11px; }
+    html.compact .skills { gap: 0; }
+    html.compact .skill-name { font-size: 12.5px; }
+    html.compact .skill-meta { font-size: 11px; }
+    html.compact .track, html.compact .bar { height: 6px; border-radius: 3px; }
+    html.compact .rank-tag { font-size: 10px; padding: 0 4px; }
+    html.compact .skill-also {
+      display: block;
+      font-size: 12px;
+      color: var(--clr-body-secondary);
+      line-height: 1.35;
+      margin-top: 4px;
     }
-    .dom-header .comm-head { width: 19%; flex-shrink: 0; }
-    .dom-header .doms { flex: 1; display: flex; gap: 7px; }
-    .dom-header .dom {
-      flex: 1 1 0; min-width: 0;
-      font-size: 8px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.4px; color: var(--irpp-navy);
-    }
+    html.compact .skill-also strong { color: var(--clr-body); font-weight: 600; }
   </style>
 </head>
 
 <body>
   <div class="dev-wrapper">
     <div class="figure-container">
-      <div class="dom-header" id="dom-header"></div>
       <div class="rows" id="rows"></div>
     </div>
   </div>
 
   <script>
-    // Matches the draft's Figure 6: the most common gap competency per community
-    // BY OaSIS DOMAIN (one column per domain). Runner-up competencies live in the
-    // tooltip (row.<Domain>_top carries the top-5 per domain).
-    const DOMAINS = [
-      { key: 'Skills', label: 'Skills',
-        desc: 'Developed capacities used in performing tasks — e.g. numeracy, critical thinking (33 competencies, proficiency 0–5).' },
-      { key: 'Knowledge', label: 'Knowledge',
-        desc: 'Organized subject-matter sets — e.g. building and construction, economics (44 competencies).' },
-      { key: 'Abilities', label: 'Abilities',
-        desc: 'Enduring attributes influencing performance — e.g. deductive reasoning, manual dexterity (49 competencies, 0–5).' },
-      { key: 'Work Activities', label: 'Work activities',
-        desc: 'General types of job behaviour — e.g. getting information, making decisions (40 competencies, complexity 0–5).' },
-    ];
+    // HTML-layer only: this view keeps the SKILLS domain and shows, per community,
+    // its own top-N Skills gaps — the training-planning view for that community.
+    // Source data (all four domains) is untouched — we read row.Skills_top.
+    // Skills-only is the author-reviewed layout (DECISIONS.md, approved export
+    // PNG); do not widen to per-domain without explicit user approval.
+    const DOMAIN_TOP = 'Skills_top';
+    const N = 3; // top-N skills shown per community
 
     const attr = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
@@ -137,37 +155,59 @@
       return t;
     }
 
+    let J_DATA = null;
+
+    function render() {
+      if (!J_DATA) return;
+      const compact = window.isCompact && window.isCompact();
+      let html = '';
+      J_DATA.forEach(row => {
+        const top = (row[DOMAIN_TOP] || []).slice(0, N);
+        let skills;
+        if (compact) {
+          // Rank-1 featured; ranks 2–3 as a one-line "Also:" list.
+          const c = top[0];
+          const also = top.slice(1).map(r => `<strong>${r.name}</strong>`).join(' · ');
+          skills = c ? `
+            <div class="skill rank1" data-tip="${attr(cellTip(c, row, row[DOMAIN_TOP]))}">
+              <div class="skill-name"><span class="rank-tag">1</span>${c.name}</div>
+              <div class="skill-meta">${c.n_pairs} of ${row.total_pairs} pairs</div>
+              <div class="track"><div class="bar" style="width:${Math.round(c.pct)}%"></div></div>
+              ${also ? `<div class="skill-also">Also: ${also}</div>` : ''}
+            </div>` : '<div class="skill"><div class="skill-meta">—</div></div>';
+        } else {
+          skills = top.map((c, i) => `
+            <div class="skill rank${i + 1}" data-tip="${attr(cellTip(c, row, row[DOMAIN_TOP]))}">
+              <div class="skill-name"><span class="rank-tag">${i + 1}</span>${c.name}</div>
+              <div class="skill-meta">${c.n_pairs} of ${row.total_pairs} pairs</div>
+              <div class="track"><div class="bar" style="width:${Math.round(c.pct)}%"></div></div>
+            </div>`).join('');
+        }
+        html += `
+          <div class="comm-row">
+            <div class="comm-head">
+              <span class="comm-name">${row.community}</span>
+              <span class="comm-count">${row.total_pairs} transitions</span>
+            </div>
+            <div class="skills">${skills}</div>
+          </div>`;
+      });
+      document.getElementById('rows').innerHTML = html;
+      reportSize();
+    }
+
+    function reportSize() {
+      const c = document.querySelector('.figure-container');
+      if (c) parent.postMessage({ type: 'figure-sized', fig: 'J_skills_gap_table', width: c.scrollWidth, height: c.scrollHeight }, '*');
+    }
+
+    window.addEventListener('compactmodechange', render);
+
     fetch('../data/J_skills_gap_table.json')
       .then(r => r.json())
       .then(DATA => {
-        document.getElementById('dom-header').innerHTML =
-          `<div class="comm-head"></div><div class="doms">` +
-          DOMAINS.map(d => `<div class="dom" data-tip="${attr(`<div class='tt-title'>${d.label}</div><div class='tt-value'>${d.desc}</div>`)}">${d.label}</div>`).join('') +
-          `</div>`;
-
-        let html = '';
-        DATA.forEach(row => {
-          const cells = DOMAINS.map(d => {
-            const c = row[d.key];
-            if (!c) return `<div class="skill"><div class="skill-meta">—</div></div>`;
-            return `
-            <div class="skill" data-tip="${attr(cellTip(c, row, row[d.key + '_top']))}">
-              <div class="skill-name">${c.name}</div>
-              <div class="skill-meta">${c.n_pairs} of ${row.total_pairs} pairs</div>
-              <div class="track"><div class="bar" style="width:${Math.round(c.pct)}%"></div></div>
-            </div>`;
-          }).join('');
-          html += `
-            <div class="comm-row">
-              <div class="comm-head">
-                <span class="comm-name">${row.community}</span>
-                <span class="comm-count">${row.total_pairs} transitions</span>
-              </div>
-              <div class="skills">${cells}</div>
-            </div>`;
-        });
-        document.getElementById('rows').innerHTML = html;
-
+        J_DATA = DATA;
+        render();
         tippy.delegate(document.body, {
           target: '[data-tip]',
           theme: 'irpp',

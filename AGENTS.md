@@ -7,7 +7,7 @@ status: active
 superseded_by:
 canonical_for: TO26 pipeline (steps 1–6, cosine), report figure data + interactive HTML figures + export PNGs, author-review decisions (see ../STRATA.md)
 created: 2026-07-01
-updated: 2026-07-07
+updated: 2026-07-08
 docs: # declare what exists; `none` means deliberately absent — don't hunt
   spec: TARGET_SPEC.md
   decisions: DECISIONS.md

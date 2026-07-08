@@ -57,11 +57,13 @@ expected and correct.
 
 - **E** comparable/relaxed split = our `teer_class`; "other" column = top-10
   viable window (per source) minus picks, grouped by NOC-3.
-- **J** = curated hand-picks only, top-5 gaps **per pair per domain**,
-  most-frequent competency per community×domain. The figure renders the
-  draft's Figure-6 layout: one top competency **per OaSIS domain** (4 columns),
-  runner-ups in the tooltip. (Superseded the earlier Skills-top-3 layout,
-  2026-07-07 — the draft's narrative cites knowledge and work-activities gaps.)
+- **J** = curated hand-picks only, top-5 gaps **per pair per domain** in the
+  JSON, rendered as each community's **top-3 Skills gaps** (Skills-only — the
+  author-reviewed layout: DECISIONS.md divergences + the approved export PNG).
+  The 2026-07-07 restructure to a per-domain 4-column layout was a
+  **regression** (it chased the stale pre-review draft); reverted 2026-07-08,
+  variant archived at `archive/J_per_domain_layout/`. Do not widen J beyond
+  Skills without explicit user approval.
 - **D** qual_signal is a community-review proxy: hand-pick → green;
   global-susceptible → red; local (CD) workers 0 → yellow.
 - **Skill-gap bars are Skills-domain only, across D and I** (matching D's
@@ -91,8 +93,27 @@ K headers/dots/pills give screen definitions, underlying values, and pick
 rationales; A2 explains the susceptibility methodology; G2 defines each OaSIS
 category. "Handpicked" → "curated" throughout K.
 
+## Compact (mobile) mode (2026-07-08)
+
+Every figure carries a second render branch in the **same HTML file**, driven
+by `dist/compact.js`: below 640px of the iframe's own width it sets `compact`
+on `<html>`, fires `compactmodechange`, and re-posts `figure-sized`. All
+compact CSS is scoped under `html.compact`, so desktop rendering is untouched
+(verified pixel-identical, VALIDATION 2026-07-08). Touch devices get
+tap-to-toggle tooltips via tippy defaults, keyed to `hover: none`, not the
+breakpoint. Design rules (user-locked 2026-07-08): trim breadth not
+legibility; 12px content floor; ~600px one-screen target with redesign
+license (B and D exceed it, rulings pending; K exempt). Per-figure choices
+live in each file's `COMPACT` CSS comment. The tester (`dist/index.html`) has
+a "Preview: Phone (375px)" toggle. Export PNGs run at desktop width and are
+unaffected.
+
 ## Watch-outs
 
 - `file://` is broken by design (figures `fetch()`); always serve over HTTP.
+  (`dist/export.mjs` is the exception — Puppeteer runs it with
+  `--allow-file-access-from-files`.)
 - Generators write directly to `dist/data/`. Regenerate via `generate_all.py`.
 - Numbered variants (F2/I/A2/C2/G2) supersede the originals (F/I/A/C/G). H dropped.
+- `compact.js` must load after the tippy `<script>` tags and before the
+  figure's own script.

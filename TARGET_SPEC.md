@@ -14,8 +14,11 @@ only if figure↔text mismatches resurface.
 `figure_data/dist/exports/*.png` are the approved default-state references.
 Print PNGs are always re-exports of the interactive figures
 (`cd figure_data/dist && bun run export.mjs`), never separate artifacts.
-Currently stale for F2 / D / J (see HANDOFF open items); re-export after
-wording sign-off.
+**Baseline refreshed 2026-07-08** (RC reviewed the diffs): A2/D/E/F2/I
+updated to the current figures; B/C2/G2/J unchanged (J back on its original
+reference after the per-domain regression was reverted — see DECISIONS).
+The PNGs outrank `temp/draft_extract.md` as the approval gate for figure
+layouts — the extract is the pre-review draft.
 
 ## 3. Hosted interactives — IN PROGRESS (the remaining work)
 
@@ -27,12 +30,16 @@ All 10 figures are feature-complete locally (tester at
 - **Responsive / mobile versions.** Agreed approach (2026-07-07, Ricardo):
   mobile is **deliberately lossy** — maximize the important content, don't
   chase parity; figure notes will say the full version is best on desktop.
-  Two versions total (desktop + compact, single ~640px breakpoint; tablets
+  Two versions total (desktop + compact, single 640px breakpoint; tablets
   get desktop + horizontal scroll). Compact is a **render branch in the same
   HTML file** over the same JSON (never a forked file), selected client-side
   by the iframe's own width — WordPress keeps one embed per figure and never
   decides. PNG exports stay desktop-only forever (the PDF is one-size).
-  See HANDOFF for the step order and open design decisions.
+  **Status 2026-07-08:** design decisions locked (DECISIONS §compact) and
+  first drafts of all 10 built (`dist/compact.js` + `html.compact` branches;
+  desktop verified pixel-stable). Remaining: per-figure polish pass with RC,
+  B/D over-budget rulings, font hygiene (self-host Nunito Sans + tippy CSS,
+  raise F2's 7px text), cross-browser QA + per-mode VALIDATION rows.
 - **French versions** for the French translation of the paper.
   *(Not yet scoped — no i18n structure exists in the figures; strings live in
   generator Python and figure HTML. Undocumented beyond this line.)*

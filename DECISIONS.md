@@ -217,6 +217,14 @@ choices; pipeline/data divergences are above.
   to show **each community's top-3 Skills gaps** (was one gap per domain across all
   four). Reframes the figure from cross-community recurrence to local training
   priorities.
+  - **Regression record (2026-07-07/08):** a session restructured J back to
+    per-domain to match `temp/draft_extract.md`'s Figure 6 — but that extract
+    is the *pre-review* draft; this Skills-only layout is the author-reviewed
+    state (the 2026-07-06 author feedback validated Figure 6 in Skills-only
+    terms, and the approved export PNG is Skills-only). Caught by RC and
+    reverted 2026-07-08, pixel-identical to the approved PNG (VALIDATION).
+    Per-domain variant archived at `archive/J_per_domain_layout/`. Lesson:
+    the approved export PNGs outrank the draft extract as the approval gate.
 - **Figure 7 (D walkthrough):** The RCA "Skill gap preview" panel was rebuilt as
   **paired source/target LQ bars** on a shared scale with a dashed RCA = 1.0
   reference, mirroring Figure 5. Header occupation names carry the bar colours
@@ -224,6 +232,25 @@ choices; pipeline/data divergences are above.
 - **Appendix (K):** A comprehensive companion showing every community × susceptible
   occupation's top-10 viable-or-handpicked candidates against the five viability
   screens. Collapsible per occupation.
+
+### Compact (mobile) mode — design decisions (locked by RC, 2026-07-08)
+
+Grilling session, 2026-07-08. Architecture context in TARGET_SPEC §3.
+
+1. **Breakpoint:** compact below **640px of the iframe's own width, evaluated
+   live** (resize/rotation switches mode; height re-emitted).
+2. **Touch tooltips:** tap-to-toggle tippy, keyed to **input capability**
+   (`hover: none`), not the breakpoint — a tablet gets desktop layout with tap
+   tooltips; a narrow desktop window gets compact with hover.
+3. **Desktop note:** one standard sentence in the figure's **notes block only**
+   (production/WordPress side), never in the graphic, so never in PNGs:
+   "Simplified view — the full interactive figure is best on a larger screen."
+4. **Lossy rule:** trim breadth (fewer elements, each fully legible), not
+   annotation. Dropped detail lives in tooltips.
+5. **Type floor:** 12px for anything content-bearing; 10px only decorative.
+6. **Height:** ~600px one-screen target **with redesign license**
+   (form-switching allowed); figures that can't fit are flagged for RC's
+   per-figure ruling. K (appendix) exempt.
 
 ### Figure numbering
 

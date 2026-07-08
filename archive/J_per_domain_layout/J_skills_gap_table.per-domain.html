@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Top Skill Gaps by Community and Domain</title>
+  <link rel="stylesheet" href="../theme.css">
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+  <style>
+    .figure-container {
+      width: var(--fig-width);
+      height: var(--fig-height);
+      padding: 6px 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+
+
+    .rows {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── One community row ── */
+    .comm-row {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 2px;
+      border-bottom: 1px solid var(--clr-border);
+    }
+    .comm-row:last-child { border-bottom: none; }
+
+    .comm-head {
+      width: 19%;
+      flex-shrink: 0;
+    }
+    .comm-name {
+      display: block;
+      font-weight: 700;
+      font-size: 9.5px;
+      color: var(--irpp-navy);
+      line-height: 1.25;
+    }
+    .comm-count {
+      display: block;
+      font-size: 7.5px;
+      color: var(--clr-body-secondary);
+      margin-top: 1px;
+    }
+
+    /* ── Skill cells (top-N, side by side) ── */
+    .skills {
+      flex: 1;
+      display: flex;
+      gap: 7px;
+    }
+    .skill {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .skill-name {
+      font-size: 8.5px;
+      font-weight: 600;
+      color: var(--clr-body);
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+    .skill-meta {
+      font-size: 7px;
+      color: var(--clr-body-secondary);
+      margin-bottom: 2px;
+    }
+    .track { height: 4px; border-radius: 2px; background: #e6e9ec; }
+    .bar   { height: 4px; border-radius: 2px; background: var(--irpp-teal); }
+
+    /* ── Domain header row ── */
+    .dom-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      padding: 2px 2px 4px;
+      border-bottom: 1.5px solid var(--irpp-navy);
+      flex-shrink: 0;
+    }
+    .dom-header .comm-head { width: 19%; flex-shrink: 0; }
+    .dom-header .doms { flex: 1; display: flex; gap: 7px; }
+    .dom-header .dom {
+      flex: 1 1 0; min-width: 0;
+      font-size: 8px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.4px; color: var(--irpp-navy);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dev-wrapper">
+    <div class="figure-container">
+      <div class="dom-header" id="dom-header"></div>
+      <div class="rows" id="rows"></div>
+    </div>
+  </div>
+
+  <script>
+    // Matches the draft's Figure 6: the most common gap competency per community
+    // BY OaSIS DOMAIN (one column per domain). Runner-up competencies live in the
+    // tooltip (row.<Domain>_top carries the top-5 per domain).
+    const DOMAINS = [
+      { key: 'Skills', label: 'Skills',
+        desc: 'Developed capacities used in performing tasks — e.g. numeracy, critical thinking (33 competencies, proficiency 0–5).' },
+      { key: 'Knowledge', label: 'Knowledge',
+        desc: 'Organized subject-matter sets — e.g. building and construction, economics (44 competencies).' },
+      { key: 'Abilities', label: 'Abilities',
+        desc: 'Enduring attributes influencing performance — e.g. deductive reasoning, manual dexterity (49 competencies, 0–5).' },
+      { key: 'Work Activities', label: 'Work activities',
+        desc: 'General types of job behaviour — e.g. getting information, making decisions (40 competencies, complexity 0–5).' },
+    ];
+
+    const attr = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+
+    function cellTip(c, row, topList) {
+      let t = `<div class="tt-title">${c.name}</div>`
+        + `<div class="tt-value">Top gap in ${c.n_pairs} of ${row.total_pairs} curated transitions (${Math.round(c.pct)}%)</div>`
+        + `<div class="tt-value">Avg. gap size: ${c.avg_gap.toFixed(2)} (RCA difference)</div>`;
+      const runners = (topList || []).filter(x => x.name !== c.name).slice(0, 3);
+      if (runners.length) {
+        t += `<hr class="tt-divider"><div class="tt-value">Next most common:</div>`
+          + runners.map(r => `<div class="tt-value">${r.name} — ${r.n_pairs} pair${r.n_pairs > 1 ? 's' : ''}</div>`).join('');
+      }
+      return t;
+    }
+
+    fetch('../data/J_skills_gap_table.json')
+      .then(r => r.json())
+      .then(DATA => {
+        document.getElementById('dom-header').innerHTML =
+          `<div class="comm-head"></div><div class="doms">` +
+          DOMAINS.map(d => `<div class="dom" data-tip="${attr(`<div class='tt-title'>${d.label}</div><div class='tt-value'>${d.desc}</div>`)}">${d.label}</div>`).join('') +
+          `</div>`;
+
+        let html = '';
+        DATA.forEach(row => {
+          const cells = DOMAINS.map(d => {
+            const c = row[d.key];
+            if (!c) return `<div class="skill"><div class="skill-meta">—</div></div>`;
+            return `
+            <div class="skill" data-tip="${attr(cellTip(c, row, row[d.key + '_top']))}">
+              <div class="skill-name">${c.name}</div>
+              <div class="skill-meta">${c.n_pairs} of ${row.total_pairs} pairs</div>
+              <div class="track"><div class="bar" style="width:${Math.round(c.pct)}%"></div></div>
+            </div>`;
+          }).join('');
+          html += `
+            <div class="comm-row">
+              <div class="comm-head">
+                <span class="comm-name">${row.community}</span>
+                <span class="comm-count">${row.total_pairs} transitions</span>
+              </div>
+              <div class="skills">${cells}</div>
+            </div>`;
+        });
+        document.getElementById('rows').innerHTML = html;
+
+        tippy.delegate(document.body, {
+          target: '[data-tip]',
+          theme: 'irpp',
+          animation: 'shift-away',
+          allowHTML: true,
+          placement: 'top',
+          appendTo: document.body,
+          content: ref => ref.getAttribute('data-tip'),
+        });
+      });
+  </script>
+
+<!-- CTP WP Engine Embed Helper -->
+<script>
+  if (window.self !== window.top) {
+    document.body.classList.add('export-mode');
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+        if (c) {
+          const fig = location.pathname.split('/').pop().replace('.html', '');
+          parent.postMessage({
+            type: 'figure-sized',
+            fig: fig,
+            width: c.scrollWidth,
+            height: c.scrollHeight
+          }, '*');
+        }
+      }, 100);
+    });
+  }
+</script>
+</body>
+
+</html>

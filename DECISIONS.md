@@ -226,6 +226,11 @@ choices; pipeline/data divergences are above.
   default view was restored to a side-by-side comparison of two pairs. D3 rendering
   was split into a two-pass layout (DOM mount then SVG draw) to ensure flex widths
   evaluate correctly and prevent x-axis clipping in the default view.
+  - **Controls Header Layout (2026-07-08):** Adjusted the controls layout to a 60/40
+    split (`flex: 3` vs `flex: 2` on `.control-stack` and `.info-panel`) on desktop, and
+    applied `min-width: 0` to both columns and select elements to prevent the browser's default
+    `min-width: auto` behavior on select options from causing column overlaps and layout clipping.
+    Applied `flex-direction: column` on mobile/compact mode to stack them cleanly.
 - **Figure 6 (J skills gaps):** Narrowed to the **Skills domain only** and pivoted
   to show **each community's top-3 Skills gaps** (was one gap per domain across all
   four). Reframes the figure from cross-community recurrence to local training
@@ -245,6 +250,11 @@ choices; pipeline/data divergences are above.
 - **Appendix (K):** A comprehensive companion showing every community × susceptible
   occupation's top-10 viable-or-handpicked candidates against the five viability
   screens. Collapsible per occupation.
+- **Figure A3 (Interactive Map):** Chosen as the canonical replacement for Figure A2.
+  It uses D3.js to dynamically render Canada's Census Divisions using `canada_cd_erased_500_wgs84.geojson` (from `census_geo_data`) under a standard Canada Albers Equal Area projection.
+  - **Winding Order Correction:** Implemented client-side GeoJSON rewinding (`rewindGeojson`) to correct clockwise winding in the source files, resolving a D3 spherical projection bug that otherwise scales the map down to 0 and projects centroids to their antipodes.
+  - **Interactivity:** Highlights the 7 study communities on hover and maps Tippy.js tooltips with metadata mirroring the sidebar. Enables bidirectional highlighting between the map elements (paths and badges) and the sidebar list items.
+  - **PT Boundaries Only:** Uses a dissolved GeoJSON layer `canada_provinces_wgs84.geojson` (generated via `mapshaper -dissolve PRUID`) drawn on top to show only Province/Territory borders, keeping interior Census Division boundaries clean (`stroke: none`).
 
 ### Compact (mobile) mode — design decisions (locked by RC, 2026-07-08)
 
@@ -272,7 +282,7 @@ The draft printed two "Figure 4"s. We renumbered downstream into a clean sequenc
 | # | Figure file | Draft section |
 |---|---|---|
 | Figure 1 | C2_summary | The approach follows four steps |
-| Figure 2 | A2_map | Susceptible communities and occupations |
+| Figure 2 | A3_map | Susceptible communities and occupations |
 | Table 1 | G2_oasis_competencies | Canada's OaSIS |
 | Figure 3 | B_suitable_heatmap | Measuring proximity between occupations |
 | Figure 4 | F2_filtering | Viable occupations: filtering for local viability |
@@ -282,7 +292,7 @@ The draft printed two "Figure 4"s. We renumbered downstream into a clean sequenc
 | Figure 7 | D_walkthrough | Material handlers: an illustrative example |
 | Appendix | K_appendix_screening | Standalone screening reference |
 
-Numbered variants (F2/I/A2/C2/G2) supersede the un-numbered originals. H dropped.
+Numbered variants (F2/I/A3/C2/G2) supersede the un-numbered originals. H dropped.
 
 ---
 

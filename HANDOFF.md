@@ -1,24 +1,25 @@
 # Handoff — 2026-07-08
 
-<!-- ONE handoff file, always overwritten. Never HANDOFF_2. History is in git.
-     Thin baton only: pointers + delta + next task. If you're writing rationale
-     or decisions here, STOP — absorb them into DECISIONS.md/README first. -->
-
 ## Task just completed
-Refactored Figure I (RCA bars) desktop UI. Replaced the Community dropdown with a dynamically populated info panel featuring "active" community pills matching Figure B's styling. Restored the two-panel default view for comparison and solved an SVG flex-width bug where rendering elements sequentially caused right-side clipping. 
+Implemented Figure A3 (Interactive Canada Map) using D3.js, and polished Figure I controls layout (done).
 
 ## Delta
-- Modified `figure_data/dist/figures/I_skills_gap_bars.html` to implement the new header layout (`control-stack` + `info-panel`), updated `COMM_NAMES` mapping to use the correct abbreviation conventions from `B_suitable_heatmap`, and implemented a two-pass rendering cycle (DOM mount -> SVG render).
-- Appended UI and architectural decisions to `DECISIONS.md`.
+*   **Created**:
+    *   [A3_map.html](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/figure_data/dist/figures/A3_map.html): Dynamic Albers projection map with white province borders, NWT Region 3 focus, and DOM-scraping tooltips.
+    *   [canada_cd_erased_500_wgs84.geojson](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/figure_data/dist/assets/map/canada_cd_erased_500_wgs84.geojson) & [canada_provinces_wgs84.geojson](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/figure_data/dist/assets/map/canada_provinces_wgs84.geojson): Source GIS layers.
+*   **Modified**:
+    *   [I_skills_gap_bars.html](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/figure_data/dist/figures/I_skills_gap_bars.html): 60/40 desktop layout adjustments, select elements min-width fix, mobile stacked overrides.
+    *   [A2_map.html](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/figure_data/dist/figures/A2_map.html): Updated "Notable municipalities" key to "Major centres" (Canadian spelling).
+    *   [index.html](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/figure_data/dist/index.html): Added Figure A3 to portal grid list and iframe sizing list.
+    *   [DECISIONS.md](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/DECISIONS.md) & [VALIDATION.md](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/VALIDATION.md): Documented A3 design choices and signed the validation check.
+    *   [exports/A2_map.png](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/figure_data/dist/exports/A2_map.png) & [exports/A3_map.png](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/figure_data/dist/exports/A3_map.png): Re-exported.
 
 ## Trust state
-The data generation remains verified. The desktop presentation layer of Figure I is now structurally correct, but requires final polish. Mobile (compact) mode for Figure I is intentionally broken/deferred until desktop is fully signed off.
+26 validation rows, all 26 signed (A3 map visual and export checks signed off by RC). Zero unsigned claims.
 
 ## Next task
-**Polish Figure I & Finalize Desktop:** 
-- Fix any remaining styling / assessment-notes condensing in Figure I.
-- Run font hygiene checks on it.
-- After desktop is completely locked in, tackle the mobile (compact) layout for Figure I.
+Refining desktop interactive Figure D (walkthrough).
+*   **Entry point**: [D_walkthrough.html](file:///Users/ricardochejfec/Programming/crossover/rural_transitions_ctp/studies/study_TO26_authorpackage/figure_data/dist/figures/D_walkthrough.html)
 
 ## Watch out
-Watch out for the `.iframe-controls` height overriding and `.info-panel` flex ratios just added to `I_skills_gap_bars.html`. They work beautifully on desktop but will absolutely break the single-column stacking required in compact view.
+*   **D3 Spherical Polygon Winding**: GIS source boundaries are wound clockwise. D3's Albers projection requires client-side rewinding (implemented as `rewindGeojson` in A3) to avoid scaling Canada to 0 and projecting centroids to their antipodes.

@@ -82,17 +82,27 @@
     html.compact .header-role { font-size: 10px; }
     html.compact .header-occ { font-size: 13px; }
     html.compact .chart-area { flex: none; height: 380px; }
+    html.compact .iframe-controls { flex-direction: column; align-items: stretch; min-height: auto; gap: 10px; }
   
     /* ── Controls Layout Overrides ── */
     .iframe-controls {
       min-height: 72px;
     }
     .control-stack {
-      flex: 1;
+      flex: 3;
+      min-width: 0;
+    }
+    .control-stack .control-group label {
+      width: 55px;
+      flex-shrink: 0;
+    }
+    .control-stack .control-group select {
+      min-width: 0;
     }
     /* ── Info Panel & Pills ── */
     .info-panel {
       flex: 2;
+      min-width: 0;
       border: 1px solid var(--clr-border);
       border-radius: 3px;
       padding: 6px 8px;

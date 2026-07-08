@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interactive Census Divisions Map</title>
+  <link rel="stylesheet" href="../theme.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
+  <script src="../compact.js"></script>
+  <style>
+    /* ── Figure-specific layout ── */
+    .figure-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Context strip ── */
+    .context-strip {
+      padding: var(--sp-8) var(--sp-14);
+      background: var(--clr-bg-muted);
+      border-bottom: 1px solid var(--clr-border);
+      font-size: var(--fs-body);
+      color: var(--clr-body);
+      line-height: var(--lh-normal);
+    }
+
+    .context-strip strong {
+      font-weight: var(--fw-semibold);
+      color: var(--clr-heading);
+    }
+
+    /* ── Main split: map + list ── */
+    .map-row {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .map-area {
+      flex: 1;
+      background: var(--clr-bg);
+      border-right: 1px solid var(--clr-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      position: relative;
+    }
+
+    /* ── D3 Interactive Map Styles ── */
+    #map-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background-color: #ffffff;
+    }
+
+    .cd-path {
+      fill: #dcdcdc;
+      stroke: none;
+      transition: fill var(--transition-fast), opacity var(--transition-fast);
+    }
+
+    .cd-path.highlighted-cd {
+      fill: var(--irpp-navy);
+      cursor: pointer;
+    }
+
+    .cd-path.highlighted-cd.hovered {
+      fill: var(--irpp-teal);
+    }
+
+    .cd-path.nwt-background-cd {
+      fill: var(--irpp-navy);
+      opacity: 0.25;
+    }
+
+    .cd-path.nwt-background-cd.hovered {
+      fill: var(--irpp-teal);
+      opacity: 0.35;
+    }
+
+    .province-boundary {
+      stroke: #ffffff;
+      stroke-width: 1px;
+      fill: none;
+      pointer-events: none;
+    }
+
+    .map-badge {
+      cursor: pointer;
+    }
+
+    .map-badge circle {
+      fill: var(--irpp-navy);
+      stroke: #ffffff;
+      stroke-width: 1.5px;
+      transition: fill var(--transition-fast);
+    }
+
+    .map-badge.hovered circle {
+      fill: var(--irpp-teal);
+    }
+
+    .map-badge text {
+      fill: #ffffff;
+      font-size: 8px;
+      font-weight: bold;
+      text-anchor: middle;
+      dominant-baseline: central;
+      font-family: var(--font-primary);
+      pointer-events: none;
+    }
+
+    /* ── Community list panel ── */
+    .community-list {
+      width: 274px;
+      padding: var(--sp-2) var(--sp-8) var(--sp-4) var(--sp-10);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .community {
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      flex: 1;
+      gap: 5px;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color var(--transition-fast);
+      padding: 2px 4px;
+    }
+
+    .community:last-child {
+      border-bottom: none;
+    }
+
+    .community.highlighted {
+      background-color: var(--clr-bg-muted);
+    }
+
+    .community.highlighted .comm-num {
+      background-color: var(--irpp-teal);
+    }
+
+    /* ── Numbered badge ── */
+    .comm-num {
+      font-size: var(--fs-label-xs);
+      font-weight: var(--fw-bold);
+      color: #fff;
+      background: var(--clr-heading);
+      border-radius: 50%;
+      width: 13px;
+      height: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background-color var(--transition-fast);
+    }
+
+    .comm-body {
+      flex: 1;
+    }
+
+    /* ── Community header line ── */
+    .comm-header {
+      font-size: var(--fs-label-sm);
+      line-height: var(--lh-tight);
+    }
+
+    .comm-name {
+      font-weight: var(--fw-bold);
+      color: var(--clr-body);
+    }
+
+    .comm-sector {
+      color: var(--clr-heading);
+      font-style: italic;
+    }
+
+    /* ── Detail rows ── */
+    .comm-row {
+      font-size: 6.5px;
+      color: var(--clr-body-secondary);
+      line-height: 1.3;
+      margin-top: 1px;
+    }
+
+    .comm-key {
+      font-weight: var(--fw-bold);
+      color: var(--clr-heading);
+      text-transform: uppercase;
+      font-size: 5.5px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
+       map on top, community list stacked below; the "local economy" detail
+       row is dropped (sector stays in the header line). ── */
+    html.compact .figure-container {
+      width: 100%;
+      height: auto;
+    }
+
+    html.compact .dev-wrapper {
+      padding: 8px;
+    }
+
+    html.compact .context-strip {
+      font-size: 12px;
+    }
+
+    html.compact .map-row {
+      flex-direction: column;
+    }
+
+    html.compact .map-area {
+      flex: none;
+      height: 200px;
+      border-right: none;
+      border-bottom: 1px solid var(--clr-border);
+      padding: 4px 0;
+    }
+
+    html.compact .community-list {
+      width: 100%;
+      padding: 4px 12px 8px;
+    }
+
+    html.compact .community {
+      flex: none;
+      padding: 5px 0;
+      gap: 8px;
+    }
+
+    html.compact .comm-num {
+      width: 17px;
+      height: 17px;
+      font-size: 10px;
+    }
+
+    html.compact .comm-header {
+      font-size: 12px;
+    }
+
+    html.compact .comm-row {
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    html.compact .comm-row--econ {
+      display: none;
+    }
+
+    html.compact .comm-key {
+      font-size: 9px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dev-wrapper">
+    <div class="figure-container">
+
+      <div class="context-strip">
+        Using the IRPP's community susceptibility methodology, <strong id="method-term"
+          style="border-bottom:1px dotted currentColor; cursor:help;">68 census divisions</strong> across Canada were
+        identified
+        as facing elevated risk of workforce disruption from the transition to a net-zero economy.
+        Seven were selected as the focus of this study, representing a diverse cross-section of regions and economic
+        profiles.
+      </div>
+
+      <div class="map-row">
+        <div class="map-area">
+          <div id="loading"
+            style="font-size: 10px; color: var(--clr-body-secondary); font-weight: bold; font-family: var(--font-primary);">
+            Loading map data...</div>
+          <svg id="map-svg" style="display: none;"></svg>
+        </div>
+
+        <div class="community-list">
+
+          <div class="community" data-id="1">
+            <div class="comm-num">1</div>
+            <div class="comm-body">
+              <div class="comm-header"><span class="comm-name">Division No. 3, NL</span> — <span
+                  class="comm-sector">Maritime transport</span></div>
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Healthcare,
+                agriculture/fishing, transport</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Channel-Port aux Basques</div>
+            </div>
+          </div>
+
+          <div class="community" data-id="2">
+            <div class="comm-num">2</div>
+            <div class="comm-body">
+              <div class="comm-header"><span class="comm-name">Algoma, ON</span> — <span class="comm-sector">Steel
+                  manufacturing</span></div>
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Healthcare, retail,
+                manufacturing</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Sault Ste. Marie, Elliot Lake,
+                Blind River</div>
+            </div>
+          </div>
+
+          <div class="community" data-id="3">
+            <div class="comm-num">3</div>
+            <div class="comm-body">
+              <div class="comm-header"><span class="comm-name">Oxford, ON</span> — <span class="comm-sector">Automotive
+                  manufacturing</span></div>
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Manufacturing,
+                healthcare, retail</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Woodstock, Ingersoll</div>
+            </div>
+          </div>
+
+          <div class="community" data-id="4">
+            <div class="comm-num">4</div>
+            <div class="comm-body">
+              <div class="comm-header"><span class="comm-name">Division No. 15, MB</span> — <span
+                  class="comm-sector">Food processing + agriculture</span></div>
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Manufacturing,
+                agriculture, healthcare</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Neepawa, Minnedosa, Carberry
+              </div>
+            </div>
+          </div>
+
+          <div class="community" data-id="5">
+            <div class="comm-num">5</div>
+            <div class="comm-body">
+              <div class="comm-header"><span class="comm-name">Division No. 1, SK</span> — <span
+                  class="comm-sector">Coal + oil &amp; gas</span></div>
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Agriculture, mining/oil
+                &amp; gas, retail</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Estevan, Carlyle, Oxbow</div>
+            </div>
+          </div>
+
+          <div class="community" data-id="6">
+            <div class="comm-num">6</div>
+            <div class="comm-body">
+              <div class="comm-header"><span class="comm-name">Division No. 16, AB</span> — <span
+                  class="comm-sector">Oil sands extraction</span></div>
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Mining/oil &amp; gas,
+                retail, construction</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Wood Buffalo (incl. Fort
+                McMurray)</div>
+            </div>
+          </div>
+
+          <div class="community" data-id="7">
+            <div class="comm-num">7</div>
+            <div class="comm-body">
+              <div class="comm-header"><span class="comm-name">Northwest Territories</span> — <span
+                  class="comm-sector">Diamond + critical mineral mining</span></div>
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Public admin,
+                healthcare, education</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Yellowknife, Hay River, Inuvik
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Method terms tooltip
+    tippy(document.getElementById('method-term'), {
+      theme: 'irpp',
+      animation: 'shift-away',
+      allowHTML: true,
+      placement: 'bottom',
+      maxWidth: 320,
+      appendTo: document.body,
+      content: `<div class="tt-title">Community susceptibility methodology</div>
+      <div class="tt-value">Communities (census divisions) scoring in the top 10% on any of three metrics:</div>
+      <div class="tt-value"><strong>Facility</strong> — emissions from large facilities relative to community size</div>
+      <div class="tt-value"><strong>Intensity</strong> — share of employment in emissions-intensive sectors</div>
+      <div class="tt-value"><strong>Market</strong> — share of labour force in globally traded sectors facing transformation</div>
+      <div class="tt-value" style="opacity:0.7">Chejfec et al. (2025), IRPP Community Transformations Project</div>`,
+    });
+
+    // Coordinate rewinding helper to fix D3 spherical polygon winding order (ensures correct fitExtent scale)
+    function rewindGeometry(geometry) {
+      if (geometry.type === "Polygon") {
+        geometry.coordinates.forEach(ring => ring.reverse());
+      } else if (geometry.type === "MultiPolygon") {
+        geometry.coordinates.forEach(poly => {
+          poly.forEach(ring => ring.reverse());
+        });
+      }
+    }
+
+    function rewindGeojson(geojson) {
+      if (geojson.type === "FeatureCollection") {
+        geojson.features.forEach(f => {
+          if (f.geometry) rewindGeometry(f.geometry);
+        });
+      }
+    }
+
+    // Map Rendering & Interaction Code
+    let cdData = null;
+    let provData = null;
+
+    Promise.all([
+      d3.json('../assets/map/canada_cd_erased_500_wgs84.geojson'),
+      d3.json('../assets/map/canada_provinces_wgs84.geojson')
+    ]).then(([cd, prov]) => {
+      rewindGeojson(cd);
+      rewindGeojson(prov);
+      cdData = cd;
+      provData = prov;
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('map-svg').style.display = 'block';
+
+      renderMap();
+    }).catch(err => {
+      console.error("Error loading map data: ", err);
+      document.getElementById('loading').textContent = "Failed to load map data.";
+    });
+
+    function renderMap() {
+      if (!cdData || !provData) return;
+
+      const container = document.querySelector('.map-area');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      const svg = d3.select("#map-svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", `0 0 ${width} ${height}`);
+
+      svg.selectAll("*").remove(); // clear previous drawing
+
+      // Projection parameters (Canada Albers Equal Area)
+      const projection = d3.geoConicEqualArea()
+        .parallels([50, 70])
+        .rotate([96, 0])
+        .center([0, 38.8]) // adjust latitude slightly to center Canada vertically
+        .fitExtent([[10, 10], [width - 10, height - 10]], cdData);
+
+      const path = d3.geoPath().projection(projection);
+
+      // Draw Land (Census Divisions)
+      svg.append("g")
+        .selectAll("path")
+        .data(cdData.features)
+        .join("path")
+        .attr("d", path)
+        .attr("class", d => {
+          if (d.properties.CDUID === '1003') return 'cd-path highlighted-cd comm-1';
+          if (d.properties.CDUID === '3557') return 'cd-path highlighted-cd comm-2';
+          if (d.properties.CDUID === '3532') return 'cd-path highlighted-cd comm-3';
+          if (d.properties.CDUID === '4615') return 'cd-path highlighted-cd comm-4';
+          if (d.properties.CDUID === '4701') return 'cd-path highlighted-cd comm-5';
+          if (d.properties.CDUID === '4816') return 'cd-path highlighted-cd comm-6';
+          if (d.properties.CDUID === '6103') return 'cd-path highlighted-cd comm-7';
+          if (d.properties.PRUID === '61') return 'cd-path nwt-background-cd comm-7';
+          return 'cd-path';
+        })
+        .attr("data-community-id", d => {
+          if (d.properties.CDUID === '1003') return '1';
+          if (d.properties.CDUID === '3557') return '2';
+          if (d.properties.CDUID === '3532') return '3';
+          if (d.properties.CDUID === '4615') return '4';
+          if (d.properties.CDUID === '4701') return '5';
+          if (d.properties.CDUID === '4816') return '6';
+          if (d.properties.PRUID === '61') return '7';
+          return null;
+        });
+
+      // Draw Province Boundaries on top
+      svg.append("g")
+        .selectAll("path")
+        .data(provData.features)
+        .join("path")
+        .attr("d", path)
+        .attr("class", "province-boundary");
+
+      // Draw Circular Badges with numbers
+      const communities = [
+        { id: 1, cduid: '1003' },
+        { id: 2, cduid: '3557' },
+        { id: 3, cduid: '3532' },
+        { id: 4, cduid: '4615' },
+        { id: 5, cduid: '4701' },
+        { id: 6, cduid: '4816' },
+        { id: 7, cduid: '6103' } // Region 3 is the equivalent focal community CD for NWT
+      ];
+
+      const badgeOffsets = {
+        1: [10, 10],   // NL: shift down-right offshore
+        2: [13, -5],     // Algoma: centered
+        3: [5, 10],   // Oxford: shift down-right offshore
+        4: [0, -15],  // MB: shift up-right
+        5: [0, 15],  // SK: shift down-left
+        6: [-17, 6],     // AB: centered
+        7: [-15, 0]   // NWT (Region 3): shift left-up
+      };
+
+      communities.forEach(c => {
+        const feature = cdData.features.find(f => f.properties.CDUID === c.cduid);
+
+        if (feature) {
+          const centroid = d3.geoCentroid(feature);
+          const [x, y] = projection(centroid);
+
+          const offset = badgeOffsets[c.id] || [0, 0];
+          const bx = x + offset[0];
+          const by = y + offset[1];
+
+          const badge = svg.append("g")
+            .attr("class", `map-badge comm-badge-${c.id}`)
+            .attr("transform", `translate(${bx}, ${by})`)
+            .attr("data-community-id", c.id);
+
+          badge.append("circle")
+            .attr("r", 7.5);
+
+          badge.append("text")
+            .text(c.id);
+        }
+      });
+
+      setupTooltips();
+      setupHoverInteractions();
+    }
+
+    function setupTooltips() {
+      if (window.tippyInstances) {
+        window.tippyInstances.forEach(t => t.destroy());
+      }
+      window.tippyInstances = [];
+
+      const elements = document.querySelectorAll('.highlighted-cd, .map-badge');
+      elements.forEach(el => {
+        const id = el.getAttribute('data-community-id');
+        const sidebarEl = document.querySelector(`.community[data-id="${id}"]`);
+        if (sidebarEl) {
+          const name = sidebarEl.querySelector('.comm-name').innerText.trim();
+          const sector = sidebarEl.querySelector('.comm-sector').innerText.trim();
+
+          const econRow = sidebarEl.querySelector('.comm-row--econ');
+          const econText = econRow ? econRow.innerText.replace(/Local economy:\s*/i, '').trim() : '';
+
+          const munRow = sidebarEl.querySelector('.comm-row:not(.comm-row--econ)');
+          const munText = munRow ? munRow.innerText.replace(/Major centres:\s*/i, '').trim() : '';
+
+          const instance = tippy(el, {
+            theme: 'irpp',
+            animation: 'shift-away',
+            allowHTML: true,
+            placement: 'top',
+            maxWidth: 280,
+            appendTo: document.body,
+            content: `
+            <div class="tt-title"><strong>${name}</strong></div>
+            <div class="tt-divider"></div>
+            <div class="tt-value"><strong>Sector:</strong> ${sector}</div>
+            <div class="tt-value"><strong>Local Economy:</strong> ${econText}</div>
+            <div class="tt-value"><strong>Major Centres:</strong> ${munText}</div>
+          `
+          });
+          window.tippyInstances.push(instance);
+        }
+      });
+    }
+
+    function setupHoverInteractions() {
+      const paths = d3.selectAll('.highlighted-cd, .nwt-background-cd');
+      const badges = d3.selectAll('.map-badge');
+      const sidebarItems = d3.selectAll('.community');
+
+      function handleIn(commId) {
+        d3.selectAll(`.highlighted-cd[data-community-id="${commId}"]`)
+          .classed('hovered', true);
+        d3.selectAll(`.nwt-background-cd[data-community-id="${commId}"]`)
+          .classed('hovered', true);
+        d3.selectAll(`.map-badge[data-community-id="${commId}"]`)
+          .classed('hovered', true);
+
+        sidebarItems.filter(function () {
+          return d3.select(this).attr('data-id') === commId;
+        }).classed('highlighted', true);
+      }
+
+      function handleOut(commId) {
+        d3.selectAll(`.highlighted-cd[data-community-id="${commId}"]`)
+          .classed('hovered', false);
+        d3.selectAll(`.nwt-background-cd[data-community-id="${commId}"]`)
+          .classed('hovered', false);
+        d3.selectAll(`.map-badge[data-community-id="${commId}"]`)
+          .classed('hovered', false);
+
+        sidebarItems.filter(function () {
+          return d3.select(this).attr('data-id') === commId;
+        }).classed('highlighted', false);
+      }
+
+      paths.on('mouseenter', function () {
+        const id = d3.select(this).attr('data-community-id');
+        handleIn(id);
+      }).on('mouseleave', function () {
+        const id = d3.select(this).attr('data-community-id');
+        handleOut(id);
+      });
+
+      badges.on('mouseenter', function () {
+        const id = d3.select(this).attr('data-community-id');
+        handleIn(id);
+      }).on('mouseleave', function () {
+        const id = d3.select(this).attr('data-community-id');
+        handleOut(id);
+      });
+
+      sidebarItems.on('mouseenter', function () {
+        const id = d3.select(this).attr('data-id');
+        handleIn(id);
+      }).on('mouseleave', function () {
+        const id = d3.select(this).attr('data-id');
+        handleOut(id);
+      });
+    }
+
+    // Handle resizing and responsive behavior
+    window.addEventListener('resize', () => {
+      if (cdData && provData) {
+        renderMap();
+      }
+    });
+
+    window.addEventListener('compactmodechange', () => {
+      if (cdData && provData) {
+        renderMap();
+      }
+    });
+  </script>
+
+  <!-- CTP WP Engine Embed Helper -->
+  <script>
+    if (window.self !== window.top) {
+      document.body.classList.add('export-mode');
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+          if (c) {
+            const fig = location.pathname.split('/').pop().replace('.html', '');
+            parent.postMessage({
+              type: 'figure-sized',
+              fig: fig,
+              width: c.scrollWidth,
+              height: document.querySelector('.dev-wrapper').scrollHeight
+            }, '*');
+          }
+        }, 200);
+      });
+    }
+  </script>
+</body>
+
+</html>

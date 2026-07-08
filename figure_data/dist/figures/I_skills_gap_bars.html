@@ -82,16 +82,59 @@
     html.compact .header-role { font-size: 10px; }
     html.compact .header-occ { font-size: 13px; }
     html.compact .chart-area { flex: none; height: 380px; }
+  
+    /* ── Controls Layout Overrides ── */
+    .iframe-controls {
+      min-height: 72px;
+    }
+    .control-stack {
+      flex: 1;
+    }
+    /* ── Info Panel & Pills ── */
+    .info-panel {
+      flex: 2;
+      border: 1px solid var(--clr-border);
+      border-radius: 3px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      margin-top: 0;
+    }
+    .info-panel label {
+      font-size: 10.5px;
+      line-height: 1.2;
+      font-weight: 600;
+      color: var(--clr-body-secondary);
+      margin: 0;
+    }
+    .community-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      margin-top: 6px;
+    }
+    .comm-pill {
+      display: inline-block;
+      font-size: 8.5px;
+      font-weight: var(--fw-semibold);
+      letter-spacing: 0.3px;
+      padding: 1.5px 5px;
+      border-radius: 2px;
+      background: var(--clr-bg-muted);
+      border: 1px solid var(--clr-border);
+      color: var(--clr-body-secondary);
+      line-height: 1.4;
+    }
+    html.compact .comm-pill {
+      font-size: 12px;
+      padding: 2px 6px;
+    }
   </style>
 </head>
 
 <body>
   <div class="dev-wrapper">
     <div class="iframe-controls">
-      <div class="control-group">
-        <label>Community</label>
-        <select id="ui-community"></select>
-      </div>
       <div class="control-stack">
         <div class="control-group">
           <label>Source</label>
@@ -102,14 +145,17 @@
           <select id="ui-target"></select>
         </div>
       </div>
+      <div class="info-panel" id="ui-community-panel">
+        <label>Communities where this transition is a curated pathway:</label>
+        <div id="ui-community-pills" class="community-pills"></div>
+      </div>
     </div>
     <div class="figure-container" id="figure-container">
     </div>
   </div>
 
   <script>
-    let activeCd = '3532';
-    let activeSrc = '75101';
+        let activeSrc = 'default';
     let activeTgt = 'default';
     const CACHE = { PAIRS: null };
 
@@ -150,65 +196,56 @@
     };
 
     const COMM_NAMES = {
-      '1004': 'St. John\'s, NL',
-      '1303': 'Halifax, NS',
-      '2411': 'Gaspésie–Îles-de-la-Madeleine, QC',
-      '3532': 'Oxford, ON',
-      '4701': 'Wood Buffalo, AB',
-      '4816': 'Lethbridge, AB',
-      'PR61': 'Northwest Territories'
+      '1003': 'Div. 3, NL',
+      '3532': 'Oxford',
+      '3557': 'Algoma',
+      '4615': 'Div. 15, MB',
+      '4701': 'Div. 1, SK',
+      '4816': 'Div. 16, AB',
+      'PR61': 'NT'
     };
 
-    const uiCommunity = document.getElementById('ui-community');
     const uiSource = document.getElementById('ui-source');
     const uiTarget = document.getElementById('ui-target');
+    const uiCommunityPanel = document.getElementById('ui-community-panel');
+    const uiCommunityPills = document.getElementById('ui-community-pills');
 
     function populateControls(pairs) {
-      if (!uiCommunity || !uiSource || !uiTarget) return;
-
-      const cds = [...new Set(pairs.flatMap(p => p.communities))].sort();
-      let tempCd = activeCd;
-      uiCommunity.innerHTML = '';
-      cds.forEach(cd => {
-        const opt = document.createElement('option');
-        opt.value = cd;
-        opt.textContent = COMM_NAMES[cd] || cd;
-        if (cd === tempCd) opt.selected = true;
-        uiCommunity.appendChild(opt);
-      });
+      if (!uiSource || !uiTarget) return;
 
       function updateSources() {
-        const cd = uiCommunity.value;
-        const cdPairs = pairs.filter(p => p.communities.includes(cd));
         const srcMap = {};
-        cdPairs.forEach(p => { srcMap[p.source_noc] = p.source_label; });
+        pairs.forEach(p => { srcMap[p.source_noc] = p.source_label; });
         
         uiSource.innerHTML = '';
-        let foundActiveSrc = false;
+        const optDef = document.createElement('option');
+        optDef.value = 'default';
+        optDef.textContent = 'None selected (default view)';
+        uiSource.appendChild(optDef);
+
         Object.entries(srcMap).forEach(([noc, label]) => {
           const opt = document.createElement('option');
           opt.value = noc;
           opt.textContent = label;
-          if (noc === activeSrc) { opt.selected = true; foundActiveSrc = true; }
+          if (noc === activeSrc) { opt.selected = true; }
           uiSource.appendChild(opt);
         });
-        if (!foundActiveSrc && uiSource.options.length > 0) {
-          activeSrc = uiSource.options[0].value;
-          uiSource.options[0].selected = true;
-        }
       }
 
       function updateTargets() {
-        const cd = uiCommunity.value;
-        const src = uiSource.value;
-        const tgtPairs = pairs.filter(p => p.communities.includes(cd) && p.source_noc === src);
-        
         uiTarget.innerHTML = '';
-        const optDef = document.createElement('option');
-        optDef.value = 'default';
-        optDef.textContent = 'Default (Side-by-Side)';
-        uiTarget.appendChild(optDef);
-        
+        if (activeSrc === 'default') {
+          const optDef = document.createElement('option');
+          optDef.value = 'default';
+          optDef.textContent = 'Select a source to explore other curated pairs';
+          optDef.disabled = true;
+          optDef.selected = true;
+          uiTarget.appendChild(optDef);
+          activeTgt = 'default';
+          return;
+        }
+
+        const tgtPairs = pairs.filter(p => p.source_noc === activeSrc);
         let foundActiveTgt = false;
         tgtPairs.forEach(p => {
           const opt = document.createElement('option');
@@ -217,21 +254,15 @@
           if (p.target_noc === activeTgt) { opt.selected = true; foundActiveTgt = true; }
           uiTarget.appendChild(opt);
         });
-        if (!foundActiveTgt) {
-          activeTgt = 'default';
-          uiTarget.value = 'default';
+        
+        if (!foundActiveTgt && uiTarget.options.length > 0) {
+          activeTgt = uiTarget.options[0].value;
+          uiTarget.options[0].selected = true;
         }
       }
 
       updateSources();
       updateTargets();
-
-      uiCommunity.onchange = (e) => {
-        activeCd = e.target.value;
-        updateSources();
-        updateTargets();
-        renderPanels(pairs);
-      };
 
       uiSource.onchange = (e) => {
         activeSrc = e.target.value;
@@ -249,8 +280,26 @@
       const container = document.getElementById('figure-container');
       container.innerHTML = '';
 
+      // Handle Community Panel
+      uiCommunityPills.innerHTML = '';
+      if (activeSrc !== 'default') {
+        const srcPairs = allPairs.filter(p => p.source_noc === activeSrc);
+        const sourceComms = [...new Set(srcPairs.flatMap(p => p.communities))].sort();
+        
+        const activePair = srcPairs.find(p => p.target_noc === activeTgt);
+        const pairComms = activePair ? activePair.communities : [];
+
+        sourceComms.forEach(cd => {
+          if (pairComms.includes(cd)) {
+            const pill = document.createElement('div');
+            pill.className = 'comm-pill';
+            pill.textContent = COMM_NAMES[cd] || cd;
+            uiCommunityPills.appendChild(pill);
+          }
+        });
+      }
+
       const compact = window.isCompact && window.isCompact();
-      // Type/spacing constants; the desktop column is the approved-PNG state.
       const F = compact
         ? { label: 12, wrap: 15, lineH: 15, twoLineUp: 8, axis: 10, annot: 11.5, annotRca: 11,
             pill: 9, pillChar: 7, pillPad: 12, pillH: 16, pillY1: 24, pillY2: 34,
@@ -259,22 +308,27 @@
             pill: 7, pillChar: 5.5, pillPad: 10, pillH: 13, pillY1: 16, pillY2: 24,
             note: 8.5, noteLineH: 12, marginLeft: 120 };
 
-      let pairs = allPairs.filter(p => p.source_noc === activeSrc && p.communities.includes(activeCd));
-
-      if (activeTgt !== 'default') {
-        pairs = pairs.filter(p => p.target_noc === activeTgt);
+      let pairsToRender = [];
+      if (activeSrc === 'default') {
+        // Default view: 75101 -> 75110 and 73300 -> 72500
+        const p1 = allPairs.find(p => p.source_noc === '75101' && p.target_noc === '75110');
+        const p2 = allPairs.find(p => p.source_noc === '73300' && p.target_noc === '72500');
+        if (p1) pairsToRender.push(p1);
+        if (p2) pairsToRender.push(p2);
+        if (compact && pairsToRender.length > 0) pairsToRender = [pairsToRender[0]];
       } else {
-        pairs = pairs.slice(0, compact ? 1 : 2);
+        const p = allPairs.find(p => p.source_noc === activeSrc && p.target_noc === activeTgt);
+        if (p) pairsToRender.push(p);
       }
       
-      if (pairs.length === 0) {
+      if (pairsToRender.length === 0) {
         container.innerHTML = `<div style="padding: 20px; font-family: 'Inter', sans-serif; font-size: 14px; color: #666;">No gap highlighting data found for this pair.</div>`;
         reportSize();
         return;
       }
       
-      pairs.forEach((pair, pi) => {
-        // Create panel DOM
+      // DOM Pass: Create and append all panels first so flex layout settles
+      pairsToRender.forEach((pair, pi) => {
         const panel = document.createElement('div');
         panel.className = 'panel';
         panel.id = `panel-${pi}`;
@@ -282,17 +336,21 @@
           <div class="panel-header" id="header-${pi}">
             <div class="header-col source">
               <div class="header-role">Susceptible</div>
-              <div class="header-occ">${pair.source_label || pair.source}</div>
+              <div class="header-occ">${pair.source_label || pair.source_noc}</div>
             </div>
             <div class="header-col target">
               <div class="header-role">Viable</div>
-              <div class="header-occ">${pair.target_label || pair.target}</div>
+              <div class="header-occ">${pair.target_label || pair.target_noc}</div>
             </div>
           </div>
           <div class="chart-area"><svg id="chart-${pi}"></svg></div>
         `;
         container.appendChild(panel);
+      });
 
+      // SVG Pass: Calculate dimensions and draw charts
+      pairsToRender.forEach((pair, pi) => {
+        const panel = document.getElementById(`panel-${pi}`);
         // ── Chart sizing ──
         const area = panel.querySelector('.chart-area');
         const W = area.clientWidth || 320;
@@ -493,11 +551,26 @@
     window.addEventListener('message', e => {
       if (!e.data || e.data.type !== 'set-active-pair') return;
       let needsRender = false;
-      if (e.data.cd && e.data.cd !== activeCd) { activeCd = e.data.cd; needsRender = true; }
+      // We ignore community updates from outside since community is no longer a dropdown driver.
       if (e.data.src && e.data.src !== activeSrc) { activeSrc = e.data.src; needsRender = true; }
       if (e.data.tgt !== undefined && e.data.tgt !== activeTgt) { activeTgt = e.data.tgt; needsRender = true; }
       
-      if (needsRender && CACHE.PAIRS) renderPanels(CACHE.PAIRS);
+      if (needsRender && CACHE.PAIRS) {
+          if(activeSrc !== 'default') {
+              uiSource.value = activeSrc;
+              // we need to rebuild targets if source changed
+              const tgtPairs = CACHE.PAIRS.filter(p => p.source_noc === activeSrc);
+              uiTarget.innerHTML = '';
+              tgtPairs.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.target_noc;
+                opt.textContent = p.target_label;
+                if (p.target_noc === activeTgt) { opt.selected = true; }
+                uiTarget.appendChild(opt);
+              });
+          }
+          renderPanels(CACHE.PAIRS);
+      }
     });
 
     window.addEventListener('compactmodechange', () => { if (CACHE.PAIRS) renderPanels(CACHE.PAIRS); });

@@ -5,18 +5,20 @@
      or decisions here, STOP — absorb them into DECISIONS.md/README first. -->
 
 ## Task just completed
-Investigated why Figure I was defaulting to a single panel; confirmed it's because our recent filter refactoring removed the ability for the default/print version to cover two different communities side-by-side.
+Refactored Figure I (RCA bars) desktop UI. Replaced the Community dropdown with a dynamically populated info panel featuring "active" community pills matching Figure B's styling. Restored the two-panel default view for comparison and solved an SVG flex-width bug where rendering elements sequentially caused right-side clipping. 
 
 ## Delta
-- No files were modified during this session.
-- Investigated the pipeline and confirmed `pipeline/06_skill_gaps.py` correctly uses within-domain LQs and `lq_skills.csv` restricts gaps to the 35 O*NET Skills. 
-- Generated a script output to verify the strict `src < 1` and `tgt > 1` logic.
+- Modified `figure_data/dist/figures/I_skills_gap_bars.html` to implement the new header layout (`control-stack` + `info-panel`), updated `COMM_NAMES` mapping to use the correct abbreviation conventions from `B_suitable_heatmap`, and implemented a two-pass rendering cycle (DOM mount -> SVG render).
+- Appended UI and architectural decisions to `DECISIONS.md`.
 
 ## Trust state
-The data generation is verified and trustworthy. The presentation layer (Figure I) is currently bugged due to recent UI filter additions blocking its side-by-side community comparison logic.
+The data generation remains verified. The desktop presentation layer of Figure I is now structurally correct, but requires final polish. Mobile (compact) mode for Figure I is intentionally broken/deferred until desktop is fully signed off.
 
 ## Next task
-**Refactor Figure I:** Restore its default/print behavior. Add a dropdown option for the Community filter to enable the side-by-side layout, and adapt the other two dropdowns (Source/Target) to match this behavior.
+**Polish Figure I & Finalize Desktop:** 
+- Fix any remaining styling / assessment-notes condensing in Figure I.
+- Run font hygiene checks on it.
+- After desktop is completely locked in, tackle the mobile (compact) layout for Figure I.
 
 ## Watch out
-Watch out for the `.control-stack` layout added in the last session; you may need to adjust the CSS grid or flexbox in `theme.css` to accommodate the restored side-by-side logic without breaking the mobile (compact) layout.
+Watch out for the `.iframe-controls` height overriding and `.info-panel` flex ratios just added to `I_skills_gap_bars.html`. They work beautifully on desktop but will absolutely break the single-column stacking required in compact view.

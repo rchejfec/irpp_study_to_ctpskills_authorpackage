@@ -221,7 +221,11 @@ choices; pipeline/data divergences are above.
   author-directed). Keeps raw top-10 similarity **without a TEER window** — the
   heatmap is the pre-viability "suitable" pool; TEER is a downstream filter.
 - **Figure 5 (I RCA bars):** y-axis labels auto-wrap via `wrapLabel()` instead of
-  relying on hardcoded `\n` in the data.
+  relying on hardcoded `\n` in the data. The "Community" dropdown was replaced by an
+  info-panel of active community pills to match the heatmap (Figure B) styling, and the
+  default view was restored to a side-by-side comparison of two pairs. D3 rendering
+  was split into a two-pass layout (DOM mount then SVG draw) to ensure flex widths
+  evaluate correctly and prevent x-axis clipping in the default view.
 - **Figure 6 (J skills gaps):** Narrowed to the **Skills domain only** and pivoted
   to show **each community's top-3 Skills gaps** (was one gap per domain across all
   four). Reframes the figure from cross-community recurrence to local training

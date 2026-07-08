@@ -238,7 +238,7 @@
 
     function reportSize() {
       const c = document.querySelector('.figure-container');
-      if (c) parent.postMessage({ type: 'figure-sized', fig: 'B_suitable_heatmap', width: c.scrollWidth, height: c.scrollHeight }, '*');
+      if (c) parent.postMessage({ type: 'figure-sized', fig: 'B_suitable_heatmap', width: c.scrollWidth, height: document.querySelector('.dev-wrapper').scrollHeight }, '*');
     }
 
     // Listen for in-place metric switch from parent
@@ -265,7 +265,7 @@
             type: 'figure-sized',
             fig: fig,
             width: c.scrollWidth,
-            height: c.scrollHeight
+            height: document.querySelector('.dev-wrapper').scrollHeight
           }, '*');
         }
       }, 100);

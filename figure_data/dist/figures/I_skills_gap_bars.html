@@ -87,6 +87,22 @@
 
 <body>
   <div class="dev-wrapper">
+    <div class="iframe-controls">
+      <div class="control-group">
+        <label>Community</label>
+        <select id="ui-community"></select>
+      </div>
+      <div class="control-stack">
+        <div class="control-group">
+          <label>Source</label>
+          <select id="ui-source"></select>
+        </div>
+        <div class="control-group" id="ui-tgt-group">
+          <label>Target</label>
+          <select id="ui-target"></select>
+        </div>
+      </div>
+    </div>
     <div class="figure-container" id="figure-container">
     </div>
   </div>
@@ -132,6 +148,102 @@
       bodySec: s.getPropertyValue('--clr-body-secondary').trim(),
       bgMuted: s.getPropertyValue('--clr-bg-muted').trim(),
     };
+
+    const COMM_NAMES = {
+      '1004': 'St. John\'s, NL',
+      '1303': 'Halifax, NS',
+      '2411': 'Gaspésie–Îles-de-la-Madeleine, QC',
+      '3532': 'Oxford, ON',
+      '4701': 'Wood Buffalo, AB',
+      '4816': 'Lethbridge, AB',
+      'PR61': 'Northwest Territories'
+    };
+
+    const uiCommunity = document.getElementById('ui-community');
+    const uiSource = document.getElementById('ui-source');
+    const uiTarget = document.getElementById('ui-target');
+
+    function populateControls(pairs) {
+      if (!uiCommunity || !uiSource || !uiTarget) return;
+
+      const cds = [...new Set(pairs.flatMap(p => p.communities))].sort();
+      let tempCd = activeCd;
+      uiCommunity.innerHTML = '';
+      cds.forEach(cd => {
+        const opt = document.createElement('option');
+        opt.value = cd;
+        opt.textContent = COMM_NAMES[cd] || cd;
+        if (cd === tempCd) opt.selected = true;
+        uiCommunity.appendChild(opt);
+      });
+
+      function updateSources() {
+        const cd = uiCommunity.value;
+        const cdPairs = pairs.filter(p => p.communities.includes(cd));
+        const srcMap = {};
+        cdPairs.forEach(p => { srcMap[p.source_noc] = p.source_label; });
+        
+        uiSource.innerHTML = '';
+        let foundActiveSrc = false;
+        Object.entries(srcMap).forEach(([noc, label]) => {
+          const opt = document.createElement('option');
+          opt.value = noc;
+          opt.textContent = label;
+          if (noc === activeSrc) { opt.selected = true; foundActiveSrc = true; }
+          uiSource.appendChild(opt);
+        });
+        if (!foundActiveSrc && uiSource.options.length > 0) {
+          activeSrc = uiSource.options[0].value;
+          uiSource.options[0].selected = true;
+        }
+      }
+
+      function updateTargets() {
+        const cd = uiCommunity.value;
+        const src = uiSource.value;
+        const tgtPairs = pairs.filter(p => p.communities.includes(cd) && p.source_noc === src);
+        
+        uiTarget.innerHTML = '';
+        const optDef = document.createElement('option');
+        optDef.value = 'default';
+        optDef.textContent = 'Default (Side-by-Side)';
+        uiTarget.appendChild(optDef);
+        
+        let foundActiveTgt = false;
+        tgtPairs.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.target_noc;
+          opt.textContent = p.target_label;
+          if (p.target_noc === activeTgt) { opt.selected = true; foundActiveTgt = true; }
+          uiTarget.appendChild(opt);
+        });
+        if (!foundActiveTgt) {
+          activeTgt = 'default';
+          uiTarget.value = 'default';
+        }
+      }
+
+      updateSources();
+      updateTargets();
+
+      uiCommunity.onchange = (e) => {
+        activeCd = e.target.value;
+        updateSources();
+        updateTargets();
+        renderPanels(pairs);
+      };
+
+      uiSource.onchange = (e) => {
+        activeSrc = e.target.value;
+        updateTargets();
+        renderPanels(pairs);
+      };
+
+      uiTarget.onchange = (e) => {
+        activeTgt = e.target.value;
+        renderPanels(pairs);
+      };
+    }
 
     function renderPanels(allPairs) {
       const container = document.getElementById('figure-container');
@@ -356,11 +468,15 @@
 
     function reportSize() {
       const c = document.querySelector('.figure-container');
-      if (c) parent.postMessage({ type: 'figure-sized', fig: 'I_skills_gap_bars', width: c.scrollWidth, height: c.scrollHeight }, '*');
+      const ctrls = document.querySelector('.iframe-controls');
+      let h = document.querySelector('.dev-wrapper').scrollHeight;
+      
+      if (c) parent.postMessage({ type: 'figure-sized', fig: 'I_skills_gap_bars', width: c.scrollWidth, height: h }, '*');
     }
 
     function loadAndRender() {
       if (CACHE.PAIRS) {
+        populateControls(CACHE.PAIRS);
         renderPanels(CACHE.PAIRS);
         return;
       }
@@ -368,6 +484,7 @@
         .then(r => r.json())
         .then(DATA => {
           CACHE.PAIRS = DATA.pairs;
+          populateControls(CACHE.PAIRS);
           renderPanels(CACHE.PAIRS);
         });
     }
@@ -395,13 +512,16 @@
     window.addEventListener('load', () => {
       setTimeout(() => {
         const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+        const ctrls = document.querySelector('.iframe-controls');
+        let h = document.querySelector('.dev-wrapper').scrollHeight;
+        
         if (c) {
           const fig = location.pathname.split('/').pop().replace('.html', '');
           parent.postMessage({
             type: 'figure-sized',
             fig: fig,
             width: c.scrollWidth,
-            height: c.scrollHeight
+            height: h
           }, '*');
         }
       }, 100);

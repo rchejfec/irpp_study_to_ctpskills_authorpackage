@@ -188,6 +188,16 @@
 
 <body>
   <div class="dev-wrapper">
+    <div class="iframe-controls">
+      <div class="control-group">
+        <label>Community</label>
+        <select id="ui-community"></select>
+      </div>
+      <div class="control-group">
+        <label>Source</label>
+        <select id="ui-source"></select>
+      </div>
+    </div>
     <div class="figure-container">
       <div class="cols-left" id="grid-left"></div>
       <div class="col-right" id="grid-right"></div>
@@ -516,8 +526,61 @@
     let activeCd = '3532';
     let activeSrc = '75101';
 
+    const uiCommunity = document.getElementById('ui-community');
+    const uiSource = document.getElementById('ui-source');
+
+    function populateControls(FULL_DATA) {
+      if (!uiCommunity || !uiSource) return;
+      
+      let tempCd = activeCd;
+      uiCommunity.innerHTML = '';
+      for (const cd in FULL_DATA) {
+        const firstSrc = Object.keys(FULL_DATA[cd])[0];
+        const opt = document.createElement('option');
+        opt.value = cd;
+        opt.textContent = FULL_DATA[cd][firstSrc].community;
+        if (cd === tempCd) opt.selected = true;
+        uiCommunity.appendChild(opt);
+      }
+      
+      function updateSources() {
+        uiSource.innerHTML = '';
+        const cd = uiCommunity.value;
+        const sources = FULL_DATA[cd];
+        let foundActive = false;
+        for (const src in sources) {
+          const opt = document.createElement('option');
+          opt.value = src;
+          opt.textContent = sources[src].source_label;
+          if (src === activeSrc) {
+            opt.selected = true;
+            foundActive = true;
+          }
+          uiSource.appendChild(opt);
+        }
+        if (!foundActive && uiSource.options.length > 0) {
+          activeSrc = uiSource.options[0].value;
+          uiSource.options[0].selected = true;
+        }
+      }
+      
+      updateSources();
+
+      uiCommunity.onchange = (e) => {
+        activeCd = e.target.value;
+        updateSources();
+        buildWalkthrough(FULL_DATA[activeCd][activeSrc]);
+      };
+
+      uiSource.onchange = (e) => {
+        activeSrc = e.target.value;
+        buildWalkthrough(FULL_DATA[activeCd][activeSrc]);
+      };
+    }
+
     function loadAndRender(metric) {
       if (CACHE[metric]) { 
+        populateControls(CACHE[metric]);
         buildWalkthrough(CACHE[metric][activeCd][activeSrc]); 
         return; 
       }
@@ -525,13 +588,17 @@
         .then(r => r.json())
         .then(DATA => { 
           CACHE[metric] = DATA; 
+          populateControls(DATA);
           buildWalkthrough(DATA[activeCd][activeSrc]); 
         });
     }
 
     function reportSize() {
       const c = document.querySelector('.figure-container');
-      if (c) parent.postMessage({ type: 'figure-sized', fig: 'D_walkthrough', width: c.scrollWidth, height: c.scrollHeight }, '*');
+      const ctrls = document.querySelector('.iframe-controls');
+      let h = document.querySelector('.dev-wrapper').scrollHeight;
+      
+      if (c) parent.postMessage({ type: 'figure-sized', fig: 'D_walkthrough', width: c.scrollWidth, height: h }, '*');
     }
 
     // Listen for in-place metric switch or active pair switch from parent
@@ -564,13 +631,16 @@
     window.addEventListener('load', () => {
       setTimeout(() => {
         const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+        const ctrls = document.querySelector('.iframe-controls');
+        let h = document.querySelector('.dev-wrapper').scrollHeight;
+        
         if (c) {
           const fig = location.pathname.split('/').pop().replace('.html', '');
           parent.postMessage({
             type: 'figure-sized',
             fig: fig,
             width: c.scrollWidth,
-            height: c.scrollHeight
+            height: h
           }, '*');
         }
       }, 100);

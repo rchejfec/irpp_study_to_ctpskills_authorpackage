@@ -230,6 +230,7 @@ body {
 .dev-wrapper {
   background: #e8e8e8;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -353,6 +354,93 @@ body {
 
 
 /* ══════════════════════════════════════════════════════════════
+   IFRAME CONTROLS (Dropdowns inside figures)
+   ══════════════════════════════════════════════════════════════ */
+
+.iframe-controls {
+  display: flex;
+  gap: var(--sp-12);
+  padding: var(--sp-8) var(--sp-16);
+  background: var(--clr-bg);
+  border-radius: 4px 4px 0 0;
+  margin-bottom: 0;
+  width: var(--fig-width);
+  align-items: flex-start;
+}
+
+.iframe-controls--wide {
+  width: var(--fig-width-wide);
+}
+
+.iframe-controls--tall {
+  width: var(--fig-width-tall);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+}
+
+.control-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  flex: 1;
+}
+
+.control-stack .control-group {
+  width: 100%;
+}
+
+.control-stack .control-group select {
+  flex: 1;
+  max-width: 100%;
+}
+
+.control-group label {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-bold);
+  color: var(--clr-heading);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-uppercase);
+}
+
+.control-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: var(--clr-bg);
+  border: 1px solid var(--clr-border);
+  border-radius: 3px;
+  padding: var(--sp-4) var(--sp-24) var(--sp-4) var(--sp-8);
+  font-family: var(--font-primary);
+  font-size: var(--fs-body-lg);
+  color: var(--clr-body);
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004667' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 14px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.control-group select:hover {
+  border-color: var(--clr-border-strong);
+}
+
+.control-group select:focus {
+  border-color: var(--irpp-teal);
+  box-shadow: 0 0 0 1px var(--irpp-teal);
+}
+
+html.compact .iframe-controls {
+  width: 100%;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
    PRINT EXPORT HELPERS
    Used by the Puppeteer export script to isolate the figure.
    ══════════════════════════════════════════════════════════════ */
@@ -389,7 +477,7 @@ body.export-mode .dev-label {
     padding: 0 !important;
     min-height: auto !important;
   }
-  .dev-label {
+  .dev-label, .iframe-controls {
     display: none !important;
   }
 }

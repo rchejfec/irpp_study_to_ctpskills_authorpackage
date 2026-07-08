@@ -87,10 +87,6 @@
     <div class="figure-block" id="block-f2">
       <div class="figure-header">
         <strong>Figure F2: Filtering Funnel</strong>
-        <div class="controls">
-          <select class="cd-select"></select>
-          <select class="src-select"></select>
-        </div>
       </div>
       <iframe id="frame-f2" src="figures/F2_filtering.html"></iframe>
     </div>
@@ -98,10 +94,6 @@
     <div class="figure-block" id="block-d">
       <div class="figure-header">
         <strong>Figure D: Walkthrough</strong>
-        <div class="controls">
-          <select class="cd-select"></select>
-          <select class="src-select"></select>
-        </div>
       </div>
       <iframe id="frame-d" src="figures/D_walkthrough.html"></iframe>
     </div>
@@ -109,11 +101,6 @@
     <div class="figure-block" id="block-i">
       <div class="figure-header">
         <strong>Figure I: Skills Gap Bars</strong>
-        <div class="controls">
-          <select class="cd-select"></select>
-          <select class="src-select"></select>
-          <select class="tgt-select" style="display:none;"></select>
-        </div>
       </div>
       <iframe id="frame-i" src="figures/I_skills_gap_bars.html"></iframe>
     </div>
@@ -136,7 +123,6 @@
     <div class="figure-block" id="block-e">
       <div class="figure-header">
         <strong>Figure E: Viable Table</strong>
-        <div class="controls"><select id="e-cd-select"></select></div>
       </div>
       <iframe id="frame-e" src="figures/E_viable_table.html"></iframe>
     </div>
@@ -162,139 +148,7 @@
       document.body.classList.toggle('phone-preview', e.target.value === 'phone');
     });
 
-    let DATA = null;
-    let I_DATA = null;
-
-    Promise.all([
-      fetch('data/D_walkthrough.all.cosine.json').then(r => r.json()),
-      fetch('data/I_skills_gap_bars.json').then(r => r.json())
-    ]).then(([dData, iData]) => {
-      DATA = dData;
-      I_DATA = iData;
-      // Wait a small beat for iframes to load
-      setTimeout(() => {
-        setupBlock('block-f2', 'frame-f2');
-        setupBlock('block-d', 'frame-d');
-        setupBlock('block-i', 'frame-i', true);
-        setupCommunityOnly('e-cd-select', 'frame-e', '4701');
-      }, 500);
-    });
-
-    function setupBlock(blockId, frameId, isFigureI = false) {
-      const block = document.getElementById(blockId);
-      const frame = document.getElementById(frameId);
-      const cdSelect = block.querySelector('.cd-select');
-      const srcSelect = block.querySelector('.src-select');
-      const tgtSelect = block.querySelector('.tgt-select');
-
-      let currentCd = '3532';
-      let currentSrc = '75101';
-      let currentTgt = 'default';
-
-      function populateCommunities() {
-        cdSelect.innerHTML = '';
-        for (const cd in DATA) {
-          const firstSrc = Object.keys(DATA[cd])[0];
-          const name = DATA[cd][firstSrc].community;
-          const opt = document.createElement('option');
-          opt.value = cd;
-          opt.textContent = name;
-          if (cd === currentCd) opt.selected = true;
-          cdSelect.appendChild(opt);
-        }
-      }
-
-      function populateSources(cd) {
-        srcSelect.innerHTML = '';
-        const sources = DATA[cd];
-        for (const src in sources) {
-          const name = sources[src].source_label;
-          const opt = document.createElement('option');
-          opt.value = src;
-          opt.textContent = name;
-          if (src === currentSrc) opt.selected = true;
-          srcSelect.appendChild(opt);
-        }
-        if (!sources[currentSrc]) {
-          currentSrc = Object.keys(sources)[0];
-          srcSelect.value = currentSrc;
-        }
-      }
-
-      function populateTargets(cd, src) {
-        if (!tgtSelect || !I_DATA) return;
-        tgtSelect.innerHTML = '';
-        const optDef = document.createElement('option');
-        optDef.value = 'default';
-        optDef.textContent = 'Default (Side-by-Side)';
-        tgtSelect.appendChild(optDef);
-        
-        const pairs = I_DATA.pairs.filter(p => p.source_noc === src && p.communities.includes(cd));
-        for (const p of pairs) {
-          const opt = document.createElement('option');
-          opt.value = p.target_noc;
-          opt.textContent = p.target_label;
-          tgtSelect.appendChild(opt);
-        }
-        if (currentTgt !== 'default' && !pairs.find(p => p.target_noc === currentTgt)) {
-          currentTgt = 'default';
-        }
-        tgtSelect.value = currentTgt;
-        
-        if (pairs.length > 0) {
-          tgtSelect.style.display = 'inline-block';
-        } else {
-          tgtSelect.style.display = 'none';
-        }
-      }
-
-      function updateIframe() {
-        const msg = { type: 'set-active-pair', cd: currentCd, src: currentSrc, tgt: currentTgt };
-        frame.contentWindow.postMessage(msg, '*');
-      }
-
-      cdSelect.addEventListener('change', e => {
-        currentCd = e.target.value;
-        populateSources(currentCd);
-        if (isFigureI) populateTargets(currentCd, currentSrc);
-        updateIframe();
-      });
-
-      srcSelect.addEventListener('change', e => {
-        currentSrc = e.target.value;
-        if (isFigureI) populateTargets(currentCd, currentSrc);
-        updateIframe();
-      });
-
-      if (tgtSelect) {
-        tgtSelect.addEventListener('change', e => {
-          currentTgt = e.target.value;
-          updateIframe();
-        });
-      }
-
-      populateCommunities();
-      populateSources(currentCd);
-      if (isFigureI) populateTargets(currentCd, currentSrc);
-      updateIframe();
-    }
-
-    function setupCommunityOnly(selectId, frameId, defaultCd) {
-      const sel = document.getElementById(selectId);
-      const frame = document.getElementById(frameId);
-      sel.innerHTML = '';
-      for (const cd in DATA) {
-        const firstSrc = Object.keys(DATA[cd])[0];
-        const opt = document.createElement('option');
-        opt.value = cd;
-        opt.textContent = DATA[cd][firstSrc].community;
-        if (cd === defaultCd) opt.selected = true;
-        sel.appendChild(opt);
-      }
-      sel.addEventListener('change', e => {
-        frame.contentWindow.postMessage({ type: 'set-active-pair', cd: e.target.value }, '*');
-      });
-    }
+    // External controls removed; iframes now handle their own dropdowns.
 
     window.addEventListener('message', e => {
       if (e.data && e.data.type === 'figure-sized') {

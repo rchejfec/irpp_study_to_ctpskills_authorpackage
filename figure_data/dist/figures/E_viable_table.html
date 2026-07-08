@@ -122,6 +122,12 @@
 </head>
 <body>
 <div class="dev-wrapper">
+  <div class="iframe-controls">
+    <div class="control-group">
+      <label>Community</label>
+      <select id="ui-community"></select>
+    </div>
+  </div>
   <div class="figure-container">
     <div class="community-header" id="comm-name">Loading…</div>
     <div class="table-wrap">
@@ -224,17 +230,48 @@
     if (comm) build(comm);
   }
 
+  const uiCommunity = document.getElementById('ui-community');
+  function populateControls(keyed) {
+    if (!uiCommunity) return;
+    
+    let tempCd = activeCd;
+    uiCommunity.innerHTML = '';
+    for (const cd in keyed) {
+      const opt = document.createElement('option');
+      opt.value = cd;
+      opt.textContent = keyed[cd].community;
+      if (cd === tempCd) opt.selected = true;
+      uiCommunity.appendChild(opt);
+    }
+    
+    uiCommunity.onchange = (e) => {
+      activeCd = e.target.value;
+      tryRender(keyed);
+    };
+  }
+
   function loadAndRender(metric, pick) {
     const key = cacheKey(metric, pick);
-    if (CACHE[key]) { tryRender(CACHE[key]); return; }
+    if (CACHE[key]) { 
+      populateControls(CACHE[key]);
+      tryRender(CACHE[key]); 
+      return; 
+    }
     fetch(`../data/E_viable_table.all.${pick}.${metric}.json`)
       .then(r => r.json())
-      .then(DATA => { CACHE[key] = DATA; tryRender(DATA); });
+      .then(DATA => { 
+        CACHE[key] = DATA; 
+        populateControls(DATA);
+        tryRender(DATA); 
+      });
   }
 
   function reportSize() {
     const c = document.querySelector('.figure-container');
-    if (c) parent.postMessage({ type: 'figure-sized', fig: 'E_viable_table', width: c.scrollWidth, height: c.scrollHeight }, '*');
+    const ctrls = document.querySelector('.iframe-controls');
+    let h = document.querySelector('.dev-wrapper').scrollHeight;
+    
+    if (c) parent.postMessage({ type: 'figure-sized', fig: 'E_viable_table', width: c.scrollWidth, height: h }, '*');
   }
 
   // Listen for in-place metric, pick, or community switch from parent
@@ -279,13 +316,16 @@
     window.addEventListener('load', () => {
       setTimeout(() => {
         const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+        const ctrls = document.querySelector('.iframe-controls');
+        let h = document.querySelector('.dev-wrapper').scrollHeight;
+        
         if (c) {
           const fig = location.pathname.split('/').pop().replace('.html', '');
           parent.postMessage({
             type: 'figure-sized',
             fig: fig,
             width: c.scrollWidth,
-            height: c.scrollHeight
+            height: h
           }, '*');
         }
       }, 100);

@@ -143,6 +143,16 @@
 
 <body>
   <div class="dev-wrapper">
+    <div class="iframe-controls">
+      <div class="control-group">
+        <label>Community</label>
+        <select id="ui-community"></select>
+      </div>
+      <div class="control-group">
+        <label>Source</label>
+        <select id="ui-source"></select>
+      </div>
+    </div>
     <div class="figure-container">
       <div class="context-strip">
         For each susceptible occupation, we first identify skill-similar alternatives across all Canadian occupations.
@@ -225,6 +235,61 @@
     const CACHE = {};
     let activeCd = '3532';
     let activeSrc = '75101';
+
+    const uiCommunity = document.getElementById('ui-community');
+    const uiSource = document.getElementById('ui-source');
+
+    function populateControls(FULL_DATA) {
+      if (!uiCommunity || !uiSource) return;
+      
+      let tempCd = activeCd;
+      uiCommunity.innerHTML = '';
+      for (const cd in FULL_DATA) {
+        const opt = document.createElement('option');
+        opt.value = cd;
+        opt.textContent = FULL_DATA[cd].community;
+        if (cd === tempCd) { opt.selected = true; }
+        uiCommunity.appendChild(opt);
+      }
+      
+      function updateSources() {
+        uiSource.innerHTML = '';
+        const cd = uiCommunity.value;
+        const sources = FULL_DATA[cd].sources;
+        let foundActive = false;
+        sources.forEach(srcObj => {
+          const opt = document.createElement('option');
+          opt.value = srcObj.noc;
+          opt.textContent = srcObj.label;
+          if (srcObj.noc === activeSrc) {
+            opt.selected = true;
+            foundActive = true;
+          }
+          uiSource.appendChild(opt);
+        });
+        if (!foundActive && uiSource.options.length > 0) {
+          activeSrc = uiSource.options[0].value;
+          uiSource.options[0].selected = true;
+        }
+      }
+      
+      updateSources();
+      
+      // Ensure global state matches the actual UI state after populate
+      activeCd = uiCommunity.value;
+      activeSrc = uiSource.value;
+
+      uiCommunity.onchange = (e) => {
+        activeCd = e.target.value;
+        updateSources();
+        tryRender(FULL_DATA);
+      };
+
+      uiSource.onchange = (e) => {
+        activeSrc = e.target.value;
+        tryRender(FULL_DATA);
+      };
+    }
 
     function renderPanels(DATA) {
       // Dynamic header text
@@ -511,6 +576,7 @@
 
     function loadAndRender(metric) {
       if (CACHE[metric]) { 
+        populateControls(CACHE[metric]);
         tryRender(CACHE[metric]); 
         return; 
       }
@@ -519,13 +585,17 @@
         .then(DATA => { 
           const actualData = DATA.data ? DATA.data : DATA;
           CACHE[metric] = actualData; 
+          populateControls(actualData);
           tryRender(actualData); 
         });
     }
 
     function reportSize() {
       const c = document.querySelector('.figure-container');
-      if (c) parent.postMessage({ type: 'figure-sized', fig: 'F2_filtering', width: c.scrollWidth, height: c.scrollHeight }, '*');
+      const ctrls = document.querySelector('.iframe-controls');
+      let h = document.querySelector('.dev-wrapper').scrollHeight;
+      
+      if (c) parent.postMessage({ type: 'figure-sized', fig: 'F2_filtering', width: c.scrollWidth, height: h }, '*');
     }
 
     // Listen for in-place metric switch or pair switch from parent
@@ -558,13 +628,16 @@
     window.addEventListener('load', () => {
       setTimeout(() => {
         const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+        const ctrls = document.querySelector('.iframe-controls');
+        let h = document.querySelector('.dev-wrapper').scrollHeight;
+        
         if (c) {
           const fig = location.pathname.split('/').pop().replace('.html', '');
           parent.postMessage({
             type: 'figure-sized',
             fig: fig,
             width: c.scrollWidth,
-            height: c.scrollHeight
+            height: h
           }, '*');
         }
       }, 100);

@@ -9,6 +9,15 @@ Viable → Skill gaps, for 7 Canadian communities. It is a clean re-build of the
 working repo `study_TO26_replication`, keeping only what feeds the final report
 and figures, and correcting issues found along the way.
 
+- `output/` is gitignored and regenerable; `data/` is inputs only, copied from
+  `study_TO26_replication` @ 2026-07-01 and stamped in `data/PROVENANCE.md` —
+  this repo is now the canonical holder (upstream is superseded), so data
+  fixes land here, not there.
+- **Export directory standard:** The canonical, approved figure PNGs are generated
+  into `figure_data/dist/exports/` via the Puppeteer script (`bun export.mjs`).
+  The older secondary screenshots folder was archived to `archive/old_exports/`
+  on 2026-07-08 to prevent version drift.
+
 ---
 
 ## Dual metric: cosine AND euclidean, in parallel

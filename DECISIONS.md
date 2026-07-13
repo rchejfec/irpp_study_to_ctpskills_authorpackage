@@ -177,6 +177,20 @@ ascending for reproducibility.
   they called "comparable" → aspirational. Verified: all Estevan picks match the
   final E figure's comparable/extensive split; all 96 picks' TEERs match the
   authoritative lookup exactly.
+- **Walkthrough visual coloring alignment (July 2026)**:
+  To match the pipeline's TEER gates (`delta ∈ [-2, +1]` and `candidate_teer ≥ 2`), the frontend walkthrough (`D_walkthrough.html`) maps the TEER dot colors and row highlights as follows:
+  * **Green (Pass - Comparable)**: `delta == 0` or `delta == 1`.
+  * **Yellow (Pass - Aspirational)**: `delta < 0` (which matches the permitted upskilling levels `-1` and `-2`).
+  * **Red (Fail)**: `delta < -2` or `delta > 1` or `candidate_teer < 2`.
+  * **Row highlights (`allGreen` check)**: Configured to check `f.teer !== 'red'`, ensuring both green (comparable) and yellow (aspirational) passing transitions get the viability highlight.
+- **Walkthrough notes and tooltip refinements (July 2026)**:
+  * **Wording**: Aspirational highlights (`delta < 0`) are prefixed with `Viable but may require additional training or credentials: ` instead of the old inline phrase.
+  * **Failure Grouping**: Non-viable candidates are grouped under `"Not viable: <reason>"` (e.g. `"Not viable: low earnings"`). For TEER failures, this is split into `"Not viable: requires significant additional training"` (if delta < 0 or candidate_teer < 2) and `"Not viable: typical training requirements are lower"` (if delta > 1). All qualitative failures (susceptible sector and local presence) are combined into one single group: `"Not viable: no local presence and/or lack of alignment with simulated community review*"`.
+  * **Qualitative Circle Color**: Qualitative failures (no local presence and/or susceptible sector) are mapped to a red circle (fail) instead of yellow/warning.
+  * **Group Collapsing**: If the number of listed qualitative notes/groups in a pair view exceeds 5, the two tiers of viability (Comparable and Aspirational) are collapsed together under the prefix `"Viable or may require additional training/credentials: "` to prevent vertical overflow.
+  * **Note Title Formatting**: If a note contains more than 3 occupations, the title renders as `occupation 1, occupation 2, and N more`.
+  * **Tooltips**: Individual title tooltips are removed in favor of a single dotted-underline tooltip on the entire note title. The tooltip triggers a richly formatted inline list showing all occupations with their NOC code, full name, and rank: `<strong>NOC <noc>:</strong> <full_title> <span style="opacity:0.8; font-style:italic;">(#<rank>)</span>` divided by middle dots in a smaller `7.5px` font.
+  * **Screening Circle Tooltips**: Dotted-underline tooltips are bound to all 5 viability screening circles (TEER, Wage, COPS, AI, Qual.) displaying the actual values and context determining pass/fail, along with the provincial worker count.
 
 ## Step 6 — Skill gaps (Location Quotient / RCA)
 
@@ -247,6 +261,7 @@ choices; pipeline/data divergences are above.
   **paired source/target LQ bars** on a shared scale with a dashed RCA = 1.0
   reference, mirroring Figure 5. Header occupation names carry the bar colours
   (source red, target teal) as the legend.
+  - **Dynamic Assessment Notes & Tooltips (July 2026):** Notes in the right-hand panel are grouped by their ultimate note text. Curated occupation labels are shortened, and full names are shown via secondary tooltips. Static community context (stored in `data/reference/community_tooltips.json`) and specific curated rationales (from `data/reference/viable_selections.csv`) are merged and displayed via Tippy.js tooltips triggered by the `"community"` or `"community review"` text.
 - **Appendix (K):** A comprehensive companion showing every community × susceptible
   occupation's top-10 viable-or-handpicked candidates against the five viability
   screens. Collapsible per occupation.
@@ -361,6 +376,36 @@ profiles.
 
 ---
 
+## Print-sizing width reduction (July 2026)
+
+Layout coordinator feedback: figures must fit a narrower print column. A 30%
+uniform scale-down was investigated and rejected — it pushes the smallest fonts
+(6.5px → ~3.4pt) below the print legibility floor.
+
+**Agreed parameters (2026-07-13):**
+- **Width:** 680 → **550px** (≈19% reduction). This is the standard figure
+  width (`--fig-width`). Wide and tall variants scale proportionally.
+- **Font floors:** **7pt** for content text; **6pt** for decorative text
+  (all-caps labels, bold attribute headers) — only where needed.
+- **Single source:** Figures are modified in-place at 550px. Both the web
+  (hosted interactive) and print (PNG export) use the same HTML.
+  No fork/dual-source.
+- **Compact breakpoint:** Lowered from 640px to **~440px** (phone-only),
+  since 550px desktop width is now below the old trigger.
+- **Safety:** Git snapshot before the global change; existing
+  `dist/exports/*.png` kept as the before-reference; previous CSS values
+  commented inline.
+- **Workflow:** Global `theme.css` change first, then per-figure polish pass
+  (heights, spacing, hardcoded px, copy tightening) one at a time with RC.
+
+A3 was prototyped in a throwaway `dist/print/` sandbox to validate
+feasibility. Key learnings: the sidebar needed an 18% width cut, padding
+removal, and copy condensing (shorter community descriptions) to avoid text
+overflow. Font sizes were bumped *up* (6.5→7, 5.5→6) rather than down. Full
+trial record in `figure_data/PRINT_SIZING.md`.
+
+---
+
 ## Known data-quality notes
 
 - The reviseddraft abstract says **"16 occupations"**; the authors' Appendix A has
@@ -372,3 +417,4 @@ profiles.
 - NWT territorial data is sparse: several NOCs are suppressed (small counts), so
   presence/earnings screens are inconclusive there. The 6 remaining override
   rationales note this.
+

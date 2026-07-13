@@ -129,6 +129,25 @@
     .qual-callout { margin-top: auto; padding: 5px 8px; background: var(--clr-bg-muted); border-radius: 3px; border-left: 3px solid var(--irpp-navy); }
     .qual-callout p { font-size: 7.5px; color: #444; line-height: 1.5; font-style: italic; margin: 0; }
 
+    .tt-trigger {
+      text-decoration: underline dotted #27ae60;
+      font-weight: 600;
+      cursor: pointer;
+      color: inherit;
+    }
+    .tt-trigger:hover {
+      color: #219653;
+    }
+    .occ-title-tt {
+      text-decoration: underline dotted #888;
+      cursor: help;
+    }
+    .tt-comm-box { padding: 4px; }
+    .tt-comm-title { font-weight: 700; font-size: 8.5px; margin-bottom: 4px; color: var(--irpp-navy); }
+    .tt-comm-text { color: #444; font-size: 7.5px; line-height: 1.4; }
+    .tt-divider { margin: 6px 0; border: 0; border-top: 1px solid #e5e7eb; }
+    .tt-value-small { font-size: 7.5px; }
+
     /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
        stacked single column; similarity bars and the 5-screen dot matrix
        merge into one candidate list (top 7); assessment notes trimmed to
@@ -248,7 +267,118 @@
           appendTo: document.body,
         });
       });
+
+      // Dynamic community review tooltips
+      document.querySelectorAll('.tt-trigger').forEach(el => {
+        if (el._tippy) el._tippy.destroy();
+        const cd = el.getAttribute('data-tt-cd');
+        const ratHtml = el.getAttribute('data-tt-rat') || '';
+        const basePara = COMMUNITY_TOOLTIPS[cd] || 'Local community profile context.';
+        
+        let content = `<div class="tt-comm-box">`;
+        content += `<div class="tt-comm-title">Simulated Community Review</div>`;
+        content += `<div class="tt-comm-text">${basePara}</div>`;
+        if (ratHtml) {
+          content += ratHtml;
+        }
+        content += `</div>`;
+        
+        tippy(el, {
+          theme: 'irpp',
+          animation: 'shift-away',
+          content: content,
+          allowHTML: true,
+          interactive: true,
+          trigger: 'click mouseenter',
+          appendTo: document.body,
+        });
+      });
+
+      // Occupation title tooltips
+      document.querySelectorAll('.occ-title-tt').forEach(el => {
+        if (el._tippy) el._tippy.destroy();
+        tippy(el, {
+          theme: 'irpp',
+          animation: 'shift-away',
+          content: `<div class="tt-value tt-value-small">${el.getAttribute('data-tippy-content')}</div>`,
+          allowHTML: true,
+          placement: 'top',
+          appendTo: document.body,
+        });
+      });
+
+      // Screen dot tooltips
+      document.querySelectorAll('.screen-dot').forEach(el => {
+        if (el._tippy) el._tippy.destroy();
+        tippy(el, {
+          theme: 'irpp',
+          animation: 'shift-away',
+          content: `<div class="tt-value tt-value-small">${el.getAttribute('data-tippy-content')}</div>`,
+          allowHTML: true,
+          placement: 'top',
+          appendTo: document.body,
+        });
+      });
     }
+
+    function getDotTooltip(col, c, t) {
+      const parts = [];
+      const prW = c.pr_workers != null ? Math.round(c.pr_workers).toLocaleString() : '0';
+      parts.push(`<strong>Provincial workers:</strong> ${prW}`);
+      
+      const sl = t.source_lmi || {};
+      const srcInc = sl.pr_income || 0;
+      
+      if (col === 'teer') {
+        const delta = c.teer - t.source_teer;
+        let deltaText = '';
+        if (delta === 0) {
+          deltaText = 'same level of educational requirements';
+        } else if (delta > 0) {
+          deltaText = `${delta} level(s) less of educational requirements`;
+        } else {
+          deltaText = `${Math.abs(delta)} level(s) more of educational requirements`;
+        }
+        parts.push(`<strong>TEER ${c.teer}:</strong> ${deltaText}`);
+      } else if (col === 'wages') {
+        const wRatio = srcInc > 0 ? c.pr_income / srcInc : 0;
+        const pct = Math.round(Math.abs(wRatio - 1) * 100);
+        const rel = wRatio >= 1.0 ? 'higher' : 'lower';
+        const incomeStr = c.pr_income != null ? '$' + Math.round(c.pr_income).toLocaleString() : '—';
+        if (srcInc > 0) {
+          parts.push(`<strong>Income:</strong> ${incomeStr} (${pct}% ${rel} than source)`);
+        } else {
+          parts.push(`<strong>Income:</strong> ${incomeStr}`);
+        }
+      } else if (col === 'cops') {
+        parts.push(`<strong>COPS outlook:</strong> ${c.cops || 'Unknown'}`);
+      } else if (col === 'ai') {
+        parts.push(`<strong>AI exposure:</strong> ${c.ai || 'Unknown'}`);
+      } else if (col === 'qual') {
+        const reasons = [];
+        if (c.screen_local_presence === false) {
+          reasons.push('No local workers');
+        }
+        if (c.screen_susceptible === false) {
+          reasons.push('Lack of alignment with simulated community review');
+        }
+        if (reasons.length === 0) {
+          reasons.push('Passed qualitative review');
+        }
+        parts.push(`<strong>Qualitative:</strong> ${reasons.join(' & ')}`);
+      }
+      return parts.join('<hr class="tt-divider">');
+    }
+
+    const COMMUNITY_TOOLTIPS = {
+      "1003": "Division No. 3 relies heavily on maritime transport (such as regional ferry operations) and marine harvesting. Long-term transitions face a vulnerable resource base, but are supported locally by municipal public works and infrastructure demand from reconstruction projects.",
+      "3532": "Oxford's economy is integrated with automotive assembly and related manufacturing. Motor vehicle parts manufacturing and regional logistics along the Highway 401 corridor provide alternative transition avenues, alongside southwestern Ontario's broader plastics and metalworking corridors.",
+      "3557": "Algoma's economy is historically anchored by steel manufacturing. As primary metal industries adopt low-emission technologies, local transition planning leverages regional assets in forestry, metal fabrication, and critical mineral development.",
+      "4615": "Neepawa has a dual-sector economy built on agriculture and food manufacturing (anchored by major meat packing operations). Local opportunities bridge between agricultural management, food processing, and public infrastructure maintenance.",
+      "4701": "Estevan relies on a mix of agriculture and energy sectors (coal mining, coal-fired power plants, and oil/gas extraction). As traditional energy generation undergoes transitions, the region leverages a strong transport logistics base (rail corridor), municipal public works, and college training programs.",
+      "4816": "Division No. 16 is highly dependent on oilsands extraction and related industrial maintenance, where employment is sensitive to global commodity markets, decarbonization targets, and automation. Transition pathways in the region align with local opportunities in heavy maintenance, welding, electrical servicing, and construction logistics.",
+      "PR61": "The Northwest Territories has a hybrid economy combining resource extraction (diamond mines and critical minerals) with a large public services sector. Regional pathways focus on maintaining vital community infrastructure, transport networks, and public utilities."
+    };
 
     // ── COMPACT render branch (same data, stacked, lossy) ──
     function buildCompactWalkthrough(t) {
@@ -272,7 +402,7 @@
         const qual = c.qual_signal || 'green';
         return { teer, wages, cops, ai, qual };
       }
-      const dotHtml = sig => `<div class="cw-dot ${sig === 'green' ? 'hm-ok' : sig === 'yellow' ? 'hm-warn' : 'hm-fail'}">●</div>`;
+      const dotHtml = (sig, tooltipText) => `<div class="cw-dot ${sig === 'green' ? 'hm-ok' : sig === 'yellow' ? 'hm-warn' : 'hm-fail'} screen-dot" data-tippy-content="${tooltipText.replace(/"/g, '&quot;')}">●</div>`;
 
       let html = '';
 
@@ -292,7 +422,7 @@
         `<div class="cw-h-screen" data-tip="${k === 'Qual.' ? 'Qual' : k}|${hmDefs[k].replace(/"/g, '&quot;')}">${compactHeads[k]}</div>`).join('') + `</div>`;
       cands.forEach(c => {
         const f = deriveFilters(c);
-        const allGreen = f.teer === 'green' && f.wages !== 'red'
+        const allGreen = f.teer !== 'red' && f.wages !== 'red'
           && f.cops === 'green' && f.ai === 'green' && f.qual === 'green';
         html += `<div class="cw-row ${allGreen ? 'cw-pass' : ''}" data-tt-label="${c.label}" data-tt-sim="${c.similarity.toFixed(3)}" data-tt-teer="${c.teer}">
           <div class="cw-cand">
@@ -302,7 +432,7 @@
               <div class="cw-label">${c.label}</div>
             </div>
           </div>
-          ${dotHtml(f.teer)}${dotHtml(f.wages)}${dotHtml(f.cops)}${dotHtml(f.ai)}${dotHtml(f.qual)}
+          ${dotHtml(f.teer, getDotTooltip('teer', c, t))}${dotHtml(f.wages, getDotTooltip('wages', c, t))}${dotHtml(f.cops, getDotTooltip('cops', c, t))}${dotHtml(f.ai, getDotTooltip('ai', c, t))}${dotHtml(f.qual, getDotTooltip('qual', c, t))}
         </div>`;
       });
       if (nTrimmed > 0) html += `<div class="cw-more">+${nTrimmed} more candidate${nTrimmed > 1 ? 's' : ''} in the full (desktop) figure</div>`;
@@ -342,15 +472,16 @@
       html += `<div class="qual-title">Assessment notes</div>`;
       shown.forEach(note => {
         const arrow = note.type === 'up' ? '↑' : '↓';
+        const labelsHtml = formatNoteTitle(note.labels, arrow, note.type);
         html += `<div class="qual-item ${note.type}">
-          <div class="qual-occ"><span class="qual-arrow ${note.type}">${arrow}</span> ${note.label}</div>
-          <div class="qual-explain">${note.explain}</div>
+          <div class="qual-occ">${labelsHtml}</div>
+          <div class="qual-explain">${note.text}</div>
         </div>`;
       });
       if (items.length > shown.length) {
         html += `<div class="cw-more">+${items.length - shown.length} more note${items.length - shown.length > 1 ? 's' : ''} in the full (desktop) figure</div>`;
       }
-      if (callout) html += `<div class="qual-callout"><p>${callout.explain}</p></div>`;
+      if (callout) html += `<div class="qual-callout"><p>${callout.text}</p></div>`;
       html += `</div>`;
 
       document.getElementById('grid-left').innerHTML = html;
@@ -358,6 +489,27 @@
 
       attachTips();
       reportSize();
+    }
+
+    function formatNoteTitle(labels, arrow, type) {
+      if (!labels || labels.length === 0) return '';
+      let titleText = '';
+      if (labels.length <= 3) {
+        if (labels.length === 1) {
+          titleText = labels[0].text;
+        } else if (labels.length === 2) {
+          titleText = `${labels[0].text} and ${labels[1].text}`;
+        } else {
+          titleText = `${labels[0].text}, ${labels[1].text}, and ${labels[2].text}`;
+        }
+      } else {
+        titleText = `${labels[0].text}, ${labels[1].text}, and ${labels.length - 2} more`;
+      }
+      const tipParts = labels.map(lbl => {
+        return `<strong>NOC ${lbl.noc}:</strong> ${lbl.full_title} <span style="opacity: 0.8; font-style: italic;">(#${lbl.rank})</span>`;
+      });
+      const tipContent = tipParts.join('<span style="margin: 0 6px; opacity: 0.5;">·</span>');
+      return `<span class="occ-title-tt" data-tippy-content="${tipContent.replace(/"/g, '&quot;')}"><span class="qual-arrow ${type}">${arrow}</span> ${titleText}</span>`;
     }
 
     function buildWalkthrough(t) {
@@ -373,8 +525,8 @@
       // Derive viability signals
       const srcInc = sl.pr_income || 0;
       function deriveFilters(c) {
-        const teer = c.teer <= t.source_teer ? 'green'
-          : c.teer === t.source_teer + 1 ? 'yellow' : 'red';
+        const delta = c.teer - t.source_teer;
+        const teer = (c.teer < 2 || delta < -2 || delta > 1) ? 'red' : (delta < 0 ? 'yellow' : 'green');
         const wRatio = srcInc > 0 ? c.pr_income / srcInc : 0;
         const wages = wRatio >= 1.0 ? 'green'
           : wRatio >= 0.65 ? 'yellow' : 'red';
@@ -395,10 +547,10 @@
         const t = (Math.log(w || 1) - logMin) / logRange;
         return 9 + t * 7;
       }
-      function sigDot(signal, sz) {
+      function sigDot(signal, sz, tooltipText) {
         const cls = signal === 'green' ? 'hm-ok'
           : signal === 'yellow' ? 'hm-warn' : 'hm-fail';
-        return `<div class="hm-dot ${cls}" style="font-size:${sz.toFixed(1)}px">\u25CF</div>`;
+        return `<div class="hm-dot ${cls} screen-dot" style="font-size:${sz.toFixed(1)}px" data-tippy-content="${tooltipText.replace(/"/g, '&quot;')}">\u25CF</div>`;
       }
 
       let left = '';
@@ -452,16 +604,16 @@
       left += `<div class="hm-data-rows">`;
       cands.forEach(c => {
         const f = deriveFilters(c);
-        const allGreen = f.teer === 'green' && f.wages !== 'red'
+        const allGreen = f.teer !== 'red' && f.wages !== 'red'
           && f.cops === 'green' && f.ai === 'green' && f.qual === 'green';
         const rowCls = allGreen ? 'hm-pass' : '';
         const sz = dotSize(c.pr_workers);
         left += `<div class="hm-row ${rowCls}">
-        ${sigDot(f.teer, sz)}
-        ${sigDot(f.wages, sz)}
-        ${sigDot(f.cops, sz)}
-        ${sigDot(f.ai, sz)}
-        ${sigDot(f.qual, sz)}
+        ${sigDot(f.teer, sz, getDotTooltip('teer', c, t))}
+        ${sigDot(f.wages, sz, getDotTooltip('wages', c, t))}
+        ${sigDot(f.cops, sz, getDotTooltip('cops', c, t))}
+        ${sigDot(f.ai, sz, getDotTooltip('ai', c, t))}
+        ${sigDot(f.qual, sz, getDotTooltip('qual', c, t))}
       </div>`;
       });
       left += `</div></div></div>`;
@@ -505,12 +657,13 @@
       const an = t.assessment_notes || { notes: [] };
       an.notes.forEach(note => {
         if (note.type === 'callout') {
-          right += `<div class="qual-callout"><p>${note.explain}</p></div>`;
+          right += `<div class="qual-callout"><p>${note.text}</p></div>`;
         } else {
           const arrow = note.type === 'up' ? '↑' : '↓';
+          const labelsHtml = formatNoteTitle(note.labels, arrow, note.type);
           right += `<div class="qual-item ${note.type}">
-            <div class="qual-occ"><span class="qual-arrow ${note.type}">${arrow}</span> ${note.label}</div>
-            <div class="qual-explain">${note.explain}</div>
+            <div class="qual-occ">${labelsHtml}</div>
+            <div class="qual-explain">${note.text}</div>
           </div>`;
         }
       });

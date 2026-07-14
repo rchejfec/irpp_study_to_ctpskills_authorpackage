@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E mockup — basic typographic table</title>
+<link rel="stylesheet" href="../theme.css">
+<style>
+  .figure-container { width: var(--fig-width); height: auto; padding: 10px 12px; overflow: visible; }
+  .community-header { font-size: var(--fs-subhead); font-weight: var(--fw-bold); color: var(--clr-heading); margin-bottom: 6px; }
+  .viable-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .viable-table th {
+    font-size: var(--fs-label); font-weight: var(--fw-semibold); color: var(--clr-heading);
+    background: var(--clr-bg-muted); text-align: left; padding: 5px 8px;
+    border-top: 1.5px solid var(--clr-border-strong); border-bottom: 1px solid var(--clr-border);
+    vertical-align: top;
+  }
+  .viable-table th .th-sub { display: block; font-weight: var(--fw-regular); color: var(--clr-body-secondary); font-size: var(--fs-label-sm); }
+  .viable-table td { padding: 7px 8px; border-bottom: 1px solid var(--clr-gridline); vertical-align: top; font-size: var(--fs-body); }
+  .col-src { width: 25%; }
+  .col-screen { width: 30%; }
+  .col-curated { width: 45%; }
+  .src-label { font-weight: var(--fw-semibold); }
+  .src-meta { font-size: var(--fs-label-sm); color: var(--clr-body-secondary); margin-top: 2px; }
+  .fam-line { color: var(--clr-body); line-height: var(--lh-tight); margin-bottom: 2px; }
+  .fam-count { color: var(--clr-body-secondary); }
+  .pick-group-label {
+    font-size: var(--fs-label-xs); font-weight: var(--fw-bold); text-transform: uppercase;
+    letter-spacing: var(--ls-uppercase); color: var(--clr-body-secondary); margin: 4px 0 2px;
+  }
+  .pick-group-label:first-child { margin-top: 0; }
+  ul.pick-list { list-style: none; }
+  ul.pick-list li { line-height: var(--lh-tight); margin-bottom: 3px; }
+  .dagger { color: var(--clr-heading); font-weight: var(--fw-semibold); }
+  .table-note { font-size: var(--fs-label-sm); color: var(--clr-body-secondary); margin-top: 8px; line-height: 1.4; }
+</style>
+</head>
+<body>
+<div class="dev-wrapper">
+<div class="figure-container">
+  <div class="community-header">Estevan</div>
+  <table class="viable-table">
+    <thead>
+      <tr>
+        <th>Susceptible occupation</th>
+        <th>Top 10 viable occupations<span class="th-sub">ranked by skills similarity, by occupation family</span></th>
+        <th>Curated pathways<span class="th-sub">simulated community review</span></th>
+      </tr>
+    </thead>
+    <tbody><tr><td class="col-src"><div class="src-label">Transport truck drivers</div><div class="src-meta">NOC 73300 &middot; TEER 3</div></td><td class="col-screen"><div class="fam-line"><span style="color:var(--irpp-navy)">Trades &amp; transport</span>&ensp;<span class="fam-count">7</span></div><div class="fam-line"><span style="color:var(--clr-earnings-high)">Natural resources &amp; agriculture</span>&ensp;<span class="fam-count">2</span></div><div class="fam-line"><span style="color:#b25419">Manufacturing &amp; utilities</span>&ensp;<span class="fam-count">1</span></div></td><td class="col-curated"><div class="pick-group-label">Comparable training</div><ul class="pick-list"><li><span style="color:var(--irpp-navy)">Bus drivers, subway operators and other transit operators</span></li><li><span style="color:var(--irpp-navy)">Railway conductors and brakemen/women</span><span class="dagger">&dagger;</span></li></ul><div class="pick-group-label">Additional training</div><ul class="pick-list"><li><span style="color:var(--irpp-navy)">Crane operators</span></li></ul></td></tr><tr><td class="col-src"><div class="src-label">Heavy equipment operators</div><div class="src-meta">NOC 73400 &middot; TEER 3</div></td><td class="col-screen"><div class="fam-line"><span style="color:var(--irpp-navy)">Trades &amp; transport</span>&ensp;<span class="fam-count">9</span></div><div class="fam-line"><span style="color:var(--clr-earnings-high)">Natural resources &amp; agriculture</span>&ensp;<span class="fam-count">1</span></div></td><td class="col-curated"><div class="pick-group-label">Comparable training</div><ul class="pick-list"><li><span style="color:var(--irpp-navy)">Concrete finishers</span><span class="dagger">&dagger;</span></li></ul><div class="pick-group-label">Additional training</div><ul class="pick-list"><li><span style="color:var(--irpp-navy)">Crane operators</span></li><li><span style="color:var(--irpp-navy)">Welders and related machine operators</span></li></ul></td></tr><tr><td class="col-src"><div class="src-label">Oil and gas well drilling and related workers and service operators</div><div class="src-meta">NOC 84101 &middot; TEER 4</div></td><td class="col-screen"><div class="fam-line"><span style="color:var(--irpp-navy)">Trades &amp; transport</span>&ensp;<span class="fam-count">7</span></div><div class="fam-line"><span style="color:#b25419">Manufacturing &amp; utilities</span>&ensp;<span class="fam-count">2</span></div><div class="fam-line"><span style="color:var(--clr-earnings-high)">Natural resources &amp; agriculture</span>&ensp;<span class="fam-count">1</span></div></td><td class="col-curated"><div class="pick-group-label">Comparable training</div><ul class="pick-list"><li><span style="color:var(--irpp-navy)">Utility maintenance workers</span></li><li><span style="color:#b25419">Chemical plant machine operators</span></li></ul><div class="pick-group-label">Additional training</div><ul class="pick-list"><li><span style="color:#b25419">Water and waste treatment plant operators</span></li></ul></td></tr><tr><td class="col-src"><div class="src-label">Oil and gas drilling servicing and related labourers</div><div class="src-meta">NOC 85111 &middot; TEER 5</div></td><td class="col-screen"><div class="fam-line"><span style="color:var(--irpp-navy)">Trades &amp; transport</span>&ensp;<span class="fam-count">6</span></div><div class="fam-line"><span style="color:var(--clr-earnings-high)">Natural resources &amp; agriculture</span>&ensp;<span class="fam-count">2</span></div><div class="fam-line"><span style="color:#b25419">Manufacturing &amp; utilities</span>&ensp;<span class="fam-count">2</span></div></td><td class="col-curated"><div class="pick-group-label">Comparable training</div><ul class="pick-list"><li><span style="color:var(--irpp-navy)">Construction trades helpers and labourers</span></li><li><span style="color:#b25419">Labourers in chemical products processing and utilities</span></li></ul><div class="pick-group-label">Additional training</div><ul class="pick-list"><li><span style="color:var(--irpp-navy)">Residential and commercial installers and servicers</span></li><li><span style="color:var(--irpp-navy)">Public works maintenance equipment operators and related workers</span><span class="dagger">&dagger;</span></li></ul></td></tr></tbody>
+  </table>
+  <div class="table-note">&dagger; Retained by the community review despite not passing every
+  quantitative screen. Curated pathways are illustrative: the review draws on local knowledge
+  and can reach beyond the top skills matches. A community applying the framework would arrive
+  at its own selection.</div>
+</div>
+</div>
+</body>
+</html>

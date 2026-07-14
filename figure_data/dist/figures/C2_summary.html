@@ -70,6 +70,23 @@
       color: var(--irpp-navy);
     }
 
+    .entity-pill {
+      display: inline;
+      font-weight: var(--fw-semibold);
+      color: #2c5530;
+      white-space: nowrap;
+    }
+
+    .entity-icon {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      max-height: 10px;
+      vertical-align: -1px;
+      margin-right: 1px;
+      overflow: hidden;
+    }
+
     /* ── Inline results within the consolidated column ── */
     .inline-results {
       display: flex;
@@ -96,7 +113,7 @@
 
     /* ── BOTTOM TIER: SOLUTION FLOW ── */
     .bottom-tier {
-      padding: 12px 16px 14px;
+      padding: 10px 16px;
     }
 
     .flow {
@@ -109,7 +126,7 @@
       flex: 1 1 0;
       min-width: 0;
       position: relative;
-      padding: 10px 12px 36px;
+      padding: 4px 6px 65px 12px;
       background: var(--clr-bg-muted);
       border: 1px solid var(--clr-border);
       border-radius: 3px;
@@ -151,10 +168,10 @@
 
     /* ── SVG OVERLAY — tune --svg-scale to resize (1 = native 593px) ── */
     .svg-overlay {
-      --svg-scale: 0.995;
+      --svg-scale: 0.812;
       position: absolute;
-      bottom: -2%;
-      left: 49%;
+      bottom: .6%;
+      left: 49.2%;
       transform: translateX(-50%) scale(var(--svg-scale));
       transform-origin: center bottom;
       pointer-events: none;
@@ -174,12 +191,26 @@
     /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
        drop the three context prose blocks (one-line intro instead), stack
        the four method steps vertically. ── */
-    .compact-intro { display: none; }
+    .compact-intro {
+      display: none;
+    }
 
-    html.compact .figure-container { width: 100%; height: auto; }
-    html.compact .dev-wrapper { padding: 8px; }
-    html.compact .top-tier { display: none; }
-    html.compact .svg-overlay { display: none; }
+    html.compact .figure-container {
+      width: 100%;
+      height: auto;
+    }
+
+    html.compact .dev-wrapper {
+      padding: 8px;
+    }
+
+    html.compact .top-tier {
+      display: none;
+    }
+
+    html.compact .svg-overlay {
+      display: none;
+    }
 
     html.compact .compact-intro {
       display: block;
@@ -190,16 +221,48 @@
       line-height: 1.45;
       color: var(--clr-body);
     }
-    html.compact .compact-intro em { font-style: italic; color: var(--irpp-navy); }
 
-    html.compact .bottom-tier { padding: 10px 12px 12px; }
-    html.compact .flow { flex-direction: column; }
-    html.compact .flow-step { flex: none; padding: 10px 12px 12px; }
-    html.compact .flow-arrow { justify-content: center; padding: 2px 0; font-size: 0; }
-    html.compact .flow-arrow::before { content: '↓'; font-size: 14px; color: var(--clr-body-tertiary, #999); }
-    html.compact .step-num { font-size: 11px; }
-    html.compact .step-title { font-size: 14px; }
-    html.compact .step-detail { font-size: 12px; }
+    html.compact .compact-intro em {
+      font-style: italic;
+      color: var(--irpp-navy);
+    }
+
+    html.compact .bottom-tier {
+      padding: 10px 12px 12px;
+    }
+
+    html.compact .flow {
+      flex-direction: column;
+    }
+
+    html.compact .flow-step {
+      flex: none;
+      padding: 10px 12px 12px;
+    }
+
+    html.compact .flow-arrow {
+      justify-content: center;
+      padding: 2px 0;
+      font-size: 0;
+    }
+
+    html.compact .flow-arrow::before {
+      content: '↓';
+      font-size: 14px;
+      color: var(--clr-body-tertiary, #999);
+    }
+
+    html.compact .step-num {
+      font-size: 11px;
+    }
+
+    html.compact .step-title {
+      font-size: 14px;
+    }
+
+    html.compact .step-detail {
+      font-size: 12px;
+    }
   </style>
 </head>
 
@@ -211,21 +274,20 @@
       <div class="top-tier">
         <div class="setup-block">
           <div class="setup-label">Context</div>
-          <div class="setup-title">Workforce disruption from structural change</div>
+          <div class="setup-title">Structural change and workforce disruption</div>
           <div class="setup-text">
-            Decarbonization, shifting trade patterns, and technological change are transforming industries across
-            Canada.
-            While most workers will adapt, a <em>small but concentrated</em> share — particularly in susceptible sectors
-            — may need support to retrain and transition into new career pathways.
+            Decarbonization, trade shifts, and technological change are transforming Canadian industries.
+            Most workers will adapt, but a <em>small but concentrated</em> share in susceptible sectors
+            may need support to move into a new career pathway.
           </div>
         </div>
         <div class="setup-block">
           <div class="setup-label">Why communities</div>
-          <div class="setup-title">Susceptible communities face compounded challenges</div>
+          <div class="setup-title">Disruption compounds in susceptible communities</div>
           <div class="setup-text">
-            Where disruption is concentrated in a dominant local industry, the effects can be sudden and far-reaching.
-            These communities may need <em>additional support</em> to manage workforce transitions and retain
-            working-age population.
+            Where disruption is concentrated, the effects can be sudden and far-reaching —
+            local supply chains, services, housing. These communities
+            have the most at stake, and the most to gain from proactive transition planning.
           </div>
         </div>
         <!-- Consolidated: Opportunity + Results -->
@@ -233,18 +295,10 @@
           <div class="setup-label">The opportunity</div>
           <div class="setup-title">Skills data enables actionable pathways</div>
           <div class="setup-text">
-            Canada's OaSIS framework provides competency profiles for 900+ occupations. A skills-based approach can
-            identify <em>viable career transitions</em> and the <em>training investments</em> needed to support them.
-          </div>
-          <div class="inline-results">
-            <div class="inline-result">
-              <strong>Target occupations</strong>
-              Viable transitions grounded in local reality
-            </div>
-            <div class="inline-result">
-              <strong>Training priorities</strong>
-              Specific skill gaps to bridge per pathway
-            </div>
+            Combining national skills data with local knowledge, conditions, and participation can help
+            <span class="entity-pill">governments</span> design targeted supports,
+            <span class="entity-pill">municipalities</span> plan workforce strategies,
+            and <span class="entity-pill">training providers</span> develop programs matched to real transition needs.
           </div>
         </div>
       </div>
@@ -263,8 +317,7 @@
             <div class="step-num">1</div>
             <div class="step-title">Identify</div>
             <div class="step-detail">
-              Susceptible <em>communities</em> and <em>occupations</em> based on reliance on sectors vulnerable to
-              disruption — decarbonization, trade exposure, market transformation
+              Susceptible <em>communities</em> and <em>occupations</em> reliant on sectors facing disruption
             </div>
           </div>
           <div class="flow-arrow">→</div>
@@ -272,8 +325,7 @@
             <div class="step-num">2</div>
             <div class="step-title">Match skills</div>
             <div class="step-detail">
-              Find occupations with similar <em>competency profiles</em> — skills, knowledge, abilities, and work
-              activities — using Canada's OaSIS framework (166 descriptors)
+              Match <em>competency profiles</em> across occupations using OaSIS (166 competencies across 4 domains)
             </div>
           </div>
           <div class="flow-arrow">→</div>
@@ -281,8 +333,7 @@
             <div class="step-num">3</div>
             <div class="step-title">Filter for viability</div>
             <div class="step-detail">
-              Narrow to locally realistic alternatives using <em>earnings, employment outlook, training alignment</em>,
-              and qualitative community insights
+              Narrow to locally viable alternatives using <em>earnings, outlook, training fit</em>, and community input
             </div>
           </div>
           <div class="flow-arrow">→</div>
@@ -304,26 +355,26 @@
     </div>
   </div>
 
-<!-- CTP WP Engine Embed Helper -->
-<script>
-  if (window.self !== window.top) {
-    document.body.classList.add('export-mode');
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
-        if (c) {
-          const fig = location.pathname.split('/').pop().replace('.html', '');
-          parent.postMessage({
-            type: 'figure-sized',
-            fig: fig,
-            width: c.scrollWidth,
-            height: document.querySelector('.dev-wrapper').scrollHeight
-          }, '*');
-        }
-      }, 100);
-    });
-  }
-</script>
+  <!-- CTP WP Engine Embed Helper -->
+  <script>
+    if (window.self !== window.top) {
+      document.body.classList.add('export-mode');
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+          if (c) {
+            const fig = location.pathname.split('/').pop().replace('.html', '');
+            parent.postMessage({
+              type: 'figure-sized',
+              fig: fig,
+              width: c.scrollWidth,
+              height: document.querySelector('.dev-wrapper').scrollHeight
+            }, '*');
+          }
+        }, 100);
+      });
+    }
+  </script>
 </body>
 
 </html>

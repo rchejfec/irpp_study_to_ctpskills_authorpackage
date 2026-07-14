@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Walkthrough Figure — Oxford, ON</title>
+  <title>Walkthrough Figure D2 — Oxford, ON</title>
   <link rel="stylesheet" href="../theme.css">
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
@@ -19,131 +19,486 @@
       height: auto;
       padding: 0;
       display: flex;
+      /* D2: full-width source band stacked above the 3-column body */
+      flex-direction: column;
       overflow: hidden;
     }
 
-    .cols-left {
-      flex: 6;
+    /* ── D2: full-width source band ── */
+    .source-band {
+      background: #faf6f0;
+      border-bottom: 1px solid #e0ddd6;
+      padding: 6px 12px;
+      flex-shrink: 0;
+    }
+
+    .band-headline {
+      line-height: 1.35;
+      margin-bottom: 2px;
+      font-size: 11px;
+      color: #444;
+    }
+    /* *** occupation name — largest */
+    .em3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--irpp-navy);
+    }
+    /* ** community — medium (matches base headline size) */
+    .em2 {
+      font-weight: 700;
+    }
+    .band-subline {
+      font-size: 9px;
+      color: #888;
+      line-height: 1.3;
+    }
+    /* * sector — bold only at base size */
+    .em1 {
+      font-weight: 700;
+      color: #555;
+    }
+
+    /* D2: one grid for all three columns so the row-1 explainer panels align
+       exactly. The two wrapper divs stay for the compact branch, but on
+       desktop their children participate in this grid directly. */
+    .fig-body {
+      flex: 1;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       grid-template-rows: auto 1fr;
-      min-width: 0;
+      min-height: 0;
+    }
+
+    .cols-left {
+      display: contents;
     }
 
     .col-right {
-      flex: 3;
+      display: contents;
+    }
+
+    /* Rail (col 3, row 2): skill-gap preview on top, assessment notes below */
+    .rail-stack {
+      grid-column: 3;
+      grid-row: 2;
       border-left: 1px solid var(--clr-border);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .rail-stack>.cell-rca {
+      flex: 0 0 auto;
+      border-bottom: 1px solid var(--clr-border);
+    }
+
+    .rail-stack>.cell-qual {
+      flex: 1 0 auto;
+    }
+
+    /* was 7px — bumped to 6pt decorative floor */
+    .src-comm {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #999;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .src-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--irpp-navy);
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    /* was 8px — bumped to ~7pt content floor */
+    .src-detail {
+      font-size: 9.5px;
+      color: #999;
+      line-height: 1.6;
+    }
+
+    .src-detail span {
+      color: #444;
+      font-weight: 500;
+    }
+
+    /* ── R2C1: Similarity bars ── */
+    .cell-similar {
+      grid-column: 1;
+      grid-row: 2;
+      border-right: 1px solid var(--clr-border);
+      padding: 2px 8px 4px 0;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    .col-right>.cell-rca { flex: 0 0 auto; }
-    .col-right>.cell-qual { flex: 2; }
-
-    /* ── R1C1: Source card ── */
-    .cell-source {
-      grid-column: 1; grid-row: 1;
-      background: #faf6f0;
-      border-bottom: 1px solid #e0ddd6;
-      border-right: 1px solid var(--clr-border);
-      padding: 8px 10px 6px;
-      display: flex; flex-direction: column; justify-content: center;
+    .sim-rows {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
     }
-    /* was 7px — bumped to 6pt decorative floor */
-    .src-comm { font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: #999; font-weight: 600; margin-bottom: 2px; }
-    .src-name { font-size: 12px; font-weight: 700; color: var(--irpp-navy); line-height: 1.3; margin-bottom: 4px; }
-    /* was 8px — bumped to ~7pt content floor */
-    .src-detail { font-size: 9.5px; color: #999; line-height: 1.6; }
-    .src-detail span { color: #444; font-weight: 500; }
 
-    /* ── R2C1: Similarity bars ── */
-    .cell-similar {
-      grid-column: 1; grid-row: 2;
-      border-right: 1px solid var(--clr-border);
-      padding: 4px 3px 4px 0; overflow: hidden;
-      display: flex; flex-direction: column;
+    .sim-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex: 1;
+      position: relative;
+      min-height: 0;
     }
-    .col-title { font-size: 8px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--irpp-navy); font-weight: 700; margin-bottom: 2px; margin-left: 8px; flex-shrink: 0; }
-    /* was 7.5px — bumped toward 7pt content floor (secondary text) */
-    .col-subtitle { font-size: 9px; color: #aaa; margin-bottom: 2px; line-height: 1.3; margin-left: 8px; flex-shrink: 0; }
-    .sim-spacer { height: 4px; flex-shrink: 0; }
-    .sim-rows { flex: 1; display: flex; flex-direction: column; gap: 0; }
-    .sim-row { display: flex; align-items: center; gap: 0; flex: 1; position: relative; min-height: 0; }
+
     /* was 8px — bumped toward 7pt content floor */
-    .sim-rank { width: 14px; font-size: 9px; color: #999; text-align: right; font-weight: 600; flex-shrink: 0; margin-right: 2px; }
-    .sim-bar-wrap { flex: 1; height: 80%; position: relative; min-width: 0; }
-    .sim-bar { height: 100%; border-radius: 2px; background: var(--irpp-navy-light); position: absolute; left: 0; top: 0; }
-    /* was 8px — bumped to ~7pt content floor */
-    .sim-label { font-size: 9.5px; color: var(--clr-body); height: 100%; display: flex; align-items: center; padding-left: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; z-index: 1; }
-
-    /* ── R1C2: Context ── */
-    .cell-context {
-      grid-column: 2; grid-row: 1;
-      border-bottom: 1px solid var(--clr-border);
-      padding: 8px 10px 6px; background: #fafaf8;
-      display: flex; flex-direction: column; justify-content: center;
+    .sim-rank {
+      width: 14px;
+      font-size: 9px;
+      color: #999;
+      text-align: right;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-right: 2px;
     }
-    .ctx-title { font-size: 10px; font-weight: 700; color: var(--clr-body); margin-bottom: 4px; line-height: 1.3; }
+
+    .sim-bar-wrap {
+      flex: 1;
+      height: 80%;
+      position: relative;
+      min-width: 0;
+    }
+
+    .sim-bar {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--irpp-navy-light);
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
     /* was 8px — bumped to ~7pt content floor */
-    .ctx-body { font-size: 9.5px; color: #666; line-height: 1.5; }
+    .sim-label {
+      font-size: 9.5px;
+      color: var(--clr-body);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── D2 row 1: explainer panels (serve as the column headers) ── */
+    .cell-explain {
+      border-bottom: 1px solid var(--clr-border);
+      padding: 7px 10px 6px;
+      background: #fafaf8;
+    }
+
+    .cell-explain.c1 {
+      grid-column: 1;
+      grid-row: 1;
+      border-right: 1px solid var(--clr-border);
+    }
+
+    .cell-explain.c2 {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 0;
+      /* hm-header supplies its own bottom padding */
+    }
+
+    .cell-explain.c3 {
+      grid-column: 3;
+      grid-row: 1;
+      border-left: 1px solid var(--clr-border);
+    }
+
+    .exp-title {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--irpp-navy);
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .exp-body {
+      font-size: 9px;
+      color: #666;
+      line-height: 1.45;
+    }
+
+    .exp-legend {
+      font-size: 8px;
+      color: #aaa;
+      margin-top: 3px;
+    }
+
+    /* Heatmap column headers pushed to bottom of explainer panel;
+       the panel's border-bottom acts as the implicit separator.
+       Negative side margins compensate for the explainer's 10px padding
+       vs the data grid's 4px, keeping the 5 columns pixel-aligned. */
+    .cell-explain .hm-header {
+      margin: 4px -6px 0;
+      border-bottom: none;
+    }
 
     /* ── R2C2: Viability heatmap ── */
     .cell-filtered {
-      grid-column: 2; grid-row: 2;
-      padding: 4px 4px; overflow: hidden;
-      display: flex; flex-direction: column;
+      grid-column: 2;
+      grid-row: 2;
+      padding: 0 4px 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
-    .hm-grid { flex: 1; display: flex; flex-direction: column; gap: 0; }
-    .hm-header { display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; height: 14px; flex-shrink: 0; border-bottom: 1px solid #ddd; }
+
+    .hm-grid {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .hm-header {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      height: 14px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #ddd;
+    }
+
     /* was 6.5px — bumped to 6pt decorative floor */
-    .hm-h-col { font-size: 8px; text-transform: uppercase; letter-spacing: 0.4px; color: #999; font-weight: 600; text-align: center; }
-    .hm-data-rows { flex: 1; display: flex; flex-direction: column; gap: 0; }
-    .hm-row { display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; flex: 1; min-height: 0; border-bottom: 1px solid #f2f2f2; }
-    .hm-row:last-child { border-bottom: none; }
-    .hm-row.hm-pass { background: #f0faf2; }
-    .hm-dot { text-align: center; font-size: 10px; }
-    .hm-ok { color: #27ae60; }
-    .hm-fail { color: #e74c3c; }
-    .hm-warn { color: #f39c12; }
+    .hm-h-col {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #999;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .hm-data-rows {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .hm-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      flex: 1;
+      min-height: 0;
+      border-bottom: 1px solid #f2f2f2;
+    }
+
+    .hm-row:last-child {
+      border-bottom: none;
+    }
+
+    .hm-row.hm-pass {
+      background: #f0faf2;
+    }
+
+    .hm-dot {
+      text-align: center;
+      font-size: 10px;
+    }
+
+    .hm-ok {
+      color: #27ae60;
+    }
+
+    .hm-fail {
+      color: #e74c3c;
+    }
+
+    .hm-warn {
+      color: #f39c12;
+    }
 
     /* ── R1C3: Skill gap preview ── */
-    .cell-rca { padding: 8px 10px 6px; background: #fff; border-bottom: 1px solid var(--clr-border); overflow: hidden; }
+    .cell-rca {
+      padding: 8px 10px 6px;
+      background: #fff;
+      overflow: hidden;
+    }
+
     /* was 7px — bumped to 6pt decorative floor */
-    .rca-title { font-size: 8px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--irpp-navy); font-weight: 700; margin-bottom: 3px; }
+    .rca-title {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--irpp-navy);
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
     /* was 9px — bumped to ~7pt content floor */
-    .rca-pair { font-size: 10px; font-weight: 600; color: var(--clr-body); margin-bottom: 3px; line-height: 1.3; }
-    .rca-pair .from { color: var(--irpp-red); font-weight: 700; }
-    .rca-pair .to { color: var(--irpp-teal); font-weight: 700; }
+    .rca-pair {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--clr-body);
+      margin-bottom: 3px;
+      line-height: 1.3;
+    }
+
+    .rca-pair .from {
+      color: var(--irpp-red);
+      font-weight: 700;
+    }
+
+    .rca-pair .to {
+      color: var(--irpp-teal);
+      font-weight: 700;
+    }
+
     /* was 8px — bumped toward 7pt content floor (secondary text) */
-    .rca-hint { font-size: 9px; color: #aaa; line-height: 1.3; margin-bottom: 2px; }
-    .rca-bars { margin-top: 12px; }
-    .rca-bar-row { margin-bottom: 5px; }
+    .rca-hint {
+      font-size: 9px;
+      color: #aaa;
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+
+    .rca-bars {
+      margin-top: 12px;
+    }
+
+    .rca-bar-row {
+      margin-bottom: 5px;
+    }
+
     /* was 7.5px — bumped toward 7pt content floor */
-    .rca-bar-label { font-size: 9px; color: #666; margin-bottom: 1px; line-height: 1.15; }
-    .rca-plot { position: relative; }
-    .rca-ref { position: absolute; top: -1px; bottom: -1px; width: 0; border-left: 1px dashed #b9b9b9; z-index: 2; }
-    .rca-bar { height: 5px; border-radius: 1px; margin-bottom: 1px; min-width: 1px; }
-    .rca-bar.src { background: var(--irpp-red); }
-    .rca-bar.tgt { background: var(--irpp-teal); }
+    .rca-bar-label {
+      font-size: 9px;
+      color: #666;
+      margin-bottom: 1px;
+      line-height: 1.15;
+    }
+
+    .rca-plot {
+      position: relative;
+    }
+
+    .rca-ref {
+      position: absolute;
+      top: -1px;
+      bottom: -1px;
+      width: 0;
+      border-left: 1px dashed #b9b9b9;
+      z-index: 2;
+    }
+
+    .rca-bar {
+      height: 5px;
+      border-radius: 1px;
+      margin-bottom: 1px;
+      min-width: 1px;
+    }
+
+    .rca-bar.src {
+      background: var(--irpp-red);
+    }
+
+    .rca-bar.tgt {
+      background: var(--irpp-teal);
+    }
 
     /* ── R2C3: Assessment notes ── */
-    .cell-qual { padding: 6px 10px 4px; background: #faf9f7; overflow: hidden; display: flex; flex-direction: column; }
+    .cell-qual {
+      padding: 6px 10px 4px;
+      background: #faf9f7;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
     /* was 7px — bumped to 6pt decorative floor */
-    .qual-title { font-size: 8px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--irpp-navy); font-weight: 700; margin-bottom: 4px; flex-shrink: 0; }
-    .qual-item { margin-bottom: 3px; padding-left: 6px; border-left: 2px solid #ddd; flex-shrink: 0; }
-    .qual-item.up { border-left-color: #27ae60; }
-    .qual-item.down { border-left-color: #e74c3c; }
+    .qual-title {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--irpp-navy);
+      font-weight: 700;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+
+    .qual-item {
+      margin-bottom: 3px;
+      padding-left: 6px;
+      border-left: 2px solid #ddd;
+      flex-shrink: 0;
+    }
+
+    .qual-item.up {
+      border-left-color: #27ae60;
+    }
+
+    .qual-item.down {
+      border-left-color: #e74c3c;
+    }
+
     /* was 8px — bumped to ~7pt content floor */
-    .qual-occ { font-size: 9.5px; font-weight: 600; color: var(--clr-body); }
+    .qual-occ {
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--clr-body);
+    }
+
     /* was 7.5px — bumped toward 7pt content floor (secondary text) */
-    .qual-explain { font-size: 9px; color: #888; line-height: 1.35; margin-top: 1px; }
+    .qual-explain {
+      font-size: 9px;
+      color: #888;
+      line-height: 1.35;
+      margin-top: 1px;
+    }
+
     /* was 7px — bumped with note titles */
-    .qual-arrow { font-size: 8px; margin-right: 2px; }
-    .qual-arrow.up { color: #27ae60; }
-    .qual-arrow.down { color: #e74c3c; }
-    .qual-callout { margin-top: auto; padding: 5px 8px; background: var(--clr-bg-muted); border-radius: 3px; border-left: 3px solid var(--irpp-navy); }
+    .qual-arrow {
+      font-size: 8px;
+      margin-right: 2px;
+    }
+
+    .qual-arrow.up {
+      color: #27ae60;
+    }
+
+    .qual-arrow.down {
+      color: #e74c3c;
+    }
+
+    .qual-callout {
+      margin-top: auto;
+      padding: 5px 8px;
+      background: var(--clr-bg-muted);
+      border-radius: 3px;
+      border-left: 3px solid var(--irpp-navy);
+    }
+
     /* was 7.5px — bumped toward 7pt content floor */
-    .qual-callout p { font-size: 9px; color: #444; line-height: 1.5; font-style: italic; margin: 0; }
+    .qual-callout p {
+      font-size: 9px;
+      color: #444;
+      line-height: 1.5;
+      font-style: italic;
+      margin: 0;
+    }
 
     .tt-trigger {
       text-decoration: underline dotted #27ae60;
@@ -151,74 +506,276 @@
       cursor: pointer;
       color: inherit;
     }
+
     .tt-trigger:hover {
       color: #219653;
     }
+
     .occ-title-tt {
       text-decoration: underline dotted #888;
       cursor: help;
     }
-    .tt-comm-box { padding: 4px; }
+
+    .tt-comm-box {
+      padding: 4px;
+    }
+
     /* tooltip text: was 8.5/7.5/7.5px — bumped with content floors */
-    .tt-comm-title { font-weight: 700; font-size: 9.5px; margin-bottom: 4px; color: var(--irpp-navy); }
-    .tt-comm-text { color: #444; font-size: 9px; line-height: 1.4; }
-    .tt-divider { margin: 6px 0; border: 0; border-top: 1px solid #e5e7eb; }
-    .tt-value-small { font-size: 9px; }
+    .tt-comm-title {
+      font-weight: 700;
+      font-size: 9.5px;
+      margin-bottom: 4px;
+      color: var(--irpp-navy);
+    }
+
+    .tt-comm-text {
+      color: #444;
+      font-size: 9px;
+      line-height: 1.4;
+    }
+
+    .tt-divider {
+      margin: 6px 0;
+      border: 0;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .tt-value-small {
+      font-size: 9px;
+    }
 
     /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
        stacked single column; similarity bars and the 5-screen dot matrix
        merge into one candidate list (top 7); assessment notes trimmed to
        the callout + 2 items. Desktop 3-column layout untouched. ── */
-    html.compact .figure-container { width: 100%; min-height: 0; display: block; }
-    html.compact .dev-wrapper { padding: 8px; }
-    html.compact .col-right { display: none; }
-    html.compact .cols-left { display: block; }
+    html.compact .figure-container {
+      width: 100%;
+      min-height: 0;
+      display: block;
+    }
 
-    html.compact .cw-source { background: #faf6f0; border-bottom: 1px solid #e0ddd6; padding: 10px 12px; }
-    html.compact .cw-comm { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #999; font-weight: 600; }
-    html.compact .cw-name { font-size: 15px; font-weight: 700; color: var(--irpp-navy); line-height: 1.3; margin: 2px 0 4px; }
-    html.compact .cw-detail { font-size: 12px; color: #777; line-height: 1.55; }
-    html.compact .cw-detail span { color: #333; font-weight: 600; }
+    html.compact .source-band {
+      display: none;
+    }
 
-    html.compact .cw-sec-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--irpp-navy); font-weight: 700; padding: 12px 12px 2px; }
-    html.compact .cw-legend { font-size: 11px; color: #999; padding: 0 12px 6px; line-height: 1.4; }
+    html.compact .fig-body {
+      display: block;
+    }
+
+    html.compact .dev-wrapper {
+      padding: 8px;
+    }
+
+    html.compact .col-right {
+      display: none;
+    }
+
+    html.compact .cols-left {
+      display: block;
+    }
+
+    html.compact .cw-source {
+      background: #faf6f0;
+      border-bottom: 1px solid #e0ddd6;
+      padding: 10px 12px;
+    }
+
+    html.compact .cw-comm {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #999;
+      font-weight: 600;
+    }
+
+    html.compact .cw-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--irpp-navy);
+      line-height: 1.3;
+      margin: 2px 0 4px;
+    }
+
+    html.compact .cw-detail {
+      font-size: 12px;
+      color: #777;
+      line-height: 1.55;
+    }
+
+    html.compact .cw-detail span {
+      color: #333;
+      font-weight: 600;
+    }
+
+    html.compact .cw-sec-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--irpp-navy);
+      font-weight: 700;
+      padding: 12px 12px 2px;
+    }
+
+    html.compact .cw-legend {
+      font-size: 11px;
+      color: #999;
+      padding: 0 12px 6px;
+      line-height: 1.4;
+    }
+
     html.compact .cw-headrow {
-      display: grid; grid-template-columns: 1fr repeat(5, 32px);
-      align-items: end; padding: 0 12px 3px; border-bottom: 1px solid #ddd;
+      display: grid;
+      grid-template-columns: 1fr repeat(5, 32px);
+      align-items: end;
+      padding: 0 12px 3px;
+      border-bottom: 1px solid #ddd;
     }
+
     html.compact .cw-h-screen {
-      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2px;
-      color: #888; text-align: center; text-decoration: underline dotted; text-underline-offset: 2px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      color: #888;
+      text-align: center;
+      text-decoration: underline dotted;
+      text-underline-offset: 2px;
     }
+
     html.compact .cw-row {
-      display: grid; grid-template-columns: 1fr repeat(5, 32px);
-      align-items: center; padding: 2px 12px; border-bottom: 1px solid #f2f2f2;
+      display: grid;
+      grid-template-columns: 1fr repeat(5, 32px);
+      align-items: center;
+      padding: 2px 12px;
+      border-bottom: 1px solid #f2f2f2;
     }
-    html.compact .cw-row.cw-pass { background: #f0faf2; }
-    html.compact .cw-cand { display: flex; align-items: center; gap: 4px; min-width: 0; padding-right: 6px; }
-    html.compact .cw-rank { font-size: 11px; color: #999; font-weight: 600; width: 16px; text-align: right; flex-shrink: 0; }
-    html.compact .cw-barwrap { position: relative; flex: 1; height: 24px; min-width: 0; }
-    html.compact .cw-bar { position: absolute; left: 0; top: 0; height: 100%; background: var(--irpp-navy-light); border-radius: 2px; }
-    html.compact .cw-label { position: relative; z-index: 1; font-size: 12px; line-height: 24px; padding-left: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    html.compact .cw-dot { text-align: center; font-size: 13px; }
-    html.compact .cw-more { font-size: 11.5px; color: #999; font-style: italic; padding: 6px 12px 2px; }
+
+    html.compact .cw-row.cw-pass {
+      background: #f0faf2;
+    }
+
+    html.compact .cw-cand {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      padding-right: 6px;
+    }
+
+    html.compact .cw-rank {
+      font-size: 11px;
+      color: #999;
+      font-weight: 600;
+      width: 16px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    html.compact .cw-barwrap {
+      position: relative;
+      flex: 1;
+      height: 24px;
+      min-width: 0;
+    }
+
+    html.compact .cw-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--irpp-navy-light);
+      border-radius: 2px;
+    }
+
+    html.compact .cw-label {
+      position: relative;
+      z-index: 1;
+      font-size: 12px;
+      line-height: 24px;
+      padding-left: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    html.compact .cw-dot {
+      text-align: center;
+      font-size: 13px;
+    }
+
+    html.compact .cw-more {
+      font-size: 11.5px;
+      color: #999;
+      font-style: italic;
+      padding: 6px 12px 2px;
+    }
 
     /* Reused desktop cells, scaled to the 12px floor */
-    html.compact .cell-rca { border-bottom: 1px solid var(--clr-border); padding: 12px; overflow: visible; }
-    html.compact .rca-title { font-size: 12px; }
-    html.compact .rca-pair { font-size: 13px; margin-bottom: 4px; }
-    html.compact .rca-hint { font-size: 11.5px; }
-    html.compact .rca-bar-label { font-size: 11.5px; margin-bottom: 2px; }
-    html.compact .rca-bar { height: 7px; }
-    html.compact .rca-bar-row { margin-bottom: 8px; }
-    html.compact .cell-qual { padding: 12px; overflow: visible; }
-    html.compact .qual-title { font-size: 12px; }
-    html.compact .qual-item { margin-bottom: 6px; padding-left: 8px; }
-    html.compact .qual-occ { font-size: 12.5px; }
-    html.compact .qual-explain { font-size: 11.5px; }
-    html.compact .qual-arrow { font-size: 11px; }
-    html.compact .qual-callout { margin-top: 8px; }
-    html.compact .qual-callout p { font-size: 11.5px; }
+    html.compact .cell-rca {
+      border-bottom: 1px solid var(--clr-border);
+      padding: 12px;
+      overflow: visible;
+    }
+
+    html.compact .rca-title {
+      font-size: 12px;
+    }
+
+    html.compact .rca-pair {
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    html.compact .rca-hint {
+      font-size: 11.5px;
+    }
+
+    html.compact .rca-bar-label {
+      font-size: 11.5px;
+      margin-bottom: 2px;
+    }
+
+    html.compact .rca-bar {
+      height: 7px;
+    }
+
+    html.compact .rca-bar-row {
+      margin-bottom: 8px;
+    }
+
+    html.compact .cell-qual {
+      padding: 12px;
+      overflow: visible;
+    }
+
+    html.compact .qual-title {
+      font-size: 12px;
+    }
+
+    html.compact .qual-item {
+      margin-bottom: 6px;
+      padding-left: 8px;
+    }
+
+    html.compact .qual-occ {
+      font-size: 12.5px;
+    }
+
+    html.compact .qual-explain {
+      font-size: 11.5px;
+    }
+
+    html.compact .qual-arrow {
+      font-size: 11px;
+    }
+
+    html.compact .qual-callout {
+      margin-top: 8px;
+    }
+
+    html.compact .qual-callout p {
+      font-size: 11.5px;
+    }
   </style>
 </head>
 
@@ -235,8 +792,11 @@
       </div>
     </div>
     <div class="figure-container">
-      <div class="cols-left" id="grid-left"></div>
-      <div class="col-right" id="grid-right"></div>
+      <div class="source-band" id="grid-band"></div>
+      <div class="fig-body">
+        <div class="cols-left" id="grid-left"></div>
+        <div class="col-right" id="grid-right"></div>
+      </div>
     </div>
   </div>
 
@@ -291,7 +851,7 @@
         const cd = el.getAttribute('data-tt-cd');
         const ratHtml = el.getAttribute('data-tt-rat') || '';
         const basePara = COMMUNITY_TOOLTIPS[cd] || 'Local community profile context.';
-        
+
         let content = `<div class="tt-comm-box">`;
         content += `<div class="tt-comm-title">Simulated Community Review</div>`;
         content += `<div class="tt-comm-text">${basePara}</div>`;
@@ -299,7 +859,7 @@
           content += ratHtml;
         }
         content += `</div>`;
-        
+
         tippy(el, {
           theme: 'irpp',
           animation: 'shift-away',
@@ -342,10 +902,10 @@
       const parts = [];
       const prW = c.pr_workers != null ? Math.round(c.pr_workers).toLocaleString() : '0';
       parts.push(`<strong>Provincial workers:</strong> ${prW}`);
-      
+
       const sl = t.source_lmi || {};
       const srcInc = sl.pr_income || 0;
-      
+
       if (col === 'teer') {
         const delta = c.teer - t.source_teer;
         let deltaText = '';
@@ -402,7 +962,8 @@
       const cands = t.candidates.slice(0, 7);
       const nTrimmed = t.candidates.length - cands.length;
       const sl = t.source_lmi || {};
-      const barW = sim => ((sim - 0.70) / 0.30) * 100;
+      const maxSim = Math.max(...cands.map(c => c.similarity));
+      const barW = sim => ((sim - 0.70) / (maxSim - 0.70)) * 100;
       const fmt$ = v => v != null ? '$' + Math.round(v).toLocaleString() : '—';
       const fmtW = v => v != null ? Math.round(v).toLocaleString() : '—';
       const geoWord = (t.cd || '').startsWith('PR') ? 'Territorial' : 'Provincial';
@@ -501,6 +1062,7 @@
       if (callout) html += `<div class="qual-callout"><p>${callout.text}</p></div>`;
       html += `</div>`;
 
+      document.getElementById('grid-band').innerHTML = '';
       document.getElementById('grid-left').innerHTML = html;
       document.getElementById('grid-right').innerHTML = '';
 
@@ -533,7 +1095,8 @@
       if (window.isCompact && window.isCompact()) { buildCompactWalkthrough(t); return; }
       const cands = t.candidates;
       const sl = t.source_lmi || {};
-      const barW = sim => ((sim - 0.70) / 0.30) * 100;
+      const maxSim = Math.max(...cands.map(c => c.similarity));
+      const barW = sim => ((sim - 0.70) / (maxSim - 0.70)) * 100;
 
       function fmt$(v) { return v != null ? '$' + Math.round(v).toLocaleString() : '\u2014'; }
       function fmtW(v) { return v != null ? Math.round(v).toLocaleString() : '\u2014'; }
@@ -574,21 +1137,46 @@
       let right = '';
       const geoWord = (t.cd || '').startsWith('PR') ? 'Territorial' : 'Provincial';
 
-      // ═══ R1C1: Source card ═══
-      left += `<div class="cell-source">
-      <div class="src-comm">${t.community}</div>
-      <div class="src-name">${t.source_label}</div>
-      <div class="src-detail">TEER level <span>${t.source_teer}</span></div>
-      <div class="src-detail">${geoWord} income: <span>${fmt$(sl.pr_income)}</span></div>
-      <div class="src-detail">${geoWord} workers: <span>${fmtW(sl.pr_workers)}</span></div>
-      <div class="src-detail">Sector: <span>${t.sector}</span></div>
+      // TEER training-level labels (condensed from NOC 2021 definitions)
+      const teerLabels = {
+        0: 'management',
+        1: 'university degree',
+        2: 'college / apprenticeship 2+ yr',
+        3: 'college / apprenticeship <2 yr',
+        4: 'high school / on-the-job',
+        5: 'short-term demonstration',
+      };
+      const teerDesc = teerLabels[t.source_teer] || '';
+      // Province abbreviation from census division code
+      const provMap = {
+        '10': 'NL', '11': 'PE', '12': 'NS', '13': 'NB',
+        '24': 'QC', '35': 'ON', '46': 'MB', '47': 'SK',
+        '48': 'AB', '59': 'BC', '60': 'YT', '61': 'NT', '62': 'NU'
+      };
+      const cdStr = String(t.cd || '').replace(/^PR/, '');
+      const provAbbr = provMap[cdStr.slice(0, 2)] || '';
+      const incomeK = sl.pr_income ? Math.round(sl.pr_income / 1000) + 'k' : null;
+
+      // ═══ Source band (full width) ═══
+      document.getElementById('grid-band').innerHTML = `
+        <div class="band-headline"><span class="em3">${t.source_label}</span> in <span class="em2">${t.community}</span></div>
+        <div class="band-subline">Susceptible occupation identified by sector exposure in <span class="em1">${t.sector}</span></div>`;
+
+      // ═══ Row 1: explainer panels (double as column headers) ═══
+      left += `<div class="cell-explain c1">
+      <div class="exp-title">Skill-similar</div>
+      <div class="exp-body">Candidates ranked by similarity of competency profiles — 166 OaSIS competencies spanning skills, knowledge, abilities, and work context.</div>
+    </div>`;
+      left += `<div class="cell-explain c2">
+      <div class="exp-title">From similar to viable</div>
+      <div class="exp-body">Each candidate is screened for economic viability. A qualitative review confirms community fit.</div>
+      <div class="exp-legend"><span class="hm-ok">●</span><span class="hm-warn">●</span> = pass  ·  dot size = provincial workers</div>
+      <div class="hm-header">` + Object.keys(hmDefs).map(k =>
+        `<div class="hm-h-col" data-tip="${k === 'Qual.' ? 'Qual' : k}|${hmDefs[k].replace(/"/g, '&quot;')}">${k}</div>`).join('') + `</div>
     </div>`;
 
-      // ═══ R2C1: Similarity bars ═══
+      // ═══ Row 2, col 1: similarity bars ═══
       left += `<div class="cell-similar">`;
-      left += `<div class="col-title">Skill-similar</div>`;
-      left += `<div class="col-subtitle">Evaluated across skills, knowledge, abilities, and work context</div>`;
-      left += `<div class="sim-spacer"></div>`;
       left += `<div class="sim-rows">`;
       cands.forEach(c => {
         left += `<div class="sim-row" data-tt-label="${c.label}" data-tt-sim="${c.similarity.toFixed(3)}" data-tt-teer="${c.teer}" data-tt-noc="${c.noc || ''}">
@@ -601,23 +1189,9 @@
       });
       left += `</div></div>`;
 
-      // ═══ R1C2: Context ═══
-      left += `<div class="cell-context">
-      <div class="ctx-title">From similar to viable</div>
-      <div class="ctx-body">
-        Each candidate is screened for economic viability: comparable income,
-        sector independence, and local presence. A qualitative review then
-        confirms community fit.
-      </div>
-    </div>`;
-
-      // ═══ R2C2: Viability heatmap ═══
+      // ═══ Row 2, col 2: viability heatmap ═══
       left += `<div class="cell-filtered">`;
-      left += `<div class="col-title">Viability screening</div>`;
-      left += `<div class="col-subtitle"><span class="hm-ok">\u25CF</span><span class="hm-warn">\u25CF</span> = pass \u00a0\u00a0 size = provincial workers</div>`;
       left += `<div class="hm-grid">`;
-      left += `<div class="hm-header">` + Object.keys(hmDefs).map(k =>
-        `<div class="hm-h-col" data-tip="${k === 'Qual.' ? 'Qual' : k}|${hmDefs[k].replace(/"/g, '&quot;')}">${k}</div>`).join('') + `</div>`;
       left += `<div class="hm-data-rows">`;
       cands.forEach(c => {
         const f = deriveFilters(c);
@@ -635,10 +1209,17 @@
       });
       left += `</div></div></div>`;
 
-      // ═══ R1C3: Skill gap preview ═══
+      // ═══ Col 3, row 1: skill-gap explainer (aligns with the other panels) ═══
+      right += `<div class="cell-explain c3">
+      <div class="exp-title">Skill gap preview</div>
+      <div class="exp-body">For one viable pathway: the competencies where targeted training would have the most impact.</div>
+    </div>`;
+
+      // ═══ Col 3, row 2: rail — skill gaps on top, assessment notes below
+      //     (caveat callout omitted in D2) ═══
+      right += `<div class="rail-stack">`;
       const fg = t.featured_gap;
       right += `<div class="cell-rca">`;
-      right += `<div class="rca-title">Skill gap preview</div>`;
       if (fg && fg.bars && fg.bars.length > 0) {
         right += `<div class="rca-pair">
         <span class="from">${t.source_label}</span>
@@ -668,23 +1249,21 @@
         right += `<div class="rca-hint">No skill-gap data available for this pair's top matches.</div></div>`;
       }
 
-      // ═══ R2C3: Assessment notes ═══
+      // Assessment notes below the gap preview
       right += `<div class="cell-qual">`;
       right += `<div class="qual-title">Assessment notes</div>`;
       const an = t.assessment_notes || { notes: [] };
       an.notes.forEach(note => {
-        if (note.type === 'callout') {
-          right += `<div class="qual-callout"><p>${note.text}</p></div>`;
-        } else {
-          const arrow = note.type === 'up' ? '↑' : '↓';
-          const labelsHtml = formatNoteTitle(note.labels, arrow, note.type);
-          right += `<div class="qual-item ${note.type}">
+        if (note.type === 'callout') return;
+        const arrow = note.type === 'up' ? '↑' : '↓';
+        const labelsHtml = formatNoteTitle(note.labels, arrow, note.type);
+        right += `<div class="qual-item ${note.type}">
             <div class="qual-occ">${labelsHtml}</div>
             <div class="qual-explain">${note.text}</div>
           </div>`;
-        }
       });
       right += `</div>`;
+      right += `</div>`; // close .rail-stack
 
       document.getElementById('grid-left').innerHTML = left;
       document.getElementById('grid-right').innerHTML = right;
@@ -701,7 +1280,7 @@
 
     function populateControls(FULL_DATA) {
       if (!uiCommunity || !uiSource) return;
-      
+
       let tempCd = activeCd;
       uiCommunity.innerHTML = '';
       for (const cd in FULL_DATA) {
@@ -712,7 +1291,7 @@
         if (cd === tempCd) opt.selected = true;
         uiCommunity.appendChild(opt);
       }
-      
+
       function updateSources() {
         uiSource.innerHTML = '';
         const cd = uiCommunity.value;
@@ -733,7 +1312,7 @@
           uiSource.options[0].selected = true;
         }
       }
-      
+
       updateSources();
 
       uiCommunity.onchange = (e) => {
@@ -749,17 +1328,17 @@
     }
 
     function loadAndRender(metric) {
-      if (CACHE[metric]) { 
+      if (CACHE[metric]) {
         populateControls(CACHE[metric]);
-        buildWalkthrough(CACHE[metric][activeCd][activeSrc]); 
-        return; 
+        buildWalkthrough(CACHE[metric][activeCd][activeSrc]);
+        return;
       }
       fetch(`../data/D_walkthrough.all.${metric}.json`)
         .then(r => r.json())
-        .then(DATA => { 
-          CACHE[metric] = DATA; 
+        .then(DATA => {
+          CACHE[metric] = DATA;
           populateControls(DATA);
-          buildWalkthrough(DATA[activeCd][activeSrc]); 
+          buildWalkthrough(DATA[activeCd][activeSrc]);
         });
     }
 
@@ -767,25 +1346,25 @@
       const c = document.querySelector('.figure-container');
       const ctrls = document.querySelector('.iframe-controls');
       let h = document.querySelector('.dev-wrapper').scrollHeight;
-      
-      if (c) parent.postMessage({ type: 'figure-sized', fig: 'D_walkthrough', width: c.scrollWidth, height: h }, '*');
+
+      if (c) parent.postMessage({ type: 'figure-sized', fig: 'D2_walkthrough', width: c.scrollWidth, height: h }, '*');
     }
 
     // Listen for in-place metric switch or active pair switch from parent
     window.addEventListener('message', e => {
       if (!e.data) return;
       let needsRender = false;
-      
+
       if (e.data.type === 'set-metric' && e.data.metric && e.data.metric !== currentMetric) {
         currentMetric = e.data.metric;
         needsRender = true;
       }
-      
+
       if (e.data.type === 'set-active-pair') {
         if (e.data.cd && e.data.cd !== activeCd) { activeCd = e.data.cd; needsRender = true; }
         if (e.data.src && e.data.src !== activeSrc) { activeSrc = e.data.src; needsRender = true; }
       }
-      
+
       if (needsRender) loadAndRender(currentMetric);
     });
 
@@ -794,29 +1373,29 @@
     loadAndRender(currentMetric);
   </script>
 
-<!-- CTP WP Engine Embed Helper -->
-<script>
-  if (window.self !== window.top) {
-    document.body.classList.add('export-mode');
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
-        const ctrls = document.querySelector('.iframe-controls');
-        let h = document.querySelector('.dev-wrapper').scrollHeight;
-        
-        if (c) {
-          const fig = location.pathname.split('/').pop().replace('.html', '');
-          parent.postMessage({
-            type: 'figure-sized',
-            fig: fig,
-            width: c.scrollWidth,
-            height: h
-          }, '*');
-        }
-      }, 100);
-    });
-  }
-</script>
+  <!-- CTP WP Engine Embed Helper -->
+  <script>
+    if (window.self !== window.top) {
+      document.body.classList.add('export-mode');
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+          const ctrls = document.querySelector('.iframe-controls');
+          let h = document.querySelector('.dev-wrapper').scrollHeight;
+
+          if (c) {
+            const fig = location.pathname.split('/').pop().replace('.html', '');
+            parent.postMessage({
+              type: 'figure-sized',
+              fig: fig,
+              width: c.scrollWidth,
+              height: h
+            }, '*');
+          }
+        }, 100);
+      });
+    }
+  </script>
 </body>
 
 </html>

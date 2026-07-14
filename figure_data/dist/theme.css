@@ -7,7 +7,8 @@
    ════════════════════════════════════════════════════════════════ */
 
 /* ── Fonts ── */
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,400&display=swap');
+/* was: @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:...'); */
+@import url('https://use.typekit.net/qgl3xbs.css');
 
 :root {
 
@@ -19,32 +20,50 @@
      ══════════════════════════════════════════════════════════════ */
 
   /* ── Group 1 · Navy / Teal ── */
-  --irpp-navy:          #004667;   /* R:0   G:70  B:103  — primary brand */
-  --irpp-navy-light:    #B8C4D3;   /* R:184 G:196 B:211 */
-  --irpp-teal:          #44A3A4;   /* R:68  G:163 B:164 */
-  --irpp-teal-light:    #B5D2D3;   /* R:181 G:210 B:211 */
+  --irpp-navy: #004667;
+  /* R:0   G:70  B:103  — primary brand */
+  --irpp-navy-light: #B8C4D3;
+  /* R:184 G:196 B:211 */
+  --irpp-teal: #44A3A4;
+  /* R:68  G:163 B:164 */
+  --irpp-teal-light: #B5D2D3;
+  /* R:181 G:210 B:211 */
 
   /* ── Group 2 · Gold / Olive ── */
-  --irpp-gold:          #DEAC28;   /* R:222 G:172 B:40  */
-  --irpp-gold-light:    #F0D8A4;   /* R:240 G:216 B:164 */
-  --irpp-olive:         #A0A638;   /* R:160 G:166 B:56  */
-  --irpp-olive-light:   #D4D4A5;   /* R:212 G:212 B:165 */
+  --irpp-gold: #DEAC28;
+  /* R:222 G:172 B:40  */
+  --irpp-gold-light: #F0D8A4;
+  /* R:240 G:216 B:164 */
+  --irpp-olive: #A0A638;
+  /* R:160 G:166 B:56  */
+  --irpp-olive-light: #D4D4A5;
+  /* R:212 G:212 B:165 */
 
   /* ── Group 3 · Grey / Orange ── */
-  --irpp-grey:          #6D6E71;   /* R:109 G:110 B:113 */
-  --irpp-grey-light:    #B8B6B7;   /* R:184 G:182 B:183 */
-  --irpp-orange:        #D36828;   /* R:211 G:104 B:40  */
-  --irpp-orange-light:  #EBBA97;   /* R:235 G:186 B:151 */
+  --irpp-grey: #6D6E71;
+  /* R:109 G:110 B:113 */
+  --irpp-grey-light: #B8B6B7;
+  /* R:184 G:182 B:183 */
+  --irpp-orange: #D36828;
+  /* R:211 G:104 B:40  */
+  --irpp-orange-light: #EBBA97;
+  /* R:235 G:186 B:151 */
 
   /* ── Group 4 · Sage / Red ── */
-  --irpp-sage:          #77AE99;   /* R:119 G:174 B:153  (Infogram said 774E99 — wrong) */
-  --irpp-sage-light:    #C5D8CF;   /* R:197 G:216 B:207 */
-  --irpp-red:           #CE2129;   /* R:206 G:33  B:41  */
-  --irpp-red-light:     #E7A38F;   /* R:231 G:163 B:143 */
+  --irpp-sage: #77AE99;
+  /* R:119 G:174 B:153  (Infogram said 774E99 — wrong) */
+  --irpp-sage-light: #C5D8CF;
+  /* R:197 G:216 B:207 */
+  --irpp-red: #CE2129;
+  /* R:206 G:33  B:41  */
+  --irpp-red-light: #E7A38F;
+  /* R:231 G:163 B:143 */
 
   /* ── Group 5 · Purple ── */
-  --irpp-purple:        #55425B;   /* R:85  G:66  B:91  */
-  --irpp-purple-light:  #BCB3BE;   /* R:188 G:179 B:190 */
+  --irpp-purple: #55425B;
+  /* R:85  G:66  B:91  */
+  --irpp-purple-light: #BCB3BE;
+  /* R:188 G:179 B:190 */
 
 
   /* ══════════════════════════════════════════════════════════════
@@ -54,40 +73,46 @@
      ══════════════════════════════════════════════════════════════ */
 
   /* ── Structural ── */
-  --clr-heading:        var(--irpp-navy);
-  --clr-body:           #1a1a2e;
+  --clr-heading: var(--irpp-navy);
+  --clr-body: #1a1a2e;
   --clr-body-secondary: var(--irpp-grey);
-  --clr-border:         #dcdcdc;
-  --clr-border-strong:  var(--irpp-navy);
-  --clr-bg:             #ffffff;
-  --clr-bg-muted:       #f8f9fb;
-  --clr-gridline:       #e8e8e8;
+  --clr-border: #dcdcdc;
+  --clr-border-strong: var(--irpp-navy);
+  --clr-bg: #ffffff;
+  --clr-bg-muted: #f8f9fb;
+  --clr-gridline: #e8e8e8;
 
   /* ── Susceptible (at-risk occupations) ── */
-  --clr-susceptible:       var(--irpp-red);
+  --clr-susceptible: var(--irpp-red);
   --clr-susceptible-light: var(--irpp-red-light);
 
   /* ── Viable / positive outcomes ── */
-  --clr-viable:            var(--irpp-teal);
-  --clr-viable-light:      var(--irpp-teal-light);
+  --clr-viable: var(--irpp-teal);
+  --clr-viable-light: var(--irpp-teal-light);
 
   /* ── TEER levels (training/education) — navy gradient ── */
-  --clr-teer-high:   var(--irpp-navy);       /* TEER 0–1: Management / University */
-  --clr-teer-mid:    #3d7a9e;                /* TEER 2–3: mid blend */
-  --clr-teer-low:    var(--irpp-navy-light);  /* TEER 4–5: lower requirements */
+  --clr-teer-high: var(--irpp-navy);
+  /* TEER 0–1: Management / University */
+  --clr-teer-mid: #3d7a9e;
+  /* TEER 2–3: mid blend */
+  --clr-teer-low: var(--irpp-navy-light);
+  /* TEER 4–5: lower requirements */
 
   /* ── Earnings — sage/green gradient ── */
-  --clr-earnings-high:  #3d7a5e;             /* Well above susceptible wage */
-  --clr-earnings-mid:   var(--irpp-sage);     /* Comparable */
-  --clr-earnings-low:   var(--irpp-sage-light); /* Below threshold */
+  --clr-earnings-high: #3d7a5e;
+  /* Well above susceptible wage */
+  --clr-earnings-mid: var(--irpp-sage);
+  /* Comparable */
+  --clr-earnings-low: var(--irpp-sage-light);
+  /* Below threshold */
 
   /* ── Community / local presence — gold/amber gradient ── */
   --clr-community-endorsed: var(--irpp-gold);
-  --clr-community-present:  var(--irpp-gold-light);
-  --clr-community-absent:   #f5ecd4;
+  --clr-community-present: var(--irpp-gold-light);
+  --clr-community-absent: #f5ecd4;
 
   /* ── Neutral candidates ── */
-  --clr-neutral:       var(--irpp-grey);
+  --clr-neutral: var(--irpp-grey);
   --clr-neutral-light: var(--irpp-grey-light);
 
   /* ── Chart series (for multi-line/bar charts) ── */
@@ -103,41 +128,53 @@
 
   /* ══════════════════════════════════════════════════════════════
      3. TYPOGRAPHY
-     Primary: Nunito Sans (Google Fonts) — geometric sans-serif
-     closest free match to IRPP's Avenir Next LT Pro.
+     Primary: Proxima Nova (Adobe Fonts / Typekit kit qgl3xbs).
+     Weights 400, 500, 600, 700 in normal + italic.
+     Fallback: system-ui (SF Pro on macOS, Segoe UI on Windows).
+     was: Nunito Sans (Google Fonts) — closest free match to
+     IRPP's Avenir Next LT Pro.
      ══════════════════════════════════════════════════════════════ */
 
-  --font-primary: 'Nunito Sans', sans-serif;
+  --font-primary: 'proxima-nova', system-ui, sans-serif;
+  /* was: 'Nunito Sans', sans-serif */
 
   /* ── Scale (figure-internal — these are SMALL by design) ── */
-  --fs-label-xs:    7px;      /* Tiny labels, source lines, caveat text */
-  --fs-label-sm:    8px;      /* Axis ticks, legend items, panel headers */
-  --fs-label:       9px;      /* Standard label / annotation */
-  --fs-body:       10px;      /* Body text inside figures */
-  --fs-body-lg:    11px;      /* Larger body / short descriptions */
-  --fs-subhead:    12px;      /* Sub-section headings within a figure */
-  --fs-head:       14px;      /* Rare: main heading inside a figure */
+  --fs-label-xs: 8px;
+  /* was 7px (~5.3pt) — bumped to meet 6pt decorative floor */
+  --fs-label-sm: 8px;
+  /* Axis ticks, legend items, panel headers */
+  --fs-label: 10px;
+  /* was 9px (~6.75pt) — bumped to meet 7pt content floor */
+  --fs-body: 10px;
+  /* Body text inside figures */
+  --fs-body-lg: 11px;
+  /* Larger body / short descriptions */
+  --fs-subhead: 12px;
+  /* Sub-section headings within a figure */
+  --fs-head: 14px;
+  /* Rare: main heading inside a figure */
 
-  --fw-regular:    400;
-  --fw-medium:     500;
-  --fw-semibold:   600;
-  --fw-bold:       700;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
 
-  --lh-tight:      1.25;
-  --lh-normal:     1.45;
-  --lh-relaxed:    1.6;
+  --lh-tight: 1.25;
+  --lh-normal: 1.45;
+  --lh-relaxed: 1.6;
 
-  --ls-uppercase:  0.8px;     /* Letter-spacing for uppercase labels */
+  --ls-uppercase: 0.8px;
+  /* Letter-spacing for uppercase labels */
 
 
   /* ══════════════════════════════════════════════════════════════
      4. SPACING
      ══════════════════════════════════════════════════════════════ */
 
-  --sp-2:   2px;
-  --sp-4:   4px;
-  --sp-6:   6px;
-  --sp-8:   8px;
+  --sp-2: 2px;
+  --sp-4: 4px;
+  --sp-6: 6px;
+  --sp-8: 8px;
   --sp-10: 10px;
   --sp-12: 12px;
   --sp-14: 14px;
@@ -152,29 +189,36 @@
      ══════════════════════════════════════════════════════════════ */
 
   /* Standard horizontal figure (most figures) */
-  --fig-width:      680px;
-  --fig-height:     420px;
+  --fig-width: 550px;
+  /* was 680px — 19% print-sizing reduction */
+  --fig-height: 380px;
+  /* heights adjusted per-figure during polish */
 
   /* Wide variant (tables, networks with many nodes) */
-  --fig-width-wide:  860px;
+  --fig-width-wide: 602px;
+  /* was 860px — 30% reduction */
   --fig-height-wide: 480px;
 
   /* Tall variant (vertical flows, stacked panels) */
-  --fig-width-tall:  680px;
+  --fig-width-tall: 476px;
+  /* was 680px — 30% reduction */
   --fig-height-tall: 600px;
+
+  /* Short variant (compact tables) */
+  --fig-height-short: 320px;
 
 
   /* ══════════════════════════════════════════════════════════════
      6. INTERACTION — Transitions & effects
      ══════════════════════════════════════════════════════════════ */
 
-  --transition-fast:   120ms ease-out;
+  --transition-fast: 120ms ease-out;
   --transition-normal: 200ms ease-out;
-  --transition-slow:   350ms ease-out;
+  --transition-slow: 350ms ease-out;
 
-  --alpha-hover:       0.85;
-  --alpha-faded:       0.20;
-  --alpha-muted:       0.45;
+  --alpha-hover: 0.85;
+  --alpha-faded: 0.20;
+  --alpha-muted: 0.45;
 }
 
 
@@ -183,7 +227,9 @@
    Applied to all figures that import this file.
    ══════════════════════════════════════════════════════════════ */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -472,12 +518,15 @@ body.export-mode .dev-label {
     padding: 0 !important;
     margin: 0 !important;
   }
+
   .dev-wrapper {
     background: transparent !important;
     padding: 0 !important;
     min-height: auto !important;
   }
-  .dev-label, .iframe-controls {
+
+  .dev-label,
+  .iframe-controls {
     display: none !important;
   }
 }

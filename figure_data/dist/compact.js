@@ -2,7 +2,7 @@
  * compact.js — shared compact-mode runtime (mobile workstream, 2026-07-08)
  *
  * Contract (agreed 2026-07-08, see HANDOFF/TARGET_SPEC §3):
- *  - Compact fires below 640px of the iframe's OWN width, evaluated live.
+ *  - Compact fires below 440px of the iframe's OWN width, evaluated live.
  *    WordPress keeps one embed per figure; the figure decides its mode.
  *  - Sets `compact` class on <html>; every compact style is scoped under
  *    `html.compact` so desktop rendering is byte-identical without it.
@@ -15,7 +15,7 @@
  * Load AFTER the tippy <script> tags and BEFORE the figure's own script.
  */
 (function () {
-  var BREAKPOINT = 640;
+  var BREAKPOINT = 440; /* was 640 — lowered for 550px desktop width (print-sizing) */
   var root = document.documentElement;
   var compact = null;
 

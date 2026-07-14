@@ -53,7 +53,7 @@ async function exportFigure(browser, filename) {
     // Add export-mode class to strip dev wrapper styling
     await page.evaluate(() => document.body.classList.add('export-mode'));
 
-    // Wait for fonts to load (Nunito Sans from Google Fonts)
+    // Wait for fonts to load (Proxima Nova from Adobe Fonts / Typekit)
     await page.evaluate(() => document.fonts.ready);
 
     // Find the figure container

@@ -385,24 +385,106 @@ uniform scale-down was investigated and rejected — it pushes the smallest font
 **Agreed parameters (2026-07-13):**
 - **Width:** 680 → **550px** (≈19% reduction). This is the standard figure
   width (`--fig-width`). Wide and tall variants scale proportionally.
+- **Height:** 420 → **380px** (global default; per-figure adjustments expected).
 - **Font floors:** **7pt** for content text; **6pt** for decorative text
   (all-caps labels, bold attribute headers) — only where needed.
 - **Single source:** Figures are modified in-place at 550px. Both the web
   (hosted interactive) and print (PNG export) use the same HTML.
   No fork/dual-source.
-- **Compact breakpoint:** Lowered from 640px to **~440px** (phone-only),
+- **Compact breakpoint:** Lowered from 640px to **440px** (phone-only),
   since 550px desktop width is now below the old trigger.
-- **Safety:** Git snapshot before the global change; existing
+- **Safety:** Git tag `pre-print-sizing` before the global change; existing
   `dist/exports/*.png` kept as the before-reference; previous CSS values
   commented inline.
 - **Workflow:** Global `theme.css` change first, then per-figure polish pass
   (heights, spacing, hardcoded px, copy tightening) one at a time with RC.
 
-A3 was prototyped in a throwaway `dist/print/` sandbox to validate
-feasibility. Key learnings: the sidebar needed an 18% width cut, padding
-removal, and copy condensing (shorter community descriptions) to avoid text
-overflow. Font sizes were bumped *up* (6.5→7, 5.5→6) rather than down. Full
-trial record in `figure_data/PRINT_SIZING.md`.
+### Font swap — Nunito Sans → Proxima Nova
+
+Layout coordinator requested Proxima Nova. Available via Adobe Fonts (Typekit
+kit `qgl3xbs`) under the existing Creative Cloud subscription — no additional
+license cost. Kit provides weights 400, 500, 600, 700 in normal + italic,
+matching all weights used in the figures.
+
+- **Import:** `@import url('https://use.typekit.net/qgl3xbs.css')` replaces
+  the Google Fonts Nunito Sans import.
+- **Family:** `'proxima-nova', system-ui, sans-serif` — system-ui as
+  fallback (SF Pro on macOS, Segoe UI on Windows). Nunito Sans removed
+  entirely from the stack to avoid loading two web fonts.
+- **Rationale for no Nunito fallback:** Loading two web fonts doubles network
+  dependency for a fallback that should rarely fire. System font fallback is
+  a cleaner graceful degradation.
+- Proxima Nova has slightly different character widths than Nunito Sans —
+  font swap was applied *before* per-figure sizing work to calibrate against
+  the final font metrics.
+
+### Figure archival
+
+- **A2_map.html** → `dist/archive/` (superseded by A3 interactive map).
+- **K_appendix_screening.html** → `dist/appendices/` (separate from main
+  figures; not part of this sizing workstream).
+
+A3 was prototyped in a throwaway `dist/print/` sandbox (since deleted) to
+validate feasibility, then applied in-place. Key learnings: the sidebar
+needed a 27% width cut (274→200px), padding removal, and copy condensing
+(shorter community descriptions) to avoid text overflow. Font sizes were
+bumped *up* (6.5→7, 5.5→6) rather than down. Full execution record in
+`figure_data/PRINT_SIZING.md`.
+
+---
+
+## Figure E2 — Table 2 refactor (2026-07-14)
+
+The print-sizing pass on E escalated into a full rethink of Table 2's column
+grammar. E2 (`gen_E2_viable_table.py` + `dist/figures/E2_viable_table.html`)
+supersedes E; `E_viable_table.html` moved to `dist/archive/` (gen_E stays —
+gen_E2 imports its pick-entry builder; E JSONs still emitted).
+
+**Framing decided in brainstorm (RC, 2026-07-14):** the table's job is to show
+the framework *in use* — "the screen proposes, the review selects." The picks
+are a curated illustration of how a community would apply the framework under
+limited information, NOT the framework's definitive output. The design must
+show the picks are a selection from a larger viable pool without visually
+prosecuting individual picks (no rank display at baseline; rank/similarity/
+rationale reserved for tooltips).
+
+**Column structure** (was: comparable picks | extensive picks | NOC3 residual):
+
+1. **Susceptible occupation** (19%) — name + TEER (NOCs dropped for space).
+2. **Top 10 viable occupations** (32%) — the FULL top-10 viable window
+   (picks included), grouped by 1-digit NOC family with counts. Full-window
+   (not residual) because the column now *precedes* the picks and represents
+   the screen stage: a residual can't precede what it's the residue of, and
+   its size would vary inversely with curation intensity (perverse). Window
+   always sums to 10 (`is_viable` includes pick-override statuses). Verified
+   across all 7 communities × both pick sources.
+   - **NOC1, not NOC2** — reverses the 2026-07-13 HANDOFF_POLISH plan
+     ("NOC1 too coarse"). That rationale assumed the column carried
+     skill-level information; in E2 the TEER signal lives in the curated
+     column's grouping, so the summary's only job is breadth, and 4 broad
+     families beat 11 two-digit labels at 550px. Do not "restore" NOC2.
+3. **Curated pathways — simulated community review** (49%) — E's two TEER
+   columns collapsed into one list. Rationale: parallel columns imply
+   category completeness (an empty "comparable" cell falsely asserts no
+   lateral option exists); ragged lists don't. Comparable picks are the
+   *unmarked default*; aspirational picks sit in a navy bracket
+   (fit-content left+bottom border) with a one-time legend ("may require
+   additional training") riding the bottom line on the first bracketed row
+   per community — later rows carry the bare bracket. Dagger superscript =
+   pick retained despite failing a screen; explanation lives in an HTML
+   comment in the figure (for production notes), not rendered.
+
+**Header carries the epistemics:** "Curated pathways / simulated community
+review" replaces "Viable (…)" headers, which over-claimed exhaustiveness.
+Column-2 subtitle says only "grouped by occupation family" (the parsing aid);
+the similarity-ranking caveat belongs in the printed notes.
+
+**Known follow-ups:** figure has no tooltips yet (rationale/full-name/member
+data already in the E2 JSONs); compact mode inherited from E's pattern but
+not polished; PNG export pending with the rest of the print-sizing pass.
+Data note: DECISIONS' earlier "6 override failures" count is stale —
+~29 author picks carry `pick_failed_filters` under the seven-filter pipeline;
+reconcile before citing either number.
 
 ---
 

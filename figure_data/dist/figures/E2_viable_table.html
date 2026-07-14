@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viable Occupations by Community</title>
+<link rel="stylesheet" href="../theme.css">
+<script src="../compact.js"></script>
+<style>
+  .figure-container {
+    width: var(--fig-width);
+    height: auto;
+    padding: 8px 12px;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .community-header {
+    font-size: 9.5px; font-weight: 700; color: #fff;
+    background: var(--irpp-navy); padding: 4px 10px;
+    letter-spacing: 0.3px; flex-shrink: 0;
+  }
+
+  .table-wrap {
+    flex: 1;
+    overflow: hidden;
+    border: 1px solid var(--clr-border);
+    border-top: none;
+  }
+
+  .viable-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .viable-table th {
+    font-size: var(--fs-body-lg);
+    font-weight: var(--fw-semibold);
+    color: var(--clr-heading);
+    background: var(--clr-bg-muted);
+    text-align: left;
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--clr-border);
+    vertical-align: top;
+  }
+  .viable-table th .th-sub {
+    display: block;
+    font-weight: var(--fw-regular);
+    color: var(--clr-body-secondary);
+    font-size: 9.5px;             /* ≥7pt print floor (was --fs-label-sm 8px = 6pt) */
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .viable-table td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--clr-gridline);
+    vertical-align: top;
+    font-size: var(--fs-body);
+  }
+  .col-src { width: 19%; }
+  .col-screen { width: 32%; }
+  .col-curated { width: 49%; }
+
+  .src-label { font-weight: var(--fw-semibold); }
+  .src-meta { font-size: 9.5px; color: var(--clr-body-secondary); margin-top: 2px; }  /* ≥7pt floor */
+
+  .fam-line { line-height: var(--lh-tight); margin-bottom: 2px; }
+  .fam-count { color: var(--clr-body-secondary); }
+
+  /* Aspirational-group annotation: comparable picks are the unmarked default;
+     the more-training picks are bracketed (selective borders of an invisible
+     rectangle) with a hanging caveat note — annotation, not category. */
+  /* Outer container stays full-width: it is the positioning context that keeps
+     the note right-anchored to the column edge regardless of content width. */
+  .asp-annot { position: relative; }
+  .asp-annot.has-note { margin-bottom: 4px; }  /* room for the note hanging below the line */
+  /* Small break between the comparable list and the bracketed group — only
+     when a comparable list precedes it (aspirational-only cells stay flush). */
+  ul.pick-list + .asp-annot { margin-top: 5px; }
+  /* The bracket (left + bottom borders) sits on the inner list and shrinks to
+     fit: short names end the line naturally; near-full-width names run the
+     line under the note, where its white background knocks it out (arrow on
+     the noted row, plain box elsewhere). */
+  .asp-annot .pick-list {
+    width: fit-content;
+    padding: 0 6px 2px 4px;
+    border-left: 1px solid var(--irpp-navy);
+    border-bottom: 1px solid var(--irpp-navy);
+  }
+  /* On the noted row, the line must always reach under the label so it reads
+     as terminating AT it (arrow), whatever the name lengths: the label is
+     right-anchored and wider than 110px, so ending within 110px of the column
+     edge guarantees the intersection at any container width. */
+  .asp-annot.has-note .pick-list { min-width: calc(100% - 110px); }
+  /* One-time legend: rides the line, leaning below it (translateY 80%); the
+     right padding extends the white knockout to the column edge without
+     moving the text (old right:10px + 3px pad = same 13px text offset). */
+  .asp-note {
+    /* integer layout offsets, no transform: percentage translate is applied
+       post-layout without pixel snapping, so its distance to the 1px border
+       drifted with the fractional content heights above. bottom:-7px with a
+       10px box = 3px above the line, 7px below (≈ the old translateY(70%)). */
+    position: absolute; right: 0; bottom: -7px; height: 10px;
+    line-height: 10px; white-space: nowrap;
+    font-size: 9.5px; font-style: italic; font-weight: var(--fw-regular);  /* ≥7pt floor */
+    color: var(--irpp-navy);
+    background: var(--clr-bg); padding: 0 13px 0 3px; z-index: 1;
+  }
+  ul.pick-list { list-style: none; margin: 0; padding: 0; }
+  ul.pick-list li { line-height: var(--lh-tight); margin-bottom: 3px; }
+  sup.dagger {
+    color: var(--clr-heading); font-weight: var(--fw-semibold);
+    /* neutralize <sup>'s default raised alignment so it can't grow the line box */
+    font-size: 8px; line-height: 0; vertical-align: baseline;
+    position: relative; top: -0.35em;
+  }
+  .none { color: var(--clr-body-secondary); }
+
+  /* ── COMPACT (<440px iframe width): columns stack into labelled blocks
+     under a collapsible per source occupation (2026-07-08 pattern). ── */
+  html.compact .figure-container { width: 100%; padding: 8px; }
+  html.compact .dev-wrapper { padding: 8px; }
+  html.compact .community-header { font-size: 13px; padding: 7px 12px; }
+  html.compact .viable-table thead { display: none; }
+  html.compact .viable-table, html.compact .viable-table tbody,
+  html.compact .viable-table tr, html.compact .viable-table td { display: block; width: 100%; }
+  html.compact .e2-cell { padding: 6px 10px 8px; font-size: 12px; }
+  html.compact .e2-cell::before {
+    content: attr(data-col);
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--clr-body-secondary);
+    margin-bottom: 3px;
+  }
+  html.compact .fam-line { margin-bottom: 3px; }
+  html.compact .asp-note { font-size: 10px; }
+  html.compact ul.pick-list li { margin-bottom: 4px; }
+
+  html.compact details.e-src { border-bottom: 1px solid #ddd; }
+  html.compact details.e-src > summary {
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    background: #f6f5f0;
+    color: var(--clr-body);
+  }
+  html.compact details.e-src > summary .src-meta { font-size: 10px; font-weight: 400; }
+  html.compact details.e-src > summary::-webkit-details-marker { display: none; }
+  html.compact details.e-src > summary::before { content: '▸ '; color: var(--irpp-navy); }
+  html.compact details.e-src[open] > summary::before { content: '▾ '; }
+</style>
+</head>
+<body>
+<div class="dev-wrapper">
+  <div class="iframe-controls">
+    <div class="control-group">
+      <label>Community</label>
+      <select id="ui-community"></select>
+    </div>
+  </div>
+  <div class="figure-container">
+    <div class="community-header" id="comm-name">Loading…</div>
+    <div class="table-wrap">
+      <table class="viable-table">
+        <thead>
+          <tr>
+            <th class="col-src">Susceptible occupation</th>
+            <th class="col-screen">Top 10 viable occupations<span class="th-sub">grouped by occupation family</span></th>
+            <th class="col-curated">Curated pathways<span class="th-sub">simulated community review</span></th>
+          </tr>
+        </thead>
+        <tbody id="table-rows"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Production notes (not rendered here; to be added to the figure's printed
+     notes by production):
+     † Retained by the community review despite not passing every quantitative
+       screen.
+     Curated pathways are illustrative: the review draws on local knowledge and
+     can reach beyond the top viable matches. A community applying the framework
+     would arrive at its own selection. -->
+
+<script>
+  let currentMetric = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
+  let currentPick = (new URLSearchParams(location.search).get('pick') === 'user') ? 'user' : 'author';
+  let activeCd = (new URLSearchParams(location.search).get('cd')) || '4701';  // Estevan default
+  const CACHE = {};
+
+  function cacheKey(metric, pick) { return `${pick}.${metric}`; }
+
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  function sourceCell(src) {
+    return `<div class="src-label">${esc(src.source_label)}</div>`
+      + `<div class="src-meta">TEER ${src.source_teer}</div>`;
+  }
+
+  function screenCell(src) {
+    return src.window_families.map(f =>
+      `<div class="fam-line">${esc(f.label)}&ensp;<span class="fam-count">${f.count}</span></div>`
+    ).join('');
+  }
+
+  function pickItem(p) {
+    const dagger = p.pick_failed_filters ? '<sup class="dagger">†</sup>' : '';
+    return `<li>${esc(p.candidate_label)}${dagger}</li>`;
+  }
+
+  function curatedCell(src, withNote) {
+    let html = '';
+    if (src.comparable.length > 0) {
+      html += `<ul class="pick-list">${src.comparable.map(pickItem).join('')}</ul>`;
+    }
+    if (src.extensive.length > 0) {
+      const note = withNote ? `<div class="asp-note">may require additional training</div>` : '';
+      html += `<div class="asp-annot${withNote ? ' has-note' : ''}">`
+        + `<ul class="pick-list">${src.extensive.map(pickItem).join('')}</ul>`
+        + note
+        + `</div>`;
+    }
+    return html || '<span class="none">—</span>';
+  }
+
+  function build(comm) {
+    document.getElementById('comm-name').textContent = comm.community;
+    const tbody = document.getElementById('table-rows');
+    const compact = window.isCompact && window.isCompact();
+    let html = '';
+    let noteShown = false;  // caveat note = one-time legend on the first aspirational group
+
+    comm.sources.forEach((src, si) => {
+      const withNote = src.extensive.length > 0 && !noteShown;
+      if (withNote) noteShown = true;
+      if (compact) {
+        html += `<tr><td colspan="3">
+          <details class="e-src"${si === 0 ? ' open' : ''}>
+            <summary>${esc(src.source_label)} <span class="src-meta">TEER ${src.source_teer}</span></summary>
+            <div class="e2-cell" data-col="Top 10 viable occupations">${screenCell(src)}</div>
+            <div class="e2-cell" data-col="Curated pathways — simulated community review">${curatedCell(src, withNote)}</div>
+          </details>
+        </td></tr>`;
+      } else {
+        html += `<tr>
+          <td class="col-src">${sourceCell(src)}</td>
+          <td class="col-screen">${screenCell(src)}</td>
+          <td class="col-curated">${curatedCell(src, withNote)}</td>
+        </tr>`;
+      }
+    });
+
+    tbody.innerHTML = html;
+    reportSize();
+  }
+
+  function tryRender(keyed) {
+    const comm = keyed[activeCd] || keyed[Object.keys(keyed)[0]];
+    if (comm) build(comm);
+  }
+
+  const uiCommunity = document.getElementById('ui-community');
+  function populateControls(keyed) {
+    if (!uiCommunity) return;
+
+    let tempCd = activeCd;
+    uiCommunity.innerHTML = '';
+    for (const cd in keyed) {
+      const opt = document.createElement('option');
+      opt.value = cd;
+      opt.textContent = keyed[cd].community;
+      if (cd === tempCd) opt.selected = true;
+      uiCommunity.appendChild(opt);
+    }
+
+    uiCommunity.onchange = (e) => {
+      activeCd = e.target.value;
+      tryRender(keyed);
+    };
+  }
+
+  function loadAndRender(metric, pick) {
+    const key = cacheKey(metric, pick);
+    if (CACHE[key]) {
+      populateControls(CACHE[key]);
+      tryRender(CACHE[key]);
+      return;
+    }
+    fetch(`../data/E2_viable_table.all.${pick}.${metric}.json`)
+      .then(r => r.json())
+      .then(DATA => {
+        CACHE[key] = DATA;
+        populateControls(DATA);
+        tryRender(DATA);
+      });
+  }
+
+  function reportSize() {
+    const c = document.querySelector('.figure-container');
+    let h = document.querySelector('.dev-wrapper').scrollHeight;
+
+    if (c) parent.postMessage({ type: 'figure-sized', fig: 'E2_viable_table', width: c.scrollWidth, height: h }, '*');
+  }
+
+  // Listen for in-place metric, pick, or community switch from parent
+  window.addEventListener('message', e => {
+    if (!e.data) return;
+    if (e.data.type === 'set-metric' && e.data.metric && e.data.metric !== currentMetric) {
+      currentMetric = e.data.metric;
+      loadAndRender(currentMetric, currentPick);
+    }
+    if (e.data.type === 'set-pick' && e.data.pick && e.data.pick !== currentPick) {
+      currentPick = e.data.pick;
+      loadAndRender(currentMetric, currentPick);
+    }
+    if (e.data.type === 'set-active-pair' && e.data.cd && e.data.cd !== activeCd) {
+      activeCd = e.data.cd;
+      loadAndRender(currentMetric, currentPick);
+    }
+  });
+
+  window.addEventListener('compactmodechange', () => loadAndRender(currentMetric, currentPick));
+  document.addEventListener('toggle', e => {
+    if (e.target && e.target.tagName === 'DETAILS') reportSize();
+  }, true);
+
+  loadAndRender(currentMetric, currentPick);
+</script>
+
+<!-- CTP WP Engine Embed Helper -->
+<script>
+  if (window.self !== window.top) {
+    document.body.classList.add('export-mode');
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+        let h = document.querySelector('.dev-wrapper').scrollHeight;
+
+        if (c) {
+          const fig = location.pathname.split('/').pop().replace('.html', '');
+          parent.postMessage({
+            type: 'figure-sized',
+            fig: fig,
+            width: c.scrollWidth,
+            height: h
+          }, '*');
+        }
+      }, 100);
+    });
+  }
+</script>
+</body>
+</html>

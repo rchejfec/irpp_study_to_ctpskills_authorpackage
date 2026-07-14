@@ -118,8 +118,10 @@
 
     /* ── Community list panel ── */
     .community-list {
-      width: 274px;
-      padding: var(--sp-2) var(--sp-8) var(--sp-4) var(--sp-10);
+      width: 200px;
+      /* was 274px — 18% reduction for 550px width */
+      padding: var(--sp-2) 0 var(--sp-4) 3px;
+      /* was: sp-2 sp-8 sp-4 sp-10 — right removed, left halved */
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -188,7 +190,8 @@
 
     /* ── Detail rows ── */
     .comm-row {
-      font-size: 6.5px;
+      font-size: 7px;
+      /* was 6.5px — bumped to meet 7pt content floor */
       color: var(--clr-body-secondary);
       line-height: 1.3;
       margin-top: 1px;
@@ -198,11 +201,12 @@
       font-weight: var(--fw-bold);
       color: var(--clr-heading);
       text-transform: uppercase;
-      font-size: 5.5px;
+      font-size: 6px;
+      /* was 5.5px — bumped to meet 6pt decorative floor (all-caps bold) */
       letter-spacing: 0.3px;
     }
 
-    /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
+    /* ── COMPACT (<440px iframe width) — lossy per 2026-07-08 decisions:
        map on top, community list stacked below; the "local economy" detail
        row is dropped (sector stays in the header line). ── */
     html.compact .figure-container {
@@ -294,8 +298,8 @@
             <div class="comm-body">
               <div class="comm-header"><span class="comm-name">Division No. 3, NL</span> — <span
                   class="comm-sector">Maritime transport</span></div>
-              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Healthcare,
-                agriculture/fishing, transport</div>
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Health care, fishing,
+                transport</div>
               <div class="comm-row"><span class="comm-key">Major centres: </span>Channel-Port aux Basques</div>
             </div>
           </div>
@@ -305,10 +309,9 @@
             <div class="comm-body">
               <div class="comm-header"><span class="comm-name">Algoma, ON</span> — <span class="comm-sector">Steel
                   manufacturing</span></div>
-              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Healthcare, retail,
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Health care, retail,
                 manufacturing</div>
-              <div class="comm-row"><span class="comm-key">Major centres: </span>Sault Ste. Marie, Elliot Lake,
-                Blind River</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Sault Ste. Marie, Elliot Lake</div>
             </div>
           </div>
 
@@ -327,11 +330,10 @@
             <div class="comm-num">4</div>
             <div class="comm-body">
               <div class="comm-header"><span class="comm-name">Division No. 15, MB</span> — <span
-                  class="comm-sector">Food processing + agriculture</span></div>
-              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Manufacturing,
-                agriculture, healthcare</div>
-              <div class="comm-row"><span class="comm-key">Major centres: </span>Neepawa, Minnedosa, Carberry
+                  class="comm-sector">Agri-food</span></div>
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Agri-food, health care
               </div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Neepawa, Minnedosa</div>
             </div>
           </div>
 
@@ -340,9 +342,9 @@
             <div class="comm-body">
               <div class="comm-header"><span class="comm-name">Division No. 1, SK</span> — <span
                   class="comm-sector">Coal + oil &amp; gas</span></div>
-              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Agriculture, mining/oil
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Agriculture, mining, oil
                 &amp; gas, retail</div>
-              <div class="comm-row"><span class="comm-key">Major centres: </span>Estevan, Carlyle, Oxbow</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Estevan, Carlyle</div>
             </div>
           </div>
 
@@ -351,10 +353,9 @@
             <div class="comm-body">
               <div class="comm-header"><span class="comm-name">Division No. 16, AB</span> — <span
                   class="comm-sector">Oil sands extraction</span></div>
-              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Mining/oil &amp; gas,
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Oil &amp; gas,
                 retail, construction</div>
-              <div class="comm-row"><span class="comm-key">Major centres: </span>Wood Buffalo (incl. Fort
-                McMurray)</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Fort McMurray</div>
             </div>
           </div>
 
@@ -362,11 +363,10 @@
             <div class="comm-num">7</div>
             <div class="comm-body">
               <div class="comm-header"><span class="comm-name">Northwest Territories</span> — <span
-                  class="comm-sector">Diamond + critical mineral mining</span></div>
-              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Public admin,
-                healthcare, education</div>
-              <div class="comm-row"><span class="comm-key">Major centres: </span>Yellowknife, Hay River, Inuvik
-              </div>
+                  class="comm-sector">Mineral mining</span></div>
+              <div class="comm-row comm-row--econ"><span class="comm-key">Local economy: </span>Public admin, health
+                care, education</div>
+              <div class="comm-row"><span class="comm-key">Major centres: </span>Yellowknife, Inuvik</div>
             </div>
           </div>
 

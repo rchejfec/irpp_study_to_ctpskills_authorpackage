@@ -34,8 +34,10 @@
       display: flex;
       background: var(--clr-bg-muted);
       border-bottom: 1px solid var(--clr-border);
-      min-height: 42px;
+      height: 50px;
+      /* fixed — fits 2-line occ names, equalizes panel chart areas */
       flex-shrink: 0;
+      overflow: hidden;
     }
 
     .header-col {
@@ -43,11 +45,12 @@
       padding: 6px 10px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     .header-role {
-      font-size: 6.5px;
+      font-size: 8px;
+      /* was 6.5px — bumped to 6pt decorative floor */
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.8px;
@@ -56,16 +59,31 @@
     }
 
     .header-occ {
-      font-size: 9px;
+      font-size: 10px;
+      /* was 9px — bumped to 7pt content floor */
       font-weight: 700;
       line-height: 1.25;
     }
 
-    .header-col.source .header-role { color: var(--clr-body-secondary); }
-    .header-col.source .header-occ { color: var(--irpp-red); }
-    .header-col.target { text-align: right; }
-    .header-col.target .header-role { color: var(--clr-body-secondary); }
-    .header-col.target .header-occ { color: var(--irpp-teal); }
+    .header-col.source .header-role {
+      color: var(--clr-body-secondary);
+    }
+
+    .header-col.source .header-occ {
+      color: var(--irpp-red);
+    }
+
+    .header-col.target {
+      text-align: right;
+    }
+
+    .header-col.target .header-role {
+      color: var(--clr-body-secondary);
+    }
+
+    .header-col.target .header-occ {
+      color: var(--irpp-teal);
+    }
 
     /* ── Chart ── */
     .chart-area {
@@ -73,32 +91,63 @@
       position: relative;
     }
 
-    /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
+    /* ── COMPACT (<440px iframe width) — lossy per 2026-07-08 decisions:
        one pathway panel instead of two side-by-side, type scaled to the
        12px floor. The second pathway stays reachable via set-active-pair. ── */
-    html.compact .figure-container { width: 100%; height: auto; padding: 8px; }
-    html.compact .dev-wrapper { padding: 8px; }
-    html.compact .panel-header { min-height: 48px; }
-    html.compact .header-role { font-size: 10px; }
-    html.compact .header-occ { font-size: 13px; }
-    html.compact .chart-area { flex: none; height: 380px; }
-    html.compact .iframe-controls { flex-direction: column; align-items: stretch; min-height: auto; gap: 10px; }
-  
+    html.compact .figure-container {
+      width: 100%;
+      height: auto;
+      padding: 8px;
+    }
+
+    html.compact .dev-wrapper {
+      padding: 8px;
+    }
+
+    html.compact .panel-header {
+      min-height: 48px;
+    }
+
+    html.compact .header-role {
+      font-size: 10px;
+    }
+
+    html.compact .header-occ {
+      font-size: 13px;
+    }
+
+    html.compact .chart-area {
+      flex: none;
+      height: 380px;
+    }
+
+    html.compact .iframe-controls {
+      flex-direction: column;
+      align-items: stretch;
+      min-height: auto;
+      gap: 10px;
+    }
+
     /* ── Controls Layout Overrides ── */
     .iframe-controls {
-      min-height: 72px;
+      min-height: auto;
+      padding: var(--sp-4) var(--sp-16) var(--sp-4);
     }
+
     .control-stack {
       flex: 3;
       min-width: 0;
     }
+
     .control-stack .control-group label {
       width: 55px;
       flex-shrink: 0;
     }
+
     .control-stack .control-group select {
       min-width: 0;
     }
+
     /* ── Info Panel & Pills ── */
     .info-panel {
       flex: 2;
@@ -110,6 +159,7 @@
       flex-direction: column;
       margin-top: 0;
     }
+
     .info-panel label {
       font-size: 10.5px;
       line-height: 1.2;
@@ -117,15 +167,18 @@
       color: var(--clr-body-secondary);
       margin: 0;
     }
+
     .community-pills {
       display: flex;
       flex-wrap: wrap;
       gap: 2px;
       margin-top: 6px;
     }
+
     .comm-pill {
       display: inline-block;
-      font-size: 8.5px;
+      font-size: 10px;
+      /* was 8.5px — bumped to 7pt content floor */
       font-weight: var(--fw-semibold);
       letter-spacing: 0.3px;
       padding: 1.5px 5px;
@@ -135,6 +188,7 @@
       color: var(--clr-body-secondary);
       line-height: 1.4;
     }
+
     html.compact .comm-pill {
       font-size: 12px;
       padding: 2px 6px;
@@ -165,7 +219,7 @@
   </div>
 
   <script>
-        let activeSrc = 'default';
+    let activeSrc = 'default';
     let activeTgt = 'default';
     const CACHE = { PAIRS: null };
 
@@ -191,16 +245,16 @@
     // Theme colours
     const s = getComputedStyle(document.documentElement);
     const C = {
-      src:     s.getPropertyValue('--irpp-red').trim(),
-      srcLt:   s.getPropertyValue('--irpp-red-light').trim(),
-      tgt:     s.getPropertyValue('--irpp-teal').trim(),
-      tgtLt:   s.getPropertyValue('--irpp-teal-light').trim(),
-      navy:    s.getPropertyValue('--irpp-navy').trim(),
-      sage:    s.getPropertyValue('--irpp-sage').trim(),
-      orange:  s.getPropertyValue('--irpp-orange').trim(),
-      border:  s.getPropertyValue('--clr-border').trim(),
-      grid:    s.getPropertyValue('--clr-gridline').trim(),
-      body:    s.getPropertyValue('--clr-body').trim(),
+      src: s.getPropertyValue('--irpp-red').trim(),
+      srcLt: s.getPropertyValue('--irpp-red-light').trim(),
+      tgt: s.getPropertyValue('--irpp-teal').trim(),
+      tgtLt: s.getPropertyValue('--irpp-teal-light').trim(),
+      navy: s.getPropertyValue('--irpp-navy').trim(),
+      sage: s.getPropertyValue('--irpp-sage').trim(),
+      orange: s.getPropertyValue('--irpp-orange').trim(),
+      border: s.getPropertyValue('--clr-border').trim(),
+      grid: s.getPropertyValue('--clr-gridline').trim(),
+      body: s.getPropertyValue('--clr-body').trim(),
       bodySec: s.getPropertyValue('--clr-body-secondary').trim(),
       bgMuted: s.getPropertyValue('--clr-bg-muted').trim(),
     };
@@ -226,7 +280,7 @@
       function updateSources() {
         const srcMap = {};
         pairs.forEach(p => { srcMap[p.source_noc] = p.source_label; });
-        
+
         uiSource.innerHTML = '';
         const optDef = document.createElement('option');
         optDef.value = 'default';
@@ -264,7 +318,7 @@
           if (p.target_noc === activeTgt) { opt.selected = true; foundActiveTgt = true; }
           uiTarget.appendChild(opt);
         });
-        
+
         if (!foundActiveTgt && uiTarget.options.length > 0) {
           activeTgt = uiTarget.options[0].value;
           uiTarget.options[0].selected = true;
@@ -295,7 +349,7 @@
       if (activeSrc !== 'default') {
         const srcPairs = allPairs.filter(p => p.source_noc === activeSrc);
         const sourceComms = [...new Set(srcPairs.flatMap(p => p.communities))].sort();
-        
+
         const activePair = srcPairs.find(p => p.target_noc === activeTgt);
         const pairComms = activePair ? activePair.communities : [];
 
@@ -311,12 +365,16 @@
 
       const compact = window.isCompact && window.isCompact();
       const F = compact
-        ? { label: 12, wrap: 15, lineH: 15, twoLineUp: 8, axis: 10, annot: 11.5, annotRca: 11,
-            pill: 9, pillChar: 7, pillPad: 12, pillH: 16, pillY1: 24, pillY2: 34,
-            note: 12, noteLineH: 15, marginLeft: 138 }
-        : { label: 8.5, wrap: 18, lineH: 11, twoLineUp: 6, axis: 7.5, annot: 9.5, annotRca: 9,
-            pill: 7, pillChar: 5.5, pillPad: 10, pillH: 13, pillY1: 16, pillY2: 24,
-            note: 8.5, noteLineH: 12, marginLeft: 120 };
+        ? {
+          label: 12, wrap: 15, lineH: 15, twoLineUp: 8, axis: 10, annot: 11.5, annotRca: 11,
+          pill: 9, pillChar: 7, pillPad: 12, pillH: 16, pillY1: 24, pillY2: 34,
+          note: 12, noteLineH: 15, marginLeft: 138
+        }
+        : {
+          label: 10, wrap: 18, lineH: 12, twoLineUp: 6, axis: 8, annot: 10, annotRca: 10,
+          pill: 8, pillChar: 6.5, pillPad: 10, pillH: 14, pillY1: 17, pillY2: 27,
+          note: 10, noteLineH: 14, marginLeft: 110
+        };
 
       let pairsToRender = [];
       if (activeSrc === 'default') {
@@ -330,13 +388,13 @@
         const p = allPairs.find(p => p.source_noc === activeSrc && p.target_noc === activeTgt);
         if (p) pairsToRender.push(p);
       }
-      
+
       if (pairsToRender.length === 0) {
         container.innerHTML = `<div style="padding: 20px; font-family: 'Inter', sans-serif; font-size: 14px; color: #666;">No gap highlighting data found for this pair.</div>`;
         reportSize();
         return;
       }
-      
+
       // DOM Pass: Create and append all panels first so flex layout settles
       pairsToRender.forEach((pair, pi) => {
         const panel = document.createElement('div');
@@ -366,7 +424,7 @@
         const W = area.clientWidth || 320;
         const H = area.clientHeight || 340;
 
-        const margin = { top: 12, right: 16, bottom: 44, left: F.marginLeft };
+        const margin = { top: 12, right: 16, bottom: 36, left: F.marginLeft };
         const w = W - margin.left - margin.right;
         const h = H - margin.top - margin.bottom;
 
@@ -379,9 +437,10 @@
         // Scales
         const maxRCA = d3.max(pair.comps, d => Math.max(d.src, d.tgt)) * 1.12;
         const x = d3.scaleLinear().domain([0, maxRCA]).range([0, w]);
+        const barPad = 14; // symmetric top/bottom inset for bars (gridlines stay full height)
         const y = d3.scaleBand()
           .domain(pair.comps.map(d => d.name))
-          .range([0, h])
+          .range([barPad, h - barPad])
           .padding(0.42);
 
         // Cap thickness so pathways with 1–2 competencies don't get giant bars
@@ -404,6 +463,21 @@
           .attr('stroke', C.navy).attr('stroke-width', 1.2)
           .attr('stroke-dasharray', '4,3').attr('opacity', 0.5);
 
+        // Dashed-line annotation — first panel only
+        if (pi === 0) {
+          const annX = x(1) + 4, annFS = '9.3px';
+          g.append('text')
+            .attr('x', annX).attr('y', 10)
+            .attr('font-size', annFS).attr('fill', C.bodySec)
+            .attr('font-style', 'italic')
+            .text('→ more relevant');
+          g.append('text')
+            .attr('x', annX + 10).attr('y', 20)
+            .attr('font-size', annFS).attr('fill', C.bodySec)
+            .attr('font-style', 'italic')
+            .text('than typical');
+        }
+
         // ── Bars ──
         pair.comps.forEach(comp => {
           const cy = y(comp.name) + bandPad;
@@ -415,10 +489,12 @@
               ? `Training gap: the viable occupation relies on this competency above the all-occupation average (RCA > 1) while the susceptible occupation sits below it (gap size ${(comp.tgt - comp.src).toFixed(2)}).`
               : 'Shared strength: both occupations rely on this competency more than the average occupation (RCA > 1).'}</div>`;
 
-          // Back bar — target at low opacity
+          // Back bar — target at low opacity (20% thinner than source bar)
+          const tgtH = barH * 0.8;
+          const tgtY = cy + (barH - tgtH) / 2; // center vertically
           const backBar = g.append('rect')
-            .attr('x', 0).attr('y', cy)
-            .attr('width', Math.max(0, x(comp.tgt))).attr('height', barH)
+            .attr('x', 0).attr('y', tgtY)
+            .attr('width', Math.max(0, x(comp.tgt))).attr('height', tgtH)
             .attr('fill', C.tgt).attr('opacity', 0.35)
             .attr('rx', 2);
 
@@ -512,25 +588,13 @@
 
         const annotY = 26;
         g.append('text')
-          .attr('x', 0).attr('y', h + annotY)
-          .attr('font-size', F.annot + 'px').attr('fill', C.bodySec)
-          .attr('font-weight', '600')
-          .text('← Less reliance');
-
-        g.append('text')
-          .attr('x', w).attr('y', h + annotY)
-          .attr('text-anchor', 'end')
-          .attr('font-size', F.annot + 'px').attr('fill', C.bodySec)
-          .attr('font-weight', '600')
-          .text('More reliance →');
-
-        g.append('text')
-          .attr('x', w / 2).attr('y', h + annotY + (compact ? 15 : 0))
+          .attr('x', w / 2).attr('y', h + annotY)
           .attr('text-anchor', 'middle')
-          .attr('font-size', F.annotRca + 'px').attr('fill', C.bodySec)
-          .text('RCA');
+          .attr('font-size', F.annot + 'px').attr('fill', C.bodySec)
+          .attr('font-weight', '600')
+          .text('Importance to occupation');
       });
-      
+
       reportSize();
     }
 
@@ -538,7 +602,7 @@
       const c = document.querySelector('.figure-container');
       const ctrls = document.querySelector('.iframe-controls');
       let h = document.querySelector('.dev-wrapper').scrollHeight;
-      
+
       if (c) parent.postMessage({ type: 'figure-sized', fig: 'I_skills_gap_bars', width: c.scrollWidth, height: h }, '*');
     }
 
@@ -564,22 +628,22 @@
       // We ignore community updates from outside since community is no longer a dropdown driver.
       if (e.data.src && e.data.src !== activeSrc) { activeSrc = e.data.src; needsRender = true; }
       if (e.data.tgt !== undefined && e.data.tgt !== activeTgt) { activeTgt = e.data.tgt; needsRender = true; }
-      
+
       if (needsRender && CACHE.PAIRS) {
-          if(activeSrc !== 'default') {
-              uiSource.value = activeSrc;
-              // we need to rebuild targets if source changed
-              const tgtPairs = CACHE.PAIRS.filter(p => p.source_noc === activeSrc);
-              uiTarget.innerHTML = '';
-              tgtPairs.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.target_noc;
-                opt.textContent = p.target_label;
-                if (p.target_noc === activeTgt) { opt.selected = true; }
-                uiTarget.appendChild(opt);
-              });
-          }
-          renderPanels(CACHE.PAIRS);
+        if (activeSrc !== 'default') {
+          uiSource.value = activeSrc;
+          // we need to rebuild targets if source changed
+          const tgtPairs = CACHE.PAIRS.filter(p => p.source_noc === activeSrc);
+          uiTarget.innerHTML = '';
+          tgtPairs.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.target_noc;
+            opt.textContent = p.target_label;
+            if (p.target_noc === activeTgt) { opt.selected = true; }
+            uiTarget.appendChild(opt);
+          });
+        }
+        renderPanels(CACHE.PAIRS);
       }
     });
 
@@ -588,29 +652,29 @@
     loadAndRender();
   </script>
 
-<!-- CTP WP Engine Embed Helper -->
-<script>
-  if (window.self !== window.top) {
-    document.body.classList.add('export-mode');
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
-        const ctrls = document.querySelector('.iframe-controls');
-        let h = document.querySelector('.dev-wrapper').scrollHeight;
-        
-        if (c) {
-          const fig = location.pathname.split('/').pop().replace('.html', '');
-          parent.postMessage({
-            type: 'figure-sized',
-            fig: fig,
-            width: c.scrollWidth,
-            height: h
-          }, '*');
-        }
-      }, 100);
-    });
-  }
-</script>
+  <!-- CTP WP Engine Embed Helper -->
+  <script>
+    if (window.self !== window.top) {
+      document.body.classList.add('export-mode');
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+          const ctrls = document.querySelector('.iframe-controls');
+          let h = document.querySelector('.dev-wrapper').scrollHeight;
+
+          if (c) {
+            const fig = location.pathname.split('/').pop().replace('.html', '');
+            parent.postMessage({
+              type: 'figure-sized',
+              fig: fig,
+              width: c.scrollWidth,
+              height: h
+            }, '*');
+          }
+        }, 100);
+      });
+    }
+  </script>
 </body>
 
 </html>

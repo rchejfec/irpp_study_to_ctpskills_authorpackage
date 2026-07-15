@@ -104,7 +104,7 @@
       cursor: default;
     }
 
-    /* ── COMPACT (<640px iframe width): sticky source column + horizontal
+    /* ── COMPACT (<440px iframe width; see compact.js): sticky source column + horizontal
        scroll (dense-grid treatment per 2026-07-08 decisions). ── */
     .compact-scroll-hint {
       display: none;
@@ -224,7 +224,7 @@
       const destCounts = {};
       const srcCounts = {};
       cells.forEach(c => {
-        destCounts[c.dest_noc3] = (destCounts[c.dest_noc3] || 0) + c.count;
+        destCounts[c.dest_noc2] = (destCounts[c.dest_noc2] || 0) + c.count;
         srcCounts[c.source_noc] = (srcCounts[c.source_noc] || 0) + c.count;
       });
       // Sort dest categories by their NOC code (ascending)
@@ -253,12 +253,12 @@
           }
         }
         srcLabels[c.source_noc] = label;
-        destLabels[c.dest_noc3] = c.dest_label;
+        destLabels[c.dest_noc2] = c.dest_label;
       });
 
       const lookup = {};
       cells.forEach(c => {
-        lookup[`${c.source_noc}|${c.dest_noc3}`] = c;
+        lookup[`${c.source_noc}|${c.dest_noc2}`] = c;
       });
 
       function hmClass(v) {

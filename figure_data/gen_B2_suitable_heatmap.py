@@ -1,22 +1,25 @@
-"""B_suitable_heatmap: susceptible occupations × suitable-alternative NOC3 families.
+"""B2_suitable_heatmap: susceptible occupations × suitable-alternative NOC2 domains.
 
-Reproduces the schema behind figures/B_suitable_heatmap.html. Each cell is one
-(source occupation × destination NOC-3 family), counting how many of the source's
-top-10 suitable candidates fall into that family, with their average similarity.
+Supersedes gen_B_suitable_heatmap (retired to figure_data/archive/, 2026-07-15).
+B2 aggregates destinations at 2-digit NOC (broad domains, 9 columns) instead of
+B's 3-digit families (11 dense columns) so cells stay legible at the 550px print
+width. Each cell is one (source occupation × destination NOC-2 domain), counting
+how many of the source's top-10 suitable candidates fall into that domain, with
+their average similarity and per-member breakdown (for tooltips).
 
-Methodology (confirmed empirically + draft figure_plan.md "susceptible occupations
-× suitable alternatives with community tags"):
+Methodology carried over from B (confirmed empirically there):
   - Sources = the 15 susceptible source occupations (union across communities).
     Suitable lists are community-independent, so each source appears once.
-  - For each source, take its TOP 10 suitable candidates by similarity rank.
-    (Verified: top-10 reproduces the figure's cell counts exactly; top-15/20 do
-    not — e.g. 94204->942=8, 95100->951=8, 73300->{742:3,752:2}.)
-  - Group those 10 by candidate NOC-3 (candidate_noc[:3]); count + mean similarity.
+  - For each source, take its TOP 10 suitable candidates by similarity rank —
+    raw similarity, no TEER window (see TOP_N note below).
+  - Group those 10 by candidate NOC-2 (candidate_noc[:2]); count + mean
+    similarity. Column labels come from lib.noc2_label() (custom labels in
+    data/reference/noc2_custom_labels.json, written for this data slice).
 
 Also emits source_communities: which communities each source occupation belongs to
 (for the row pills), derived from source_sector_mapping.json.
 
-Per metric: B_suitable_heatmap.<metric>.json
+Per metric: B2_suitable_heatmap.<metric>.json
 """
 from __future__ import annotations
 
@@ -83,7 +86,7 @@ def generate(metric: str) -> None:
             cells.append({
                 "source_noc": src_noc,
                 "source_label": src_label,
-                "dest_noc3": noc2,
+                "dest_noc2": noc2,
                 "dest_label": lib.noc2_label(noc2),
                 "count": int(len(g)),
                 "avg_sim": round(float(g["similarity"].mean()), 3),
@@ -99,11 +102,11 @@ def generate(metric: str) -> None:
     # Single-source columns are dropped as noise. Author-directed.
     src_per_col: dict[str, set[str]] = defaultdict(set)
     for c in cells:
-        src_per_col[c["dest_noc3"]].add(c["source_noc"])
+        src_per_col[c["dest_noc2"]].add(c["source_noc"])
     # EXPERIMENT: Keep all columns (even single-source) for the 2-digit view
     shared_cols = {n3 for n3, srcs in src_per_col.items() if len(srcs) >= 1}
     dropped = sorted(set(src_per_col) - shared_cols)
-    cells = [c for c in cells if c["dest_noc3"] in shared_cols]
+    cells = [c for c in cells if c["dest_noc2"] in shared_cols]
 
     payload = {
         "heatmap": cells,

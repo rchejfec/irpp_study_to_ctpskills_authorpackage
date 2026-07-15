@@ -24,12 +24,15 @@
       overflow: hidden;
     }
 
-    /* ── D2: full-width source band ── */
+    /* ── D2: full-width source band ──
+       Horizontal padding matches .cell-explain (10px) so the band shares
+       the figure's left/right text anchors with cols 1 and 3. */
     .source-band {
       background: #faf6f0;
       border-bottom: 1px solid #e0ddd6;
-      padding: 6px 12px;
+      padding: 6px 10px;
       flex-shrink: 0;
+      position: relative;
     }
 
     .band-headline {
@@ -69,7 +72,11 @@
     .fig-body {
       flex: 1;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      /* minmax(0,1fr), not bare 1fr: 1fr implies min-width auto, which lets
+         any unbreakable content (e.g. a long nowrap gap pill) widen its
+         column and silently shrink the others (legend wrap in col 2).
+         Thirds are non-negotiable; content must wrap or truncate inside. */
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
       grid-template-rows: auto 1fr;
       min-height: 0;
     }
@@ -200,11 +207,14 @@
       z-index: 1;
     }
 
-    /* ── D2 row 1: explainer panels (serve as the column headers) ── */
+    /* ── D2 row 1: explainer panels (serve as the column headers) ──
+       No border-bottom: the figure reads as four vertical components
+       (similar / similar→viable / skill gaps / notes), not two rows —
+       each explainer flows into its data panel. */
     .cell-explain {
-      border-bottom: 1px solid var(--clr-border);
       padding: 7px 10px 6px;
       background: #fafaf8;
+      position: relative;
     }
 
     .cell-explain.c1 {
@@ -237,6 +247,35 @@
       margin-bottom: 3px;
     }
 
+    /* Step chips: numbered circles top-right of each panel (band = 1, then
+       2/3/4 walk C2's Identify→Match→Filter→Gaps). Pure CSS rather than SVG
+       text: flex centering is deterministic, and the 1.2px border matches
+       lucide's stroke weight at this size. Absolute so it works inside the
+       c2 flex column too. */
+    .exp-step {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      width: 14px;
+      height: 14px;
+      border: 1.2px solid currentColor;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 600;
+      line-height: 1;
+      color: var(--irpp-navy);
+      opacity: 0.55;
+    }
+
+    /* right inherits 8px so chip 1 shares chip 4's right anchor;
+       only the vertical offset differs (taller band, optical centering) */
+    .source-band .exp-step {
+      top: 8px;
+    }
+
     .exp-body {
       font-size: 9px;
       color: #666;
@@ -256,20 +295,20 @@
       margin: 0 1px;
     }
 
-    /* Heatmap column headers pushed to bottom of explainer panel;
-       the panel's border-bottom acts as the implicit separator.
+    /* Heatmap column headers pushed to bottom of explainer panel.
+       Keeps its own underline (matrix furniture, like an axis) now that
+       the explainer row no longer draws a border-bottom.
        Negative side margins compensate for the explainer's 10px padding
        vs the data grid's 4px, keeping the 5 columns pixel-aligned. */
     .cell-explain .hm-header {
       margin: 4px -6px 0;
-      border-bottom: none;
     }
 
     /* ── R2C2: Viability heatmap ── */
     .cell-filtered {
       grid-column: 2;
       grid-row: 2;
-      padding: 0 4px 4px;
+      padding: 2px 4px 4px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -282,13 +321,14 @@
       gap: 0;
     }
 
+    /* no underline: the caps/grey typography vs the colored icons below is
+       the header signal — keeps col 2 free of horizontal rules like col 1 */
     .hm-header {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       align-items: center;
       height: 14px;
       flex-shrink: 0;
-      border-bottom: 1px solid #ddd;
     }
 
     /* was 6.5px — bumped to 6pt decorative floor */
@@ -357,7 +397,7 @@
 
     /* ── R1C3: Skill gap preview ── */
     .cell-rca {
-      padding: 8px 10px 6px;
+      padding: 4px 10px 6px;
       background: #fff;
       overflow: hidden;
     }
@@ -372,91 +412,63 @@
       margin-bottom: 3px;
     }
 
-    /* was 9px — bumped to ~7pt content floor */
-    .rca-pair {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--clr-body);
-      margin-bottom: 3px;
-      line-height: 1.3;
-    }
-
-    .rca-pair .from {
-      color: var(--irpp-red);
-      font-weight: 700;
-      text-align: left;
-      padding-left: 10px;
-    }
-
-    .rca-pair .rca-arrow {
-      color: #999;
-      text-align: center;
-      padding: 0 10px;
-    }
-
-    .rca-pair .to {
-      color: var(--irpp-teal);
-      font-weight: 700;
-      text-align: left;
-      padding-left: 10px;
-
-    }
-
-    /* was 8px — bumped toward 7pt content floor (secondary text) */
-    .rca-hint {
+    /* Specimen pane: lead-in → target → two parallel facts → gap tokens.
+       The explainer above carries the concept; this pane is pure example. */
+    .rca-lead {
       font-size: 9px;
-      color: #aaa;
-      line-height: 1.3;
+      color: #888;
       margin-bottom: 2px;
-      text-align: center;
     }
 
-    .rca-bars {
-      margin-top: 5px;
-      padding: 0 6px;
+    .rca-target {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--irpp-teal);
+      margin-bottom: 3px;
+      line-height: 1.2;
     }
 
-    .rca-bar-row {
-      margin-bottom: 5px;
+    /* cross-references col 1's rank gutter; matches the target's size and
+       weight (colour carries the distinction) */
+    .rca-rank {
+      font-size: 10px;
+      color: #999;
+      font-weight: 700;
+      margin-right: 3px;
     }
 
-    /* was 7.5px — bumped toward 7pt content floor */
-    .rca-bar-label {
+    /* facts + pills sit offset right of the target, sketch-style:
+       facts one step in, pills one step further (containment) */
+    .rca-fact {
       font-size: 9px;
-      color: #666;
-      margin-bottom: 1px;
-      line-height: 1.15;
+      color: #555;
+      margin-bottom: 2px;
+      margin-left: 8px;
     }
 
-    .rca-plot {
-      position: relative;
+    .gap-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      /* one step deeper than the facts: contained by "N skill gaps" above */
+      margin: 2px 0 2px 16px;
     }
 
-    .rca-ref {
-      position: absolute;
-      top: -1px;
-      bottom: -1px;
-      width: 0;
-      border-left: 1.5px solid #aaa;
-      z-index: 2;
+    /* pills wrap internally (2 lines) rather than forcing their column wider */
+    .gap-pill {
+      font-size: 8.5px;
+      color: #444;
+      background: #f2f2f0;
+      border-radius: 3px;
+      padding: 1px 5px;
+      line-height: 1.35;
     }
 
-    .rca-bar {
-      height: 5px;
-      border-radius: 1px;
-      margin-bottom: 1px;
-      min-width: 1px;
-    }
-
-    .rca-bar.src {
-      background: var(--irpp-red);
-    }
-
-    .rca-bar.tgt {
-      background: var(--irpp-teal);
+    .gap-pill.gap-more-pill {
+      color: #999;
+      font-style: italic;
+      background: none;
+      padding-left: 0;
     }
 
     /* ── R2C3: Assessment notes ── */
@@ -758,29 +770,28 @@
     }
 
     html.compact .rca-title {
-      font-size: 12px;
+      font-size: 11px;
     }
 
-    html.compact .rca-pair {
+    html.compact .rca-target {
       font-size: 13px;
       margin-bottom: 4px;
     }
 
-    html.compact .rca-hint {
+    html.compact .rca-shared {
+      font-size: 12px;
+    }
+
+    html.compact .rca-gaps-header {
+      font-size: 11px;
+    }
+
+    html.compact .gap-list {
+      font-size: 12px;
+    }
+
+    html.compact .gap-more {
       font-size: 11.5px;
-    }
-
-    html.compact .rca-bar-label {
-      font-size: 11.5px;
-      margin-bottom: 2px;
-    }
-
-    html.compact .rca-bar {
-      height: 7px;
-    }
-
-    html.compact .rca-bar-row {
-      margin-bottom: 8px;
     }
 
     html.compact .cell-qual {
@@ -1061,29 +1072,26 @@
       const fg = t.featured_gap;
       html += `<div class="cell-rca">`;
       html += `<div class="rca-title">Skill gap preview</div>`;
-      if (fg && fg.bars && fg.bars.length > 0) {
+      if (fg && fg.gaps && fg.gaps.length > 0) {
         const _st = (s, n) => { if (s.length <= n) return s; const c = s.lastIndexOf(' ', n); return (c > 0 ? s.slice(0, c) : s.slice(0, n)) + '\u2026'; };
-        const srcShort = _st(t.source_label, 30);
         const tgtShort = _st(fg.target_label, 30);
-        const srcTip = t.source_label.length > 30 ? ` class="occ-title-tt" data-tippy-content="${t.source_label.replace(/"/g, '&quot;')}"` : '';
         const tgtTip = fg.target_label.length > 30 ? ` class="occ-title-tt" data-tippy-content="${fg.target_label.replace(/"/g, '&quot;')}"` : '';
-        html += `<div class="rca-pair"><span class="from"${srcTip}>${srcShort}</span><span class="rca-arrow">\u25B8</span><span class="to"${tgtTip}>${tgtShort}</span></div>`;
-        html += `<div class="rca-hint">${fg.summary.shared} shared skills · ${fg.summary.gaps} training gaps</div>`;
-        const maxLq = Math.max(...fg.bars.flatMap(b => [b.source_lq, b.target_lq]), 1.1);
-        const refPct = (1 / maxLq) * 100;
-        html += `<div class="rca-bars">`;
-        fg.bars.forEach(b => {
-          const rowTip = `${b.dimension}|${t.source_label} RCA: ${b.source_lq.toFixed(2)} · ${fg.target_label} RCA: ${b.target_lq.toFixed(2)}. RCA > 1 = relied on more than the average occupation; the difference is the training gap.`;
-          html += `<div class="rca-bar-row" data-tip="${rowTip.replace(/"/g, '&quot;')}">
-            <div class="rca-bar-label">${b.dimension}</div>
-            <div class="rca-plot">
-              <div class="rca-ref" style="left:${refPct}%"></div>
-              <div class="rca-bar src" style="width:${(b.source_lq / maxLq) * 100}%"></div>
-              <div class="rca-bar tgt" style="width:${(b.target_lq / maxLq) * 100}%"></div>
-            </div>
-          </div>`;
+        html += `<div class="rca-target"><span class="rca-target-arrow">↳</span> <span${tgtTip}>${tgtShort}</span></div>`;
+
+        const sharedStr = (fg.shared_skills || []).join('<br>').replace(/"/g, '&quot;');
+        html += `<div class="rca-shared"><span class="occ-title-tt" data-tippy-content="${sharedStr}"><span class="rca-shared-icon">✓</span> ${fg.summary.shared} shared skills</span></div>`;
+        html += `<div class="rca-gaps-header">${fg.summary.gaps} SKILL GAPS</div>`;
+        html += `<ul class="gap-list">`;
+        const topGaps = fg.gaps.slice(0, 3);
+        const moreGaps = fg.gaps.slice(3);
+        topGaps.forEach(g => {
+          html += `<li class="gap-item">${g}</li>`;
         });
-        html += `</div></div>`;
+        if (moreGaps.length > 0) {
+          const moreStr = moreGaps.join('<br>').replace(/"/g, '&quot;');
+          html += `<li class="gap-more occ-title-tt" data-tippy-content="${moreStr}">+ ${moreGaps.length} more</li>`;
+        }
+        html += `</ul></div>`;
       } else {
         html += `<div class="rca-hint">No skill-gap data available for this pair's top matches.</div></div>`;
       }
@@ -1188,6 +1196,7 @@
       const svgCheck = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>`;
       const svgWarn = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>`;
       const svgCross = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>`;
+      const stepChip = n => `<span class="exp-step">${n}</span>`;
       function sigDot(signal, tooltipText) {
         const cls = signal === 'green' ? 'hm-ok'
           : signal === 'yellow' ? 'hm-warn' : 'hm-fail';
@@ -1220,16 +1229,16 @@
       const incomeK = sl.pr_income ? Math.round(sl.pr_income / 1000) + 'k' : null;
 
       // ═══ Source band (full width) ═══
-      document.getElementById('grid-band').innerHTML = `
+      document.getElementById('grid-band').innerHTML = `${stepChip(1)}
         <div class="band-headline"><span class="em3">${t.source_label}</span> in <span class="em2">${t.community}</span></div>
         <div class="band-subline">Susceptible occupation identified by sector exposure in <span class="em1">${t.sector}</span></div>`;
 
       // ═══ Row 1: explainer panels (double as column headers) ═══
-      left += `<div class="cell-explain c1">
-      <div class="exp-title">Skill-similar</div>
+      left += `<div class="cell-explain c1">${stepChip(2)}
+      <div class="exp-title">Similar occupations</div>
       <div class="exp-body">Candidates ranked by similarity of competency profiles — 166 OaSIS competencies spanning skills, knowledge, abilities, and work context.</div>
     </div>`;
-      left += `<div class="cell-explain c2">
+      left += `<div class="cell-explain c2">${stepChip(3)}
       <div class="exp-title">From similar to viable</div>
       <div class="exp-body">Each candidate is screened for economic viability. A qualitative review confirms community fit. <span class="exp-legend"><span class="hm-ok hm-dot">${svgCheck}</span><span class="hm-warn hm-dot">${svgCheck}</span>\u2009=\u2009pass \u00b7 <span class="hm-fail hm-dot">${svgCross}</span>\u2009=\u2009fail</span></div>
       <div class="hm-header">` + Object.keys(hmDefs).map(k =>
@@ -1271,9 +1280,9 @@
       left += `</div></div></div>`;
 
       // ═══ Col 3, row 1: skill-gap explainer (aligns with the other panels) ═══
-      right += `<div class="cell-explain c3">
-      <div class="exp-title">Skill gap preview</div>
-      <div class="exp-body">Skills the target occupation relies on more than average, but the source occupation does not. Useful for planning training or comparing pathways.</div>
+      right += `<div class="cell-explain c3">${stepChip(4)}
+      <div class="exp-title">Skill gaps</div>
+      <div class="exp-body">Skills the target occupation relies on more than average, but the source does not. Useful for planning training or comparing pathways.</div>
     </div>`;
 
       // ═══ Col 3, row 2: rail — skill gaps on top, assessment notes below
@@ -1281,35 +1290,30 @@
       right += `<div class="rail-stack">`;
       const fg = t.featured_gap;
       right += `<div class="cell-rca">`;
-      if (fg && fg.bars && fg.bars.length > 0) {
-        const srcLabel = smartTrunc(t.source_label, 30);
+      if (fg && fg.gaps && fg.gaps.length > 0) {
         const tgtLabel = smartTrunc(fg.target_label, 30);
-        const srcTip = t.source_label.length > 30 ? ` class="from occ-title-tt" data-tippy-content="${t.source_label.replace(/"/g, '&quot;')}"` : ' class="from"';
-        const tgtTip = fg.target_label.length > 30 ? ` class="to occ-title-tt" data-tippy-content="${fg.target_label.replace(/"/g, '&quot;')}"` : ' class="to"';
-        right += `<div class="rca-pair">
-        <span${srcTip}>${srcLabel}</span>
-        <span class="rca-arrow">\u25B8</span>
-        <span${tgtTip}>${tgtLabel}</span>
-      </div>`;
-        right += `<div class="rca-hint">${fg.summary.shared} shared skills · ${fg.summary.gaps} training gaps</div>`;
-        const maxLq = Math.max(...fg.bars.flatMap(b => [b.source_lq, b.target_lq]), 1.1);
-        const refPct = (1 / maxLq) * 100;
-        right += `<div class="rca-bars">`;
-        fg.bars.forEach(b => {
-          const srcPct = (b.source_lq / maxLq) * 100;
-          const tgtPct = (b.target_lq / maxLq) * 100;
-          const dimLabel = b.dimension;
-          const rowTip = `${dimLabel}|${t.source_label} RCA: ${b.source_lq.toFixed(2)} · ${fg.target_label} RCA: ${b.target_lq.toFixed(2)}. RCA > 1 = relied on more than the average occupation; the difference is the training gap.`;
-          right += `<div class="rca-bar-row" data-tip="${rowTip.replace(/"/g, '&quot;')}">
-          <div class="rca-bar-label">${dimLabel}</div>
-          <div class="rca-plot">
-            <div class="rca-ref" style="left:${refPct}%"></div>
-            <div class="rca-bar src" style="width:${srcPct}%"></div>
-            <div class="rca-bar tgt" style="width:${tgtPct}%"></div>
-          </div>
-        </div>`;
-        });
-        right += `</div></div>`;
+        const tgtTip = fg.target_label.length > 30 ? ` class="occ-title-tt" data-tippy-content="${fg.target_label.replace(/"/g, '&quot;')}"` : '';
+        const sharedStr = (fg.shared_skills || []).join('<br>').replace(/"/g, '&quot;');
+        // Visible pills favour one-line labels: long ones are deranked into
+        // "+N more" (tooltip) so the pane keeps a stable height. Two-line
+        // wrap inside a pill remains the fallback when short labels run out.
+        // ~33 chars ≈ one pill line at 8.5px in a third-width column.
+        const fitsLine = g => g.length <= 33;
+        const shortG = fg.gaps.filter(fitsLine);
+        const visible = shortG.slice(0, 3);
+        if (visible.length < 3) visible.push(...fg.gaps.filter(g => !fitsLine(g)).slice(0, 3 - visible.length));
+        const topGaps = fg.gaps.filter(g => visible.includes(g));   // data order preserved
+        const moreGaps = fg.gaps.filter(g => !visible.includes(g));
+        const tgtRank = (t.candidates.find(c => c.noc === fg.target_noc) || {}).rank;
+        right += `<div class="rca-lead">One sample pathway:</div>`;
+        right += `<div class="rca-target">${tgtRank != null ? `<span class="rca-rank">${tgtRank}</span>` : ''}<span${tgtTip}>${tgtLabel}</span></div>`;
+        right += `<div class="rca-fact"><span class="occ-title-tt" data-tippy-content="${sharedStr}">${fg.summary.shared} shared skills</span></div>`;
+        right += `<div class="rca-fact">${fg.summary.gaps} skill gap${fg.summary.gaps > 1 ? 's' : ''}</div>`;
+        right += `<div class="gap-pills">`
+          + topGaps.map(g => `<span class="gap-pill">${g}</span>`).join('')
+          + (moreGaps.length > 0 ? `<span class="gap-pill gap-more-pill occ-title-tt" data-tippy-content="${moreGaps.join('<br>').replace(/"/g, '&quot;')}">+${moreGaps.length} more</span>` : '')
+          + `</div>`;
+        right += `</div>`;
       } else {
         right += `<div class="rca-hint">No skill-gap data available for this pair's top matches.</div></div>`;
       }

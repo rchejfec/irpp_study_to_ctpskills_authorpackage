@@ -105,6 +105,7 @@ _LQ_DOMAINS = ("skills",)
 
 def _lq_summary(source_noc: str, target_noc: str) -> dict:
     total = shared = gaps = 0
+    shared_skills = []
     for dom in _LQ_DOMAINS:
         m = pd.read_csv(lib.OUTPUT_DIR / "skill_gaps" / f"lq_{dom}.csv", dtype=str)
         m = m.set_index("noc")
@@ -114,9 +115,14 @@ def _lq_summary(source_noc: str, target_noc: str) -> dict:
         tgt = pd.to_numeric(m.loc[target_noc], errors="coerce")
         both = src.notna() & tgt.notna()
         total += int(both.sum())
-        shared += int((both & (src >= 1) & (tgt >= 1)).sum())
+        
+        is_shared = both & (src >= 1) & (tgt >= 1)
+        shared += int(is_shared.sum())
+        shared_skills.extend(is_shared[is_shared].index.tolist())
+        
         gaps += int((both & (src < 1) & (tgt > 1)).sum())
-    return {"total": total, "gaps": gaps, "shared": shared}
+        
+    return {"total": total, "gaps": gaps, "shared": shared, "shared_skills": shared_skills}
 
 
 def _featured_gap(cd_uid: str, src_noc: str, ranked_nocs: list[str]) -> dict | None:
@@ -149,21 +155,17 @@ def _featured_gap(cd_uid: str, src_noc: str, ranked_nocs: list[str]) -> dict | N
         return None
 
     label = pair.iloc[0]["candidate_label"]
-    bars = [
-        {
-            "dimension": r["competency"],
-            "source_lq": round(float(r["source_lq"]), 3),
-            "target_lq": round(float(r["dest_lq"]), 3),
-            "delta_lq": round(float(r["delta_lq"]), 3),
-            "type": "gap",
-        }
-        for _, r in actionable.sort_values("delta_lq", ascending=False).head(2).iterrows()
+    gap_skills = [
+        r["competency"]
+        for _, r in actionable.sort_values("delta_lq", ascending=False).iterrows()
     ]
+    summary = _lq_summary(src_noc, tgt_noc)
     return {
         "target_noc": tgt_noc,
         "target_label": label,
-        "summary": _lq_summary(src_noc, tgt_noc),
-        "bars": bars,
+        "summary": summary,
+        "gaps": gap_skills,
+        "shared_skills": summary["shared_skills"]
     }
 
 

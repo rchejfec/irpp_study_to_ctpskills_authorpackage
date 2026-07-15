@@ -125,33 +125,53 @@ def _lq_summary(source_noc: str, target_noc: str) -> dict:
     return {"total": total, "gaps": gaps, "shared": shared, "shared_skills": shared_skills}
 
 
-def _featured_gap(cd_uid: str, src_noc: str, ranked_nocs: list[str]) -> dict | None:
+def _featured_gap(cd_uid: str, src_noc: str, ranked_nocs: list[str],
+                  pick_nocs: list[str]) -> dict | None:
     gaps = pd.read_csv(lib.OUTPUT_DIR / "skill_gaps" / "skill_gaps.csv", dtype=str)
     for c in ("source_lq", "dest_lq", "delta_lq"):
         gaps[c] = pd.to_numeric(gaps[c], errors="coerce")
-        
-    if cd_uid == CANONICAL_CD and src_noc == CANONICAL_SRC:
-        tgt_candidates = [FEATURED_TARGET]
-    else:
-        # Walk the full viable ranking (not just the displayed candidates)
-        # until a target with Skills-domain gaps exists — near-twin sources
-        # (e.g. 951xx labourers) often have none among their top matches.
-        tgt_candidates = ranked_nocs
 
-    pair = None
-    actionable = None
-    for tgt_noc in tgt_candidates:
-        pair = gaps[(gaps["cd_uid"] == cd_uid) &
+    def _rows_for(tgt: str) -> pd.DataFrame:
+        return gaps[(gaps["cd_uid"] == cd_uid) &
                     (gaps["source_noc"] == src_noc) &
-                    (gaps["candidate_noc"] == tgt_noc)]
-        if pair.empty:
-            continue
-        # Bars are Skills-only across D and I (matching the summary counts).
-        actionable = pair[pair["domain"] == "skills"]
-        if not actionable.empty:
-            break
+                    (gaps["candidate_noc"] == tgt)]
 
-    if actionable is None or actionable.empty:
+    if cd_uid == CANONICAL_CD and src_noc == CANONICAL_SRC:
+        pick_nocs = [FEATURED_TARGET]  # fixed editorial pick (is a curated pick)
+
+    # The sample pathway comes from the simulated review's curated picks
+    # (rank order), NOT the raw similarity ranking (RC 2026-07-14):
+    #   1. first pick with Skills-domain gaps;
+    #   2. no pick has any -> own the first pick's zero (shared-only
+    #      near-twin; rendered as a finding, not missing data);
+    #   3. no pick in the gaps table at all -> old ranked walk as fallback.
+    tgt_noc = pair = actionable = None
+    zero_pick = None
+    for cand_noc in pick_nocs:
+        rows = _rows_for(cand_noc)
+        if rows.empty:
+            continue
+        # Gap lists are Skills-only across D and I (matching summary counts).
+        act = rows[rows["domain"] == "skills"]
+        if not act.empty:
+            tgt_noc, pair, actionable = cand_noc, rows, act
+            break
+        if zero_pick is None:
+            zero_pick = (cand_noc, rows)
+    if actionable is None and zero_pick is not None:
+        tgt_noc, pair = zero_pick
+        actionable = pair.iloc[0:0]  # empty: zero Skills-domain gaps
+    if actionable is None:
+        for cand_noc in ranked_nocs:
+            rows = _rows_for(cand_noc)
+            if rows.empty:
+                continue
+            act = rows[rows["domain"] == "skills"]
+            if not act.empty:
+                tgt_noc, pair, actionable = cand_noc, rows, act
+                break
+
+    if pair is None or actionable is None:
         return None
 
     label = pair.iloc[0]["candidate_label"]
@@ -489,7 +509,9 @@ def generate(metric: str) -> None:
             }
             
             cands = _candidate_set(sdf)
-            
+            ranked = (sdf.assign(_rank=pd.to_numeric(sdf["rank"], errors="coerce"))
+                         .sort_values("_rank"))
+
             cd_data[src_noc] = {
                 "cd": cd_uid,
                 "src": src_noc,
@@ -501,8 +523,8 @@ def generate(metric: str) -> None:
                 "candidates": [_candidate(r, global_susc) for _, r in cands.iterrows()],
                 "featured_gap": _featured_gap(
                     cd_uid, src_noc,
-                    sdf.assign(_rank=pd.to_numeric(sdf["rank"], errors="coerce"))
-                       .sort_values("_rank")["candidate_noc"].tolist()),
+                    ranked["candidate_noc"].tolist(),
+                    ranked[lib.is_pick(ranked)]["candidate_noc"].tolist()),
                 "assessment_notes": _assessment_notes(cd_uid, src_noc, cands, global_susc, rationales)
             }
         all_data[cd_uid] = cd_data

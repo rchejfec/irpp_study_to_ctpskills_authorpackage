@@ -68,14 +68,14 @@
     }
 
     .panel-label {
-      font-size: 7px;
+      font-size: 8px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: var(--irpp-navy);
       margin-bottom: 2px;
       text-align: center;
-      min-height: 2.2em;
+      min-height: 3em;
       display: flex;
       align-items: flex-end;
       justify-content: center;
@@ -99,7 +99,7 @@
     }
 
     .desc-val {
-      font-size: 7.5px;
+      font-size: 9.3px;
       color: var(--clr-body);
       padding: 0 4px;
       margin-bottom: 0px;
@@ -111,23 +111,49 @@
       background: var(--clr-bg-muted);
       border: 1px solid var(--clr-border);
       border-radius: 3px;
-      font-size: 7.5px;
+      font-size: 9.3px;
       color: var(--clr-body);
       line-height: 1.6;
+    }
+
+    .iframe-controls {
+      width: 550px;
+    }
+
+    .iframe-controls .control-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .iframe-controls .control-group select {
+      flex: 1;
+      min-width: 0;
+      text-overflow: ellipsis;
     }
 
     /* ── COMPACT (<640px iframe width) — lossy per 2026-07-08 decisions:
        panels in a 2×2 grid; the four legend paragraphs collapse into
        tap-tooltips on the panel labels (dotted underline = tappable). ── */
-    html.compact .figure-container { width: 100%; min-height: 0; }
-    html.compact .dev-wrapper { padding: 8px; }
-    html.compact .context-strip { font-size: 12px; }
+    html.compact .figure-container {
+      width: 100%;
+      min-height: 0;
+    }
+
+    html.compact .dev-wrapper {
+      padding: 8px;
+    }
+
+    html.compact .context-strip {
+      font-size: 12px;
+    }
+
     html.compact .panels-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       row-gap: 10px;
       padding: 10px 8px 0;
     }
+
     html.compact .panel-label {
       font-size: 12px;
       min-height: 0;
@@ -136,8 +162,15 @@
       text-underline-offset: 3px;
       cursor: help;
     }
-    html.compact .descs-row { display: none; }
-    html.compact .footer-strip { font-size: 11px; margin: 12px 12px 12px; }
+
+    html.compact .descs-row {
+      display: none;
+    }
+
+    html.compact .footer-strip {
+      font-size: 11px;
+      margin: 12px 12px 12px;
+    }
   </style>
 </head>
 
@@ -155,14 +188,16 @@
     </div>
     <div class="figure-container">
       <div class="context-strip">
-        For each susceptible occupation, we first identify skill-similar alternatives across all Canadian occupations.
-        This figure traces the filtering that follows for <strong id="header-source-label">Material handlers</strong> (TEER <span id="header-teer">5</span>) in <strong id="header-community">Oxford,
+        For each susceptible occupation, we first identify competency-matched alternatives across all Canadian
+        occupations.
+        This figure traces the filtering that follows for <strong id="header-source-label">Material handlers</strong> in
+        <strong id="header-community">Oxford,
           ON</strong>.
       </div>
 
       <div class="panels-row">
         <div class="panel-col">
-          <div class="panel-label">Skills-Similar<br>&amp; TEER-Compatible</div>
+          <div class="panel-label">Competency-Matched<br>&amp; TEER-Compatible</div>
           <div id="p1"></div>
         </div>
         <div class="panel-col">
@@ -181,42 +216,38 @@
 
       <div class="descs-row">
         <div class="panel-desc">
-          <div class="desc-val">Starting from all skill-similar occupations, we screen for comparable training
-            requirements and select the top ~30 most similar candidates. Across these panels, the <span
-              style="color:#CE2129;font-weight:600">■ square</span> is the susceptible occupation, each <span
-              style="color:#555;font-weight:600">● dot</span> is a candidate — closer to centre = more similar — and
-            dots that <span style="color:#999;font-weight:600">fade</span> have been filtered out. Different use cases
-            may apply stricter or looser thresholds.</div>
+          <div class="desc-val">We filter for comparable training and select the most similar candidates. The <span
+              style="color:#CE2129;white-space:nowrap;">■ <span style="font-weight:600;">square</span></span> is the susceptible occupation;
+            <span style="color:#555;white-space:nowrap;">● <span style="font-weight:600;">dots</span></span> are candidates (closer to centre
+            = more similar). Faded
+            dots are filtered out.</div>
         </div>
         <div class="panel-desc">
           <div class="desc-val">We screen candidates for existing local relevance. <span
-              style="color:#1a3d6b;font-weight:600">Dark blue</span> = present in the Census Division. <span
-              style="color:#5b8db8;font-weight:600">Lighter blue</span> = present in the province but not locally —
+              style="color:#1a3d6b;white-space:nowrap;">● <span style="font-weight:600;">Dark blue</span></span>
+            candidates are present in the Census Division. <span style="color:#5b8db8;white-space:nowrap;">● <span
+                style="font-weight:600;">Lighter blue</span></span> candidates are present in the province but not
+            locally;
             these remain in the pool until community review.</div>
         </div>
         <div class="panel-desc">
-          <div class="desc-val">Surviving candidates are screened for employment outlook (COPS projections) and earnings
-            viability (≥65% of the susceptible occupation's wage). <span
-              style="color:#d4760a;font-weight:600">Orange</span> = passes both, <span
-              style="color:#DEAC28;font-weight:600">yellow</span> = fails outlook, <span
-              style="color:#CE2129;font-weight:600">red</span> = fails earnings. <span id="ai-text">An additional
-            AI-exposure filter is applied but does not exclude any candidates here.</span></div>
+          <div class="desc-val">Candidates are screened for employment outlook (COPS, projected surpluses or shortages),
+            AI exposure risk (Dais), and earnings viability (≥65% of source wage). <span
+              style="color:#d4760a;white-space:nowrap;">● <span style="font-weight:600;">Orange</span></span> candidates
+            clear all three screens.</div>
         </div>
         <div class="panel-desc">
-          <div class="desc-val">Remaining candidates are presented for community validation, which may surface
-            additional occupations or relax earlier filters based on local plans and goals. Candidates without local
-            presence are excluded at this stage unless community-endorsed. We exclude occupations that
-            are themselves susceptible and <span style="color:#1a7a3a;font-weight:600">◆ highlight</span> those
-            potentially relevant based on extrapolations from surrounding-area and community profiles. Colour denotes
-            TEER level: <span style="color:#1a7a3a;font-weight:600">dark green</span> = TEER <span
-              id="teer-same">5</span> (same as source), <span
-              style="color:#4aaa5e;font-weight:600">mid green</span> = other TEER levels.</div>
+          <div class="desc-val">Remaining candidates undergo community vetting against local conditions and plans. We
+            simulate this review by extrapolating from IRPP profiles and local data, excluding some and <span
+              style="color:#1a7a3a;white-space:nowrap;"><span style="font-weight:600;">highlighting</span> (<span style="font-size:1.5em;line-height:0;display:inline-block;vertical-align:-0.05em;">◆</span>)</span> additions. <span
+              style="color:#4aaa5e;white-space:nowrap;">● <span style="font-weight:600;">Light-green</span></span>
+            candidates may require extended training.</div>
         </div>
       </div>
 
-      <div class="footer-strip"><strong>Note:</strong> Data limitations — particularly the lack of granular local labour
-        market information — constrain the precision of each filter and the conclusions that can be drawn. Despite this,
-        the filtering framework itself demonstrates the potential of systematic transition planning — and a strong
+      <div class="footer-strip"><strong>Note:</strong> Data limitations, particularly the lack of granular local labour
+        market information, constrain the precision of each filter and the conclusions that can be drawn. Despite this,
+        the filtering framework itself demonstrates the potential of systematic transition planning and a strong
         rationale for public investment in better local labour market data.</div>
     </div>
   </div>
@@ -241,7 +272,7 @@
 
     function populateControls(FULL_DATA) {
       if (!uiCommunity || !uiSource) return;
-      
+
       let tempCd = activeCd;
       uiCommunity.innerHTML = '';
       for (const cd in FULL_DATA) {
@@ -251,7 +282,7 @@
         if (cd === tempCd) { opt.selected = true; }
         uiCommunity.appendChild(opt);
       }
-      
+
       function updateSources() {
         uiSource.innerHTML = '';
         const cd = uiCommunity.value;
@@ -272,9 +303,9 @@
           uiSource.options[0].selected = true;
         }
       }
-      
+
       updateSources();
-      
+
       // Ensure global state matches the actual UI state after populate
       activeCd = uiCommunity.value;
       activeSrc = uiSource.value;
@@ -294,7 +325,6 @@
     function renderPanels(DATA) {
       // Dynamic header text
       if (DATA.source_label) document.getElementById('header-source-label').innerText = DATA.source_label;
-      if (DATA.source_teer) document.getElementById('header-teer').innerText = DATA.source_teer;
       if (DATA.community) document.getElementById('header-community').innerText = DATA.community;
 
       const sourceTeer = DATA.source_teer;
@@ -319,7 +349,7 @@
         return idx.map(i => arr[i]);
       }
 
-      const lensSize = 145;
+      const lensSize = 130;
       const cx = lensSize / 2, cy = lensSize / 2;
       const ir = 10;
       const outerR = lensSize / 2 - 1;
@@ -327,7 +357,7 @@
       const top30 = visibleCandidates.filter(c => c.in_top30);
       const nonTop30 = visibleCandidates.filter(c => !c.in_top30);
       const simMax = Math.max(...visibleCandidates.map(c => c.similarity));
-      
+
       // Fallbacks in case top30 is empty
       const simMaxT30 = top30.length ? Math.max(...top30.map(c => c.similarity)) : simMax;
       const simMinT30 = top30.length ? Math.min(...top30.map(c => c.similarity)) : 0.85;
@@ -405,26 +435,23 @@
             return { state: 'active', color: d.passes_local_cd ? P.p2LocalCd : P.p2LocalPr };
           }
           if (d.screen_presence) return { state: 'active', color: P.p2LocalPr }; // Stays active here!
-          return { state: 'faded', color: P.p2Neither };
+          return { state: 'faded', color: P.p1Faded };
         }
         if (panelIdx === 2) {
           if (!d.screen_presence) return { state: 'hidden' };
-          
-          if (d.screen_cops === 'fail') return { state: 'faded', color: P.p3FailCops };
-          if (!d.screen_earnings) return { state: 'faded', color: P.p3FailEarn };
-          if (!d.screen_ai) return { state: 'faded', color: P.p3FailAi };
-          
-          // COPS warn: show amber dot but still active (not filtered out)
-          if (d.screen_cops === 'warn') return { state: 'active', color: P.p3FailCops };
+
+          if (d.screen_cops === 'fail' || d.screen_cops === 'warn' || !d.screen_earnings || !d.screen_ai) {
+            return { state: 'faded', color: P.p1Faded };
+          }
           return { state: 'active', color: P.p3Pass };
         }
         if (panelIdx === 3) {
           if (!d.screen_presence) return { state: 'hidden' };
           if (d.screen_cops === 'fail' || !d.screen_earnings || !d.screen_ai) return { state: 'hidden' };
-          
+
           // Now, in Panel 4 (QUAL step), we fade out candidates that fail local presence
           if (!d.passes_local_cd && d.community_category !== 'endorsed') return { state: 'faded', color: P.p4Faded };
-          
+
           if (d.is_susceptible) return { state: 'faded', color: P.p4Faded };
           const teerClr = d.teer === sourceTeer ? P.p4Teer5 : P.p4Teer4;
           const shape = d.community_category === 'endorsed' ? 'diamond' : 'circle';
@@ -511,15 +538,7 @@
         });
 
         if (pi === 2) {
-          const aiText = document.getElementById('ai-text');
-          if (aiText) {
-             if (aiExcludes > 0) {
-               // Fold the AI screen into the legend when it visibly excludes dots
-               aiText.innerHTML = `<span style="color:#3a3a3a;font-weight:600">Dark grey</span> = excluded by an additional AI-exposure screen.`;
-             } else {
-               aiText.innerText = `An additional AI-exposure filter is applied but does not exclude any candidates here.`;
-             }
-          }
+
         }
 
         // Centre node (square = susceptible occupation)
@@ -575,18 +594,18 @@
     }
 
     function loadAndRender(metric) {
-      if (CACHE[metric]) { 
+      if (CACHE[metric]) {
         populateControls(CACHE[metric]);
-        tryRender(CACHE[metric]); 
-        return; 
+        tryRender(CACHE[metric]);
+        return;
       }
       fetch(`../data/F2_filtering.all.${metric}.json`)
         .then(r => r.json())
-        .then(DATA => { 
+        .then(DATA => {
           const actualData = DATA.data ? DATA.data : DATA;
-          CACHE[metric] = actualData; 
+          CACHE[metric] = actualData;
           populateControls(actualData);
-          tryRender(actualData); 
+          tryRender(actualData);
         });
     }
 
@@ -594,7 +613,7 @@
       const c = document.querySelector('.figure-container');
       const ctrls = document.querySelector('.iframe-controls');
       let h = document.querySelector('.dev-wrapper').scrollHeight;
-      
+
       if (c) parent.postMessage({ type: 'figure-sized', fig: 'F2_filtering', width: c.scrollWidth, height: h }, '*');
     }
 
@@ -602,17 +621,17 @@
     window.addEventListener('message', e => {
       if (!e.data) return;
       let needsRender = false;
-      
+
       if (e.data.type === 'set-metric' && e.data.metric && e.data.metric !== currentMetric) {
         currentMetric = e.data.metric;
         needsRender = true;
       }
-      
+
       if (e.data.type === 'set-active-pair') {
         if (e.data.cd && e.data.cd !== activeCd) { activeCd = e.data.cd; needsRender = true; }
         if (e.data.src && e.data.src !== activeSrc) { activeSrc = e.data.src; needsRender = true; }
       }
-      
+
       if (needsRender) loadAndRender(currentMetric);
     });
 
@@ -621,29 +640,29 @@
     loadAndRender(currentMetric);
   </script>
 
-<!-- CTP WP Engine Embed Helper -->
-<script>
-  if (window.self !== window.top) {
-    document.body.classList.add('export-mode');
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
-        const ctrls = document.querySelector('.iframe-controls');
-        let h = document.querySelector('.dev-wrapper').scrollHeight;
-        
-        if (c) {
-          const fig = location.pathname.split('/').pop().replace('.html', '');
-          parent.postMessage({
-            type: 'figure-sized',
-            fig: fig,
-            width: c.scrollWidth,
-            height: h
-          }, '*');
-        }
-      }, 100);
-    });
-  }
-</script>
+  <!-- CTP WP Engine Embed Helper -->
+  <script>
+    if (window.self !== window.top) {
+      document.body.classList.add('export-mode');
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+          const ctrls = document.querySelector('.iframe-controls');
+          let h = document.querySelector('.dev-wrapper').scrollHeight;
+
+          if (c) {
+            const fig = location.pathname.split('/').pop().replace('.html', '');
+            parent.postMessage({
+              type: 'figure-sized',
+              fig: fig,
+              width: c.scrollWidth,
+              height: h
+            }, '*');
+          }
+        }, 100);
+      });
+    }
+  </script>
 </body>
 
 </html>

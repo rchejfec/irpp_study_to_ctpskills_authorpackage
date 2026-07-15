@@ -113,11 +113,11 @@ Four global changes:
 - [x] Git snapshot (`pre-print-sizing` tag)
 - [x] Global `theme.css` change (font, widths, heights, token floors)
 - [x] Global `compact.js` change (breakpoint 640 → 440)
-- [ ] Per-figure polish pass (7/9 verified ✅, 2 remaining: B vetoed-for-now, F2)
+- [ ] Per-figure polish pass (8/9 verified ✅, 1 remaining: B vetoed-for-now)
   - [x] A3 (Interactive Map)
   - [x] C2 (Summary) — All three top-tier texts condensed (~30% fewer words); titles rewritten ("Structural change and workforce disruption", "Disruption compounds in susceptible communities"); column 3 rewritten for use-case framing (governments/municipalities/training providers as entity-pill styled spans); mini-table removed; bottom-tier steps condensed; SVG overlay scaled to 0.812 and repositioned; flow-step padding tightened
   - [ ] B (Suitable Heatmap)
-  - [ ] F2 (Filtering)
+  - [x] F2 (Filtering) — SVG viewbox and min-heights unified to fix alignment; legend consolidated and simplified; descriptive text aggressively condensed to ~30 words per panel; symbols scaled and baseline-aligned; non-passing candidates standardized to uniform grey fade; em-dashes replaced with standard punctuation.
   - [x] E (Viable Table) — rebuilt as **E2** (2026-07-14): new column grammar
         (source | top-10 window by NOC1 | curated pathways w/ bracket
         annotation), 19/32/49 at 550px, fonts ≥7pt (dagger 6pt). E archived.
@@ -202,3 +202,22 @@ mid-freeze:
   NOT yet device-verified.
 - **Housekeeping**: dead code swept; D archived to `dist/archive/`;
   tester (`dist/index.html`) points at D2.
+
+---
+
+## Per-figure polish — F2 (Filtering) ✅
+
+Completed 2026-07-15. Rebuilt to strictly fit the 550px print column width.
+
+### Layout & SVG Alignment
+- **SVG Viewbox**: Unified viewbox sizes and constrained `min-height` to enforce precise vertical alignment of the network layers across all four panels.
+- **UI Controls**: Fixed an overflow bug where long `<select>` options stretched the `.iframe-controls` bar beyond the figure bounds. Explicitly constrained with `width: 550px`, plus `flex: 1` and `min-width: 0` to enforce truncation.
+
+### Typography & Copy
+- **Panel Descriptions**: Aggressively condensed descriptive text to ~30 words per panel to fit the narrower columns without expanding vertical height.
+- **Punctuation**: Stripped all 5 em-dashes across panels and footnotes in favor of tighter, standard punctuation.
+- **Legend & Terminology**: Renamed "Mid-green" to "Light-green". Rephrased the 4th panel text to explicitly contextualize the diamond symbol: `highlighting (◆) additions`.
+
+### Legend Symbols & Fading Logic
+- **Symbol Alignment**: Standardized circles and squares to `1em`. Scaled the diamond to `1.5em` with a `line-height: 0` and `vertical-align: -0.05em` CSS hack to perfectly center it inline without pushing down the line rhythm.
+- **Node Fading**: Replaced the previous ad-hoc fading logic with a strict, uniform grey fade (`#ccc`) for all non-passing candidate nodes across panels 2, 3, and 4.

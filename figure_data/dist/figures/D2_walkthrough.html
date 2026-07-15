@@ -424,6 +424,13 @@
       margin-left: 8px;
     }
 
+    /* zero-gap (shared-only) pathway note */
+    .rca-fact.rca-zero {
+      font-style: italic;
+      color: #777;
+      line-height: 1.35;
+    }
+
     .gap-pills {
       display: flex;
       flex-wrap: wrap;
@@ -1093,19 +1100,24 @@
       const fg = t.featured_gap;
       html += `<div class="cell-rca">`;
       html += `<div class="rca-title">Skill gaps</div>`;
-      if (fg && fg.gaps && fg.gaps.length > 0) {
+      if (fg && fg.summary) {
         const sharedStr = (fg.shared_skills || []).join('<br>').replace(/"/g, '&quot;');
-        const topGaps = fg.gaps.slice(0, 3);
-        const moreGaps = fg.gaps.slice(3);
         const tgtRank = (t.candidates.find(c => c.noc === fg.target_noc) || {}).rank;
         html += `<div class="rca-lead">One sample pathway:</div>`;
         html += `<div class="rca-target">${fg.target_label}${tgtRank != null ? ` (#${tgtRank})` : ''}</div>`;
         html += `<div class="rca-fact"><span class="occ-title-tt" data-tippy-content="${sharedStr}">${fg.summary.shared} shared skills</span></div>`;
-        html += `<div class="rca-fact">${fg.summary.gaps} skill gap${fg.summary.gaps > 1 ? 's' : ''}</div>`;
-        html += `<div class="gap-pills">`
-          + topGaps.map(g => `<span class="gap-pill">${g}</span>`).join('')
-          + (moreGaps.length > 0 ? `<span class="gap-pill gap-more-pill occ-title-tt" data-tippy-content="${moreGaps.join('<br>').replace(/"/g, '&quot;')}">+${moreGaps.length} more</span>` : '')
-          + `</div>`;
+        if ((fg.gaps || []).length > 0) {
+          const topGaps = fg.gaps.slice(0, 3);
+          const moreGaps = fg.gaps.slice(3);
+          html += `<div class="rca-fact">${fg.summary.gaps} skill gap${fg.summary.gaps > 1 ? 's' : ''}</div>`;
+          html += `<div class="gap-pills">`
+            + topGaps.map(g => `<span class="gap-pill">${g}</span>`).join('')
+            + (moreGaps.length > 0 ? `<span class="gap-pill gap-more-pill occ-title-tt" data-tippy-content="${moreGaps.join('<br>').replace(/"/g, '&quot;')}">+${moreGaps.length} more</span>` : '')
+            + `</div>`;
+        } else {
+          // Shared-only ("near-twin") pathway — short note, see Figure I for long
+          html += `<div class="rca-fact rca-zero">No skill gaps — differences may remain in other domains or in credentials not captured by the taxonomy.</div>`;
+        }
         html += `</div>`;
       } else {
         html += `<div class="rca-hint">No skill-gap data available for this pair's top matches.</div></div>`;
@@ -1265,27 +1277,33 @@
       right += `<div class="rail-stack">`;
       const fg = t.featured_gap;
       right += `<div class="cell-rca">`;
-      if (fg && fg.gaps && fg.gaps.length > 0) {
+      if (fg && fg.summary) {
         const sharedStr = (fg.shared_skills || []).join('<br>').replace(/"/g, '&quot;');
-        // Visible pills favour one-line labels: long ones are deranked into
-        // "+N more" (tooltip) so the pane keeps a stable height. Two-line
-        // wrap inside a pill remains the fallback when short labels run out.
-        // ~33 chars ≈ one pill line at 8.5px in a third-width column.
-        const fitsLine = g => g.length <= 33;
-        const shortG = fg.gaps.filter(fitsLine);
-        const visible = shortG.slice(0, 3);
-        if (visible.length < 3) visible.push(...fg.gaps.filter(g => !fitsLine(g)).slice(0, 3 - visible.length));
-        const topGaps = fg.gaps.filter(g => visible.includes(g));   // data order preserved
-        const moreGaps = fg.gaps.filter(g => !visible.includes(g));
         const tgtRank = (t.candidates.find(c => c.noc === fg.target_noc) || {}).rank;
         right += `<div class="rca-lead">One sample pathway:</div>`;
         right += `<div class="rca-target">${fg.target_label}${tgtRank != null ? ` (#${tgtRank})` : ''}</div>`;
         right += `<div class="rca-fact"><span class="occ-title-tt" data-tippy-content="${sharedStr}">${fg.summary.shared} shared skills</span></div>`;
-        right += `<div class="rca-fact">${fg.summary.gaps} skill gap${fg.summary.gaps > 1 ? 's' : ''}</div>`;
-        right += `<div class="gap-pills">`
-          + topGaps.map(g => `<span class="gap-pill">${g}</span>`).join('')
-          + (moreGaps.length > 0 ? `<span class="gap-pill gap-more-pill occ-title-tt" data-tippy-content="${moreGaps.join('<br>').replace(/"/g, '&quot;')}">+${moreGaps.length} more</span>` : '')
-          + `</div>`;
+        if ((fg.gaps || []).length > 0) {
+          // Visible pills favour one-line labels: long ones are deranked into
+          // "+N more" (tooltip) so the pane keeps a stable height. Two-line
+          // wrap inside a pill remains the fallback when short labels run out.
+          // ~33 chars ≈ one pill line at 8.5px in a third-width column.
+          const fitsLine = g => g.length <= 33;
+          const shortG = fg.gaps.filter(fitsLine);
+          const visible = shortG.slice(0, 3);
+          if (visible.length < 3) visible.push(...fg.gaps.filter(g => !fitsLine(g)).slice(0, 3 - visible.length));
+          const topGaps = fg.gaps.filter(g => visible.includes(g));   // data order preserved
+          const moreGaps = fg.gaps.filter(g => !visible.includes(g));
+          right += `<div class="rca-fact">${fg.summary.gaps} skill gap${fg.summary.gaps > 1 ? 's' : ''}</div>`;
+          right += `<div class="gap-pills">`
+            + topGaps.map(g => `<span class="gap-pill">${g}</span>`).join('')
+            + (moreGaps.length > 0 ? `<span class="gap-pill gap-more-pill occ-title-tt" data-tippy-content="${moreGaps.join('<br>').replace(/"/g, '&quot;')}">+${moreGaps.length} more</span>` : '')
+            + `</div>`;
+        } else {
+          // Shared-only ("near-twin") pathway: data-true zero, not missing
+          // data. Short note here; the long version lives in Figure I.
+          right += `<div class="rca-fact rca-zero">No skill gaps — differences may remain in other domains or in credentials not captured by the taxonomy.</div>`;
+        }
         right += `</div>`;
       } else {
         right += `<div class="rca-hint">No skill-gap data available for this pair's top matches.</div></div>`;

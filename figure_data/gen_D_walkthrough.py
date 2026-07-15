@@ -524,7 +524,11 @@ def generate(metric: str) -> None:
                 "featured_gap": _featured_gap(
                     cd_uid, src_noc,
                     ranked["candidate_noc"].tolist(),
-                    ranked[lib.is_pick(ranked)]["candidate_noc"].tolist()),
+                    # Author picks only: user picks are silent in D (notes
+                    # "decision 1"), so featuring one would show a pathway
+                    # the notes never mention (and the fade-supersede,
+                    # keyed off the up-note labels, wouldn't protect it).
+                    ranked[ranked["pick_source"] == "author"]["candidate_noc"].tolist()),
                 "assessment_notes": _assessment_notes(cd_uid, src_noc, cands, global_susc, rationales)
             }
         all_data[cd_uid] = cd_data

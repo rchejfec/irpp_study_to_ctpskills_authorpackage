@@ -557,12 +557,18 @@
         // Sits left-aligned at the axis, in the slot the next bar would take.
         if (!pair.comps.some(c => c.type === 'gap')) {
           const lastBottom = Math.max(...pair.comps.map(c => y(c.name) + bandPad + barH));
-          const noteY = Math.min(lastBottom + 30, h - 40);
+          // Long-form note (short version lives in D2's specimen pane):
+          // zero is data-true under the gap definition, and the caveat is
+          // that Skills-domain parity is not whole-profile parity.
           const noteLines = [
-            'No formal training gaps for this pathway —',
-            'the viable occupation relies on competencies',
-            'this occupation already uses intensively.',
+            'No skill gaps for this pathway — every skill the',
+            'viable occupation relies on more than average is',
+            'already used intensively by this occupation.',
+            'Differences may remain in other competency domains',
+            '(knowledge, abilities, work context) or in',
+            'credentials the taxonomy omits, e.g. accreditations.',
           ];
+          const noteY = Math.min(lastBottom + 30, h - 12 - noteLines.length * F.noteLineH);
           noteLines.forEach((line, li) => {
             g.append('text')
               .attr('x', 4).attr('y', noteY + li * F.noteLineH)

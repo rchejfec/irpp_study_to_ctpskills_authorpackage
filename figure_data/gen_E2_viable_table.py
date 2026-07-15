@@ -16,7 +16,8 @@ Window membership note: `lib.is_viable` includes pick-override statuses
 (picks always win), so filter-failing picks ARE window candidates; the
 window is simply the 10 lowest-ranked viable candidates per source.
 
-Pick entries reuse gen_E_viable_table._pick_entry — same fields, including
+Pick entries use _pick_entry (migrated here from the retired
+gen_E_viable_table, now in figure_data/archive/) — same fields, including
 `pick_failed_filters` (drives the dagger in the figure) and `rationale`
 (reserved for tooltips).
 
@@ -31,7 +32,31 @@ import argparse
 import pandas as pd
 
 import lib
-from gen_E_viable_table import FIGURE_COMMUNITY_CD, PICK_SOURCES, _pick_entry
+
+# Migrated from the retired gen_E_viable_table (figure_data/archive/):
+# Community the E figure hardcodes for the single-community JSON.
+FIGURE_COMMUNITY_CD = "4701"  # Estevan
+PICK_SOURCES = ("author", "user")
+
+
+def _pick_entry(row: pd.Series) -> dict:
+    sim = pd.to_numeric(row.get("similarity"), errors="coerce")
+    ratio = pd.to_numeric(row.get("pr_income_discount"), errors="coerce")
+    return {
+        "candidate_noc": row["candidate_noc"],
+        "candidate_label": row["candidate_label"],
+        "candidate_teer": int(row["candidate_teer"]),
+        "rank": int(row["rank"]),
+        "similarity": None if pd.isna(sim) else round(float(sim), 3),
+        "income_ratio": None if pd.isna(ratio) else round(float(ratio), 3),
+        "rationale": row["rationale"] if pd.notna(row.get("rationale")) else None,
+        # pick_failed_filters is a bool; the failed screens' names are in
+        # filter_reasons. Emit the names (or None if the pick failed nothing).
+        "pick_failed_filters": row["filter_reasons"]
+            if row.get("pick_failed_filters") == "True"
+               and pd.notna(row.get("filter_reasons")) else None,
+    }
+
 
 WINDOW_N = 10
 

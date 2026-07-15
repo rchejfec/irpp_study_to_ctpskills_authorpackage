@@ -5,9 +5,14 @@
 All 9 figures polished (B rebuilt as B2, RC solo). Remaining before the
 HANDOFF.md freeze lifts, in order:
 1. ~~C2 step-detail 9px fix + SVG spacing~~ done (RC spacing fix, scale kept).
-2. Adoption & archival sweep: B2 adoption (archive B, DECISIONS § B2 incl.
-   dual web/print-mode deviation, commit RC's B2 work), full tester index
-   audit, archive `_E_mockup` + orphaned gens/JSONs.
+2. ~~Adoption & archival sweep~~ done 2026-07-15: RC's B2 work committed
+   (`b87087b`); B + `_E_mockup` → `dist/archive/`; gen_B + gen_E →
+   `figure_data/archive/` (shared E symbols migrated into gen_E2);
+   generate_all: B2 in, old B/E out; orphaned JSONs removed (old
+   single-pair D, non-`.all` old-E); `.all` JSONs of archived figures kept
+   so `dist/archive/` still renders; tester index: B2 in, A2 out, K path →
+   `appendices/`; DECISIONS § B2 written (dual-mode deviation + hardening
+   follow-ups recorded there).
 3. Supersede the 7 unsigned 2026-07-08 D rows in VALIDATION.md (describe the
    archived D, replaced by D2).
 4. Hardening sweep: temp code in F2/B2 + anything missed (TODO/FIXME/dead

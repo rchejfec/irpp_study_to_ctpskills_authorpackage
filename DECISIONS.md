@@ -550,6 +550,47 @@ PNG export with the rest of the print-sizing pass.
 
 ---
 
+## Figure B2 — Suitability heatmap rebuild (2026-07-15, RC solo)
+
+B resisted the 550px pass (11 dense NOC-3 columns; cells shrank below
+legibility), so RC rebuilt it solo as B2 (`gen_B2_suitable_heatmap.py`,
+`dist/figures/B2_suitable_heatmap.html`). B is archived to `dist/archive/`;
+its generator to `figure_data/archive/`; its last JSON stays in `dist/data/`
+so the archived HTML still renders.
+
+**Aggregation.** Destination families grouped at 2-digit NOC (9 columns
+instead of 11) via `lib.noc2_label()`, backed by
+`data/reference/noc2_custom_labels.json` — custom labels written for this
+study's specific data slices, not the official (long) NOC titles. The freed
+width goes to cells: 39×22px (from 28×18), `display: block` + `margin: 0
+auto` centering to eliminate text-baseline row jitter; row headers fixed at
+175px.
+
+**Dual web/print mode — deviation from the single-source rule.** B2 serves
+two layouts from one file, switched by `navigator.webdriver` (Puppeteer) or
+`?print`: web mode shows community pills and truncates row labels to one
+line (split at first comma, ≤30 chars); print mode drops the pills, allows
+natural 2-line wraps, and swaps " and " → " & ". This is a deliberate
+exception to the layer's one-rendering-per-figure convention: the print
+target (7pt floor at 550px) and the embed target (pills for interactivity
+context) could not be reconciled in one layout at this density. The
+`dist/exports/B2_suitable_heatmap.png` reference therefore captures the
+**print** variant — the web default state differs by design.
+
+**Editorial overrides.** Two print-mode label shorthands are hardcoded in
+the HTML (NOC 74203, 94141) to stop 3-line wraps from breaking the grid
+rhythm. NOC 65 is filtered out render-side.
+
+**Recorded follow-ups (hardening sweep, 2026-07-15):** gen_B2's docstring
+is still the cloned gen_B text (says NOC-3, names the old JSON); the cell
+key is still `dest_noc3` though it now holds 2-digit codes; and an
+`EXPERIMENT` line relaxes the author-directed shared-column filter to
+`>= 1` sources (a no-op filter — every column kept). Whether that
+keep-all-columns behaviour is final needs RC's confirmation before the
+comment is removed.
+
+---
+
 ## Known data-quality notes
 
 - The reviseddraft abstract says **"16 occupations"**; the authors' Appendix A has

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Suitable Heatmap</title>
+  <title>Suitable Heatmap (B2 2-digit NOC)</title>
   <link rel="stylesheet" href="../theme.css">
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
@@ -15,7 +15,7 @@
       width: var(--fig-width);
       height: auto;
       min-height: 420px;
-      padding: var(--sp-16) var(--sp-14) var(--sp-12);
+      padding: 0;
     }
 
     .heatmap-table {
@@ -27,7 +27,7 @@
     .heatmap-table th {
       font-weight: var(--fw-medium);
       color: var(--clr-body-secondary);
-      padding: var(--sp-4) 4px;
+      padding: 2px 4px;
       text-align: center;
       vertical-align: bottom;
       border-bottom: 1px solid var(--clr-border);
@@ -37,12 +37,12 @@
       writing-mode: vertical-rl;
       text-orientation: mixed;
       transform: rotate(180deg);
-      height: 185px;
+      height: 160px;
       white-space: normal;
-      max-width: 2.4em;
-      font-size: 10px;
-      padding: var(--sp-6) 2px;
-      line-height: 1.3;
+      max-width: 3em;
+      font-size: 10.5px;
+      padding: var(--sp-6) 2px 0;
+      line-height: 1.08;
       text-align: left;
       vertical-align: middle;
     }
@@ -51,14 +51,22 @@
       text-align: right;
       padding-right: var(--sp-6);
       font-size: 10px;
-      max-width: 190px;
+      max-width: 175px;
       line-height: 1.3;
       font-weight: var(--fw-medium);
       color: var(--clr-body);
       border-bottom: none;
+      vertical-align: middle;
     }
 
-    .comm-pills { display: block; margin-top: 1px; }
+    .comm-pills {
+      display: block;
+      margin-top: 1px;
+    }
+
+    body.print-mode .comm-pills {
+      display: none;
+    }
 
     .comm-pill {
       display: inline-block;
@@ -77,18 +85,20 @@
     .heatmap-table td {
       text-align: center;
       padding: 1px 1px;
-      min-width: 30px;
+      min-width: 41px;
       font-size: var(--fs-body);
       font-weight: var(--fw-medium);
       border-bottom: none;
+      vertical-align: middle;
     }
 
     .hm-cell {
       border-radius: 2px;
-      display: inline-block;
-      width: 28px;
-      height: 18px;
-      line-height: 18px;
+      display: block;
+      margin: 0 auto;
+      width: 39px;
+      height: 22px;
+      line-height: 22px;
       font-size: 9.5px;
       color: #fff;
       cursor: default;
@@ -96,39 +106,100 @@
 
     /* ── COMPACT (<640px iframe width): sticky source column + horizontal
        scroll (dense-grid treatment per 2026-07-08 decisions). ── */
-    .compact-scroll-hint { display: none; }
+    .compact-scroll-hint {
+      display: none;
+    }
 
-    html.compact .figure-container { width: 100%; min-height: 0; padding: 10px 0 12px; }
-    html.compact .dev-wrapper { padding: 8px; }
+    html.compact .figure-container {
+      width: 100%;
+      min-height: 0;
+      padding: 10px 0 12px;
+    }
+
+    html.compact .dev-wrapper {
+      padding: 8px;
+    }
+
     html.compact .compact-scroll-hint {
       display: block;
       font-size: 11px;
       color: var(--clr-body-secondary);
       padding: 0 12px 6px;
     }
-    html.compact #heatmap-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    html.compact #heatmap-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
     html.compact .heatmap-table th.row-header {
-      position: sticky; left: 0; z-index: 2;
+      position: sticky;
+      left: 0;
+      z-index: 2;
       background: #fff;
       font-size: 12px;
-      min-width: 138px; max-width: 138px;
+      min-width: 138px;
+      max-width: 138px;
       padding-left: 10px;
       box-shadow: 3px 0 4px -2px rgba(0, 0, 0, 0.12);
     }
-    html.compact .heatmap-table th.col-header { font-size: 11px; height: 150px; }
+
+    html.compact .heatmap-table th.col-header {
+      font-size: 11px;
+      height: 150px;
+    }
+
     /* Community pills dropped in compact (kept row heights near one line);
        cell tooltips still name the member occupations. */
-    html.compact .comm-pills { display: none; }
-    html.compact .heatmap-table td { min-width: 40px; }
-    html.compact .hm-cell { width: 36px; height: 24px; line-height: 24px; font-size: 12px; }
+    html.compact .comm-pills {
+      display: none;
+    }
 
-    .hm-0 { background: #f0efe9; color: #ccc; }
-    .hm-1 { background: var(--irpp-navy-light); color: var(--clr-body); }
-    .hm-2 { background: #7a9db8; color: #fff; }
-    .hm-3 { background: #4d7d9e; color: #fff; }
-    .hm-4 { background: #2a6485; color: #fff; }
-    .hm-5 { background: var(--irpp-navy); color: #fff; }
-    .hm-7 { background: #002d44; color: #fff; }
+    html.compact .heatmap-table td {
+      min-width: 40px;
+    }
+
+    html.compact .hm-cell {
+      width: 36px;
+      height: 24px;
+      line-height: 24px;
+      font-size: 12px;
+    }
+
+    .hm-0 {
+      background: #f0efe9;
+      color: #ccc;
+    }
+
+    .hm-1 {
+      background: var(--irpp-navy-light);
+      color: var(--clr-body);
+    }
+
+    .hm-2 {
+      background: #7a9db8;
+      color: #fff;
+    }
+
+    .hm-3 {
+      background: #4d7d9e;
+      color: #fff;
+    }
+
+    .hm-4 {
+      background: #2a6485;
+      color: #fff;
+    }
+
+    .hm-5 {
+      background: var(--irpp-navy);
+      color: #fff;
+    }
+
+    .hm-7 {
+      background: #002d44;
+      color: #fff;
+    }
   </style>
 </head>
 
@@ -142,6 +213,8 @@
 
   <script>
     let currentMetric = (new URLSearchParams(location.search).get('metric') === 'euclidean') ? 'euclidean' : 'cosine';
+    const isPrint = navigator.webdriver || new URLSearchParams(location.search).has('print');
+    if (isPrint) document.body.classList.add('print-mode');
     const CACHE = {};
 
     function buildHeatmap(cells, sourceComms) {
@@ -154,13 +227,32 @@
         destCounts[c.dest_noc3] = (destCounts[c.dest_noc3] || 0) + c.count;
         srcCounts[c.source_noc] = (srcCounts[c.source_noc] || 0) + c.count;
       });
-      const dests = Object.keys(destCounts).sort((a, b) => destCounts[b] - destCounts[a]);
+      // Sort dest categories by their NOC code (ascending)
+      let dests = Object.keys(destCounts).sort((a, b) => a.localeCompare(b));
+      // Filter out NOC 65 on the render side
+      dests = dests.filter(d => d !== '65');
       const sources = Object.keys(srcCounts).sort((a, b) => srcCounts[b] - srcCounts[a]);
 
       const srcLabels = {};
       const destLabels = {};
       cells.forEach(c => {
-        srcLabels[c.source_noc] = c.source_label;
+        let label = c.source_label;
+        if (!isPrint) {
+          label = label.split(',')[0];
+          if (label.length > 32) label = label.substring(0, 30) + '...';
+        } else {
+          // Uniformly shorten " and " for print mode to save space
+          label = label.replace(/ and /g, ' & ');
+          
+          // Specific editorial shorthands to prevent 3-line wrapping
+          if (c.source_noc === '74203') {
+            label = 'Automotive, heavy truck & equipment parts installers';
+          }
+          if (c.source_noc === '94141') {
+            label = 'Industrial butchers, meat cutters & poultry preparers';
+          }
+        }
+        srcLabels[c.source_noc] = label;
         destLabels[c.dest_noc3] = c.dest_label;
       });
 
@@ -231,14 +323,14 @@
 
     function loadAndRender(metric) {
       if (CACHE[metric]) { buildHeatmap(CACHE[metric].heatmap, CACHE[metric].source_communities); return; }
-      fetch(`../data/B_suitable_heatmap.${metric}.json`)
+      fetch(`../data/B2_suitable_heatmap.${metric}.json`)
         .then(r => r.json())
         .then(DATA => { CACHE[metric] = DATA; buildHeatmap(DATA.heatmap, DATA.source_communities); });
     }
 
     function reportSize() {
       const c = document.querySelector('.figure-container');
-      if (c) parent.postMessage({ type: 'figure-sized', fig: 'B_suitable_heatmap', width: c.scrollWidth, height: document.querySelector('.dev-wrapper').scrollHeight }, '*');
+      if (c) parent.postMessage({ type: 'figure-sized', fig: 'B2_suitable_heatmap', width: c.scrollWidth, height: document.querySelector('.dev-wrapper').scrollHeight }, '*');
     }
 
     // Listen for in-place metric switch from parent
@@ -252,26 +344,26 @@
     loadAndRender(currentMetric);
   </script>
 
-<!-- CTP WP Engine Embed Helper -->
-<script>
-  if (window.self !== window.top) {
-    document.body.classList.add('export-mode');
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
-        if (c) {
-          const fig = location.pathname.split('/').pop().replace('.html', '');
-          parent.postMessage({
-            type: 'figure-sized',
-            fig: fig,
-            width: c.scrollWidth,
-            height: document.querySelector('.dev-wrapper').scrollHeight
-          }, '*');
-        }
-      }, 100);
-    });
-  }
-</script>
+  <!-- CTP WP Engine Embed Helper -->
+  <script>
+    if (window.self !== window.top) {
+      document.body.classList.add('export-mode');
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const c = document.querySelector('.figure-container') || document.querySelector('.appendix');
+          if (c) {
+            const fig = location.pathname.split('/').pop().replace('.html', '');
+            parent.postMessage({
+              type: 'figure-sized',
+              fig: fig,
+              width: c.scrollWidth,
+              height: document.querySelector('.dev-wrapper').scrollHeight
+            }, '*');
+          }
+        }, 100);
+      });
+    }
+  </script>
 </body>
 
 </html>

@@ -1,0 +1,42 @@
+{
+  "65": {
+    "custom": "Service support",
+    "official": "Service support and other service occupations, n.e.c."
+  },
+  "72": {
+    "custom": "Technical trades & transport officers",
+    "official": "Technical trades and transportation officers and controllers"
+  },
+  "73": {
+    "custom": "General trades & transport operators",
+    "official": "General trades"
+  },
+  "74": {
+    "custom": "Transport operators & maintenance workers",
+    "official": "Mail and message distribution, other transport equipment operators and related maintenance workers"
+  },
+  "75": {
+    "custom": "Transport drivers, operators & public works labourers",
+    "official": "Helpers and labourers and other transport drivers, operators and labourers"
+  },
+  "83": {
+    "custom": "Resource extraction machinery operators & miners",
+    "official": "Occupations in natural resources and related production"
+  },
+  "84": {
+    "custom": "Resource, agriculture & fishing support workers",
+    "official": "Workers in natural resources, agriculture and related production"
+  },
+  "85": {
+    "custom": "Natural resources & agriculture labourers",
+    "official": "Harvesting, landscaping and natural resources labourers"
+  },
+  "94": {
+    "custom": "Manufacturing operators, assemblers & inspectors",
+    "official": "Machine operators, assemblers and inspectors in processing, manufacturing and printing"
+  },
+  "95": {
+    "custom": "Manufacturing & processing labourers",
+    "official": "Labourers in processing, manufacturing and utilities"
+  }
+}

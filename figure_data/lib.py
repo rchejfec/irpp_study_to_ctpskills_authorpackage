@@ -56,6 +56,16 @@ def noc3_label(noc3: str) -> str:
     return NOC3_LABELS.get(noc3, f"Other ({noc3}xx)")
 
 
+def noc2_label(noc2: str) -> str:
+    """Load custom 2-digit NOC labels optimized for the study's specific data slices."""
+    path = REF_DIR / "noc2_custom_labels.json"
+    if path.exists():
+        labels = json.loads(path.read_text())
+        if noc2 in labels:
+            return labels[noc2].get("custom", f"NOC {noc2}")
+    return f"NOC {noc2}"
+
+
 def load_viable(metric: str) -> pd.DataFrame:
     """Load viable_{metric}.csv with numeric coercion on the columns we use."""
     path = OUTPUT_DIR / "viable" / f"viable_{metric}.csv"

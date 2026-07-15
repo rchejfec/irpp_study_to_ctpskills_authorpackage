@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Color Space Interpolation Tester</title>
+  <style>
+    :root {
+      font-family: system-ui, sans-serif;
+      background: #f4f4f4;
+      color: #333;
+    }
+    body {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    h1 { margin-top: 0; }
+    
+    .note-panel {
+      background: #eef5fa;
+      border-left: 4px solid #004667;
+      padding: 1rem 1.5rem;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 2rem;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .controls label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .grid {
+      display: grid;
+      gap: 2rem;
+    }
+    
+    .section {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .section h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .row-label {
+      width: 150px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    
+    .swatch-group {
+      display: flex;
+      gap: 0;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px #ddd;
+    }
+    
+    .swatch {
+      width: 80px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      font-weight: bold;
+    }
+    
+    .swatch.light-text {
+      color: #333;
+      text-shadow: none;
+    }
+
+    /* Interpolation Logic */
+    body.space-srgb .mix { background: color-mix(in srgb, var(--c1), var(--c2)); }
+    body.space-hsl .mix { background: color-mix(in hsl, var(--c1), var(--c2)); }
+    body.space-oklch .mix { background: color-mix(in oklch, var(--c1), var(--c2)); }
+    
+    /* Special HSL interpolation modes to show its quirks if needed, but standard 'in hsl' is fine for demo */
+
+    .mix::after {
+      content: "50% MIX";
+    }
+  </style>
+</head>
+<body class="space-oklch">
+
+  <h1>Color Space Interpolation Tester</h1>
+  
+  <div class="note-panel">
+    <h3>Recommended Color Space: <strong>OKLCH</strong></h3>
+    <p>Modern CSS allows us to generate new colors (like hover states or semantic scales) by mixing colors natively in the browser using <code>color-mix()</code>.</p>
+    <ul>
+      <li><strong>sRGB</strong> (Standard): Often creates "muddy" or grayish dead zones in the middle when mixing opposing colors.</li>
+      <li><strong>HSL</strong> (Hue/Saturation/Lightness): Better than sRGB, but perceptually uneven. A 50% lightness in blue looks much darker to the human eye than a 50% lightness in yellow.</li>
+      <li><strong>OKLCH (Recommended)</strong>: A perceptual color space. It guarantees that the mathematical middle step is exactly the visual middle step to the human eye. It maintains vibrant chromas and completely avoids the muddy grey dead zone.</li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <label><input type="radio" name="space" value="space-srgb" onchange="document.body.className=this.value"> sRGB (Traditional)</label>
+    <label><input type="radio" name="space" value="space-hsl" onchange="document.body.className=this.value"> HSL (Cylindrical)</label>
+    <label><input type="radio" name="space" value="space-oklch" checked onchange="document.body.className=this.value"> OKLCH (Perceptual - Recommended)</label>
+  </div>
+
+  <div class="grid">
+    
+    <div class="section">
+      <h2>1. Lightness Interpolation (Base to Light)</h2>
+      <p style="font-size: 0.9rem; color: #666; margin-top:-1rem; margin-bottom: 1.5rem;">Testing how each space handles stepping from a dark/saturated base to its tinted light variant.</p>
+      
+      <div class="row">
+        <div class="row-label">Navy</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #004667">BASE</div>
+          <div class="swatch mix" style="--c1: #004667; --c2: #B8C4D3"></div>
+          <div class="swatch light-text" style="background: #B8C4D3">LIGHT</div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="row-label">Teal</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #44A3A4">BASE</div>
+          <div class="swatch mix" style="--c1: #44A3A4; --c2: #B5D2D3"></div>
+          <div class="swatch light-text" style="background: #B5D2D3">LIGHT</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Gold</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #DEAC28">BASE</div>
+          <div class="swatch mix" style="--c1: #DEAC28; --c2: #F0D8A4"></div>
+          <div class="swatch light-text" style="background: #F0D8A4">LIGHT</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Orange</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #D36828">BASE</div>
+          <div class="swatch mix" style="--c1: #D36828; --c2: #EBBA97"></div>
+          <div class="swatch light-text" style="background: #EBBA97">LIGHT</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Red</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #CE2129">BASE</div>
+          <div class="swatch mix" style="--c1: #CE2129; --c2: #E7A38F"></div>
+          <div class="swatch light-text" style="background: #E7A38F">LIGHT</div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="row-label">Purple</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #55425B">BASE</div>
+          <div class="swatch mix" style="--c1: #55425B; --c2: #BCB3BE"></div>
+          <div class="swatch light-text" style="background: #BCB3BE">LIGHT</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>2. Hue Interpolation (Base to Base)</h2>
+      <p style="font-size: 0.9rem; color: #666; margin-top:-1rem; margin-bottom: 1.5rem;">Testing how the space handles blending entirely different hues. Notice how sRGB gets muddy, while OKLCH maintains vibrance.</p>
+      
+      <div class="row">
+        <div class="row-label">Navy to Teal</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #004667">NAVY</div>
+          <div class="swatch mix" style="--c1: #004667; --c2: #44A3A4"></div>
+          <div class="swatch" style="background: #44A3A4">TEAL</div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="row-label">Teal to Olive</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #44A3A4">TEAL</div>
+          <div class="swatch mix" style="--c1: #44A3A4; --c2: #A0A638"></div>
+          <div class="swatch" style="background: #A0A638">OLIVE</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Olive to Gold</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #A0A638">OLIVE</div>
+          <div class="swatch mix" style="--c1: #A0A638; --c2: #DEAC28"></div>
+          <div class="swatch" style="background: #DEAC28">GOLD</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Gold to Red</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #DEAC28">GOLD</div>
+          <div class="swatch mix" style="--c1: #DEAC28; --c2: #CE2129"></div>
+          <div class="swatch" style="background: #CE2129">RED</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Red to Purple</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #CE2129">RED</div>
+          <div class="swatch mix" style="--c1: #CE2129; --c2: #55425B"></div>
+          <div class="swatch" style="background: #55425B">PURPLE</div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="row-label">Extreme: Navy to Gold</div>
+        <div class="swatch-group">
+          <div class="swatch" style="background: #004667">NAVY</div>
+          <div class="swatch mix" style="--c1: #004667; --c2: #DEAC28"></div>
+          <div class="swatch" style="background: #DEAC28">GOLD</div>
+        </div>
+      </div>
+      
+    </div>
+
+  </div>
+
+</body>
+</html>

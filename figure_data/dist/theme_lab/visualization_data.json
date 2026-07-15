@@ -1,0 +1,74 @@
+[
+  {
+    "tag": "--color-map-landmass",
+    "type": "surface",
+    "legacy": "#dcdcdc",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Map: Default background fill for non-selected regions / landmass in A3."
+  },
+  {
+    "tag": "--color-map-region-selected",
+    "type": "surface",
+    "legacy": "#004667",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Map: Background fill for selected community/region in A3."
+  },
+  {
+    "tag": "--color-scale-heatmap-base",
+    "type": "surface",
+    "legacy": "#f0efe9",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Viz: The zero/base value fill for the sequential suitability heatmap scale in B2."
+  },
+  {
+    "tag": "--color-scale-heatmap-max",
+    "type": "surface",
+    "legacy": "#002d44",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Viz: The peak intensity fill for the sequential suitability heatmap scale in B2."
+  },
+  {
+    "tag": "--color-chart-similarity",
+    "type": "surface",
+    "legacy": "#B8C4D3",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Viz: Fill color for similarity bars in D2."
+  },
+  {
+    "tag": "--color-chart-reference-line",
+    "type": "border",
+    "legacy": "#004667",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Viz: Horizontal reference baseline indicator (RCA=1) in Figure I."
+  },
+  {
+    "tag": "--color-chart-rank1",
+    "type": "surface",
+    "legacy": "#44A3A4",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Viz: First rank skill bar fill in J (Base Teal)."
+  },
+  {
+    "tag": "--color-chart-rank2",
+    "type": "surface",
+    "legacy": "#5aa9a9",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Viz: Second rank skill bar fill in J (Muted Teal)."
+  },
+  {
+    "tag": "--color-chart-rank3",
+    "type": "surface",
+    "legacy": "#93c6c6",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Viz: Third rank skill bar fill in J (Subtle Teal)."
+  }
+]

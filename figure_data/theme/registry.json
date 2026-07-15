@@ -1,0 +1,666 @@
+{
+  "meta": {
+    "created": "2026-07-15",
+    "updated": "2026-07-15",
+    "spec": "REGISTRY.md",
+    "passes": {
+      "1": "Gemini-era consolidation, RC decisions mined from chapter JSONs (decision_variable fields)",
+      "2": "2026-07-15 interview: warm/cool collapse, scale anchor-pairs, state derivation rules"
+    }
+  },
+  "tokens": [
+    {
+      "token": "--color-surface-default",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#ffffff", "source": "--clr-bg + literals" }
+      ],
+      "usage": [],
+      "notes": "Main canvas. Keep white vs very light warm tone = colour-stage call."
+    },
+    {
+      "token": "--color-surface-subtle",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "decided",
+      "pass": 2,
+      "absorbs": [
+        { "value": "#f8f9fb", "source": "--clr-bg-muted (muted + hover uses)" },
+        { "value": "#e6e9ec", "source": "J progress track" },
+        { "value": "#fafaf8", "source": "D2 .cell-explain (warm drift)" },
+        { "value": "#faf9f7", "source": "D2 .cell-qual (warm drift)" },
+        { "value": "#faf6f0", "source": "D2 source band (warm drift)" }
+      ],
+      "usage": [],
+      "notes": "Single neutral subtle-surface tier. Warm variants were drift, not decisions (p2). Hover-same-as-muted merge deliberate (p1). Collapsing the near-identical warm hexes changes rendered values sub-perceptually — log in pixel-diff."
+    },
+    {
+      "token": "--color-surface-brand",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#004667", "source": "E2/G2 header blocks (--irpp-navy)" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-surface-inverse",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#004667", "source": "A3 .comm-num background (--clr-heading)" }
+      ],
+      "usage": [],
+      "notes": "Dark chip/badge background carrying inverse text. May merge with surface-brand — decide when both are implemented."
+    },
+    {
+      "token": "--color-surface-warm-subtle",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "merged",
+      "pass": 2,
+      "merged_into": "--color-surface-subtle",
+      "absorbs": [],
+      "usage": [],
+      "notes": "Warm/cool split was drift (RC, 2026-07-15 interview)."
+    },
+    {
+      "token": "--color-surface-warm-muted",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "merged",
+      "pass": 2,
+      "merged_into": "--color-surface-subtle",
+      "absorbs": [],
+      "usage": [],
+      "notes": "Warm/cool split was drift (RC, 2026-07-15 interview)."
+    },
+    {
+      "token": "--color-surface-hover",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "merged",
+      "pass": 1,
+      "merged_into": "--color-surface-subtle",
+      "absorbs": [],
+      "usage": [],
+      "notes": "Deliberately same colour as subtle surface (RC)."
+    },
+    {
+      "token": "--color-surface-accent1-subtle",
+      "chapter": "structural",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 1,
+      "merged_into": "",
+      "absorbs": [
+        { "value": "#f6faf7", "source": "C2 mint gradient" },
+        { "value": "#e3efe5", "source": "C2 mint highlighted blocks" }
+      ],
+      "usage": [],
+      "notes": "Gemini proposed dropping C2's mint surfaces into surface-subtle/default. Not RC-ratified — resolve at C2's sweep."
+    },
+    {
+      "token": "--color-border-default",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#dcdcdc", "source": "--clr-border" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-border-subtle",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "decided",
+      "pass": 2,
+      "absorbs": [
+        { "value": "#f0f0f0", "source": "list separators (A3 etc.)" },
+        { "value": "#ddd", "source": "D2" },
+        { "value": "#f2f2f2", "source": "D2" },
+        { "value": "#e5e7eb", "source": "D2 .tt-divider" },
+        { "value": "#e0ddd6", "source": "D2 warm border (drift)" }
+      ],
+      "usage": [],
+      "notes": "Warm border collapsed here per p2 warm/cool ruling. The four cool near-duplicates merge; log deltas in pixel-diff."
+    },
+    {
+      "token": "--color-border-strong",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#004667", "source": "--clr-border-strong; C2 section separators; D2 .qual-callout" }
+      ],
+      "usage": [],
+      "notes": "Candidate to also absorb border-annotation-accent (Gemini proposal, unratified)."
+    },
+    {
+      "token": "--color-border-inverse",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#ffffff", "source": "A3 badge stroke" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-border-inverse-subtle",
+      "chapter": "structural",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "rgba(255,255,255,0.2)", "source": "G2 table header divider" }
+      ],
+      "usage": [],
+      "notes": "Gemini proposed drop-to-transparent. Unratified; also a transparency-rule case (inverse @ 0.2)."
+    },
+    {
+      "token": "--color-text-primary",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#1a1a2e", "source": "--clr-body" },
+        { "value": "#444", "source": "D2 headlines/pills" }
+      ],
+      "usage": [],
+      "notes": "Pending merge with text-strong (Gemini proposal, unratified)."
+    },
+    {
+      "token": "--color-text-strong",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#1a1a2e", "source": "bold labels via --clr-heading contexts" }
+      ],
+      "usage": [],
+      "notes": "Likely merges into text-primary; hold until A3 sweep shows whether strong ever differs."
+    },
+    {
+      "token": "--color-text-secondary",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#6D6E71", "source": "--clr-body-secondary (--irpp-grey)" },
+        { "value": "#555", "source": "D2" },
+        { "value": "#666", "source": "D2" }
+      ],
+      "usage": [],
+      "notes": "Needs legibility check at colour stage."
+    },
+    {
+      "token": "--color-text-muted",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#777", "source": "D2" },
+        { "value": "#888", "source": "D2" }
+      ],
+      "usage": [],
+      "notes": "Tier between secondary and tertiary claimed by Gemini's D2 inventory. Verify D2 really needs 4 text tiers, else merge."
+    },
+    {
+      "token": "--color-text-tertiary",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#999", "source": "faint text (D2/F2)" },
+        { "value": "#aaa", "source": "D2 ornament arrows" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-text-inverse",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#ffffff", "source": "knockout text in dark badges/cells" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-text-inverse-muted",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#cccccc", "source": "B2 zero-value heatmap cell text (was text-disabled)" }
+      ],
+      "usage": [],
+      "notes": "Reclassified from text-disabled (RC, p1)."
+    },
+    {
+      "token": "--color-text-brand",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#004667", "source": "--clr-heading as text; navy highlights/numbers" }
+      ],
+      "usage": [],
+      "notes": "Candidate to absorb text-annotation-accent and text-accent1 (Gemini proposals, unratified)."
+    },
+    {
+      "token": "--color-text-accent1",
+      "chapter": "structural",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#2c5530", "source": "C2 opportunity-block green text" }
+      ],
+      "usage": [],
+      "notes": "Gemini proposed merge into text-brand. Resolve at C2's sweep — may instead belong to concept-viable-C2's family."
+    },
+    {
+      "token": "--color-shadow-subtle",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "rgba(0,0,0,0.12)", "source": "B2 sticky header; tippy theme box-shadow" }
+      ],
+      "usage": [],
+      "notes": "Gemini proposed drop; but the tippy tooltip theme uses it too. Resolve at B2's sweep."
+    },
+    {
+      "token": "--color-surface-pill-neutral",
+      "chapter": "components",
+      "scope": "structural",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#f8f9fb", "source": "B2 community pills" },
+        { "value": "#f2f2f0", "source": "D2 occupation/gap pills" }
+      ],
+      "usage": [],
+      "notes": "Community + occupation pills converge (RC, p1)."
+    },
+    {
+      "token": "--color-text-pill-neutral",
+      "chapter": "components",
+      "scope": "structural",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#6D6E71", "source": "B2 community pill text" },
+        { "value": "#444444", "source": "D2 occupation pill text" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-border-pill-neutral",
+      "chapter": "components",
+      "scope": "structural",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#dcdcdc", "source": "B2 community pill border" },
+        { "value": "none", "source": "D2 occupation pills (borderless; token keeps door open)" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-surface-pill-shared",
+      "chapter": "components",
+      "scope": "report",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#77AE99", "source": "shared-strength badge (--irpp-sage)" }
+      ],
+      "usage": [],
+      "notes": "Concept badge — report scope, exclusive colour at colour stage."
+    },
+    {
+      "token": "--color-surface-pill-gap",
+      "chapter": "components",
+      "scope": "report",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#D36828", "source": "skills-gap badge (--irpp-orange)" }
+      ],
+      "usage": [],
+      "notes": "Concept badge — report scope. Note current value collides with concept-candidate-p3's neighbourhood (#d4760a) — drift, fix at colour stage."
+    },
+    {
+      "token": "--color-concept-susceptible",
+      "chapter": "concepts",
+      "scope": "report",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#CE2129", "source": "susceptible occupation indicator (--irpp-red)" }
+      ],
+      "usage": [],
+      "notes": "Current value ≈ status-fail red — drift, resolve at colour stage under exclusivity rule."
+    },
+    {
+      "token": "--color-concept-suitable",
+      "chapter": "concepts",
+      "scope": "report",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#163568", "source": "suitable occupation indicator" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-concept-viable-C2",
+      "chapter": "concepts",
+      "scope": "report",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#166822", "source": "C2 viable occupation indicator" }
+      ],
+      "usage": [],
+      "notes": "Figure-suffixed name is a rename candidate for a later pass; kept as decided (RC, p1). Deliberately distinct from F2's candidate-p4 greens."
+    },
+    {
+      "token": "--color-concept-community",
+      "chapter": "concepts",
+      "scope": "report",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#5F5A5A", "source": "community location indicator dot" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-concept-candidate-p1",
+      "chapter": "concepts",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#555555", "source": "F2 panel 1 active candidate" }
+      ],
+      "usage": [],
+      "notes": "F2 pipeline vocabulary — figure scope."
+    },
+    {
+      "token": "--color-concept-candidate-fade",
+      "chapter": "concepts",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#999999", "source": "F2 panel 1 filtered candidate" },
+        { "value": "#a8c8e8", "source": "F2 panel 2 out-of-province (merged in, RC p1)" }
+      ],
+      "usage": [],
+      "notes": "Check #a8c8e8 against blue-base+alpha composites (transparency rule) during F2 sweep."
+    },
+    {
+      "token": "--color-concept-candidate-p2-local",
+      "chapter": "concepts",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#1a3d6b", "source": "F2 panel 2 local presence" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-concept-candidate-p2-pt",
+      "chapter": "concepts",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#5b8db8", "source": "F2 panel 2 provincial presence" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-concept-candidate-p3",
+      "chapter": "concepts",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#d4760a", "source": "F2 panel 3 passed screens" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-concept-candidate-p4-viable",
+      "chapter": "concepts",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#1a7a3a", "source": "F2 panel 4 viable" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-concept-candidate-p4-viable-teer",
+      "chapter": "concepts",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#4aaa5e", "source": "F2 panel 4 viable requiring training" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-status-success",
+      "chapter": "concepts",
+      "scope": "report",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#27ae60", "source": "D2 pass indicators, qual arrows up, tt-trigger" },
+        { "value": "#219653", "source": "D2 tt-trigger:hover (→ derive via hover rule)" }
+      ],
+      "usage": [],
+      "notes": "Off-brand flat-UI green. Keep token; rebrand value at colour stage (traffic-light hue direction retained, tuned to palette register)."
+    },
+    {
+      "token": "--color-status-warning",
+      "chapter": "concepts",
+      "scope": "report",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#f39c12", "source": "D2 warn indicators" }
+      ],
+      "usage": [],
+      "notes": "Likely steals org orange at colour stage."
+    },
+    {
+      "token": "--color-status-fail",
+      "chapter": "concepts",
+      "scope": "report",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#e74c3c", "source": "D2 fail indicators, qual arrows down" }
+      ],
+      "usage": [],
+      "notes": "Likely steals org red at colour stage — but must resolve against concept-susceptible exclusivity first."
+    },
+    {
+      "token": "--color-map-landmass",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#dcdcdc", "source": "A3 unselected region fill" }
+      ],
+      "usage": [],
+      "notes": "Same hex as border-default — coincidence of drift, keep separate tokens."
+    },
+    {
+      "token": "--color-map-boundary",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#ffffff", "source": "A3 province boundary stroke" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-map-region-selected",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#004667", "source": "A3 selected region / badge fill (--irpp-navy)" }
+      ],
+      "usage": [],
+      "notes": "Faded variant = this token @ 25% (transparency rule; A3 NWT background)."
+    },
+    {
+      "token": "--color-map-region-hover",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#44A3A4", "source": "A3 hover fill (--irpp-teal)" }
+      ],
+      "usage": [],
+      "notes": "Genuine semantic state change (navy→teal), earns an explicit token per REGISTRY.md state rules. Faded-hover = this @ 35%."
+    },
+    {
+      "token": "--color-scale-heatmap-base",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 2,
+      "absorbs": [
+        { "value": "#f0efe9", "source": "B2 heatmap zero/base" }
+      ],
+      "usage": [],
+      "notes": "Anchor-pair approach decided p2; values proposed. Steps derived in OKLCH."
+    },
+    {
+      "token": "--color-scale-heatmap-max",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 2,
+      "absorbs": [
+        { "value": "#002d44", "source": "B2 heatmap peak" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-scale-rank-base",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 2,
+      "absorbs": [
+        { "value": "#44A3A4", "source": "J rank-1 teal (--irpp-teal)" }
+      ],
+      "usage": [],
+      "notes": "J's three rank teals (#44A3A4/#5aa9a9/#93c6c6) become base+max anchors with the middle step derived. Verify derivation reproduces #5aa9a9 acceptably at J's sweep."
+    },
+    {
+      "token": "--color-scale-rank-max",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 2,
+      "absorbs": [
+        { "value": "#93c6c6", "source": "J rank-3 subtle teal" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-chart-similarity",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#B8C4D3", "source": "D2 similarity bars (--irpp-navy-light)" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-chart-reference-line",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#004667", "source": "I RCA=1 baseline (--irpp-navy)" }
+      ],
+      "usage": [],
+      "notes": ""
+    },
+    {
+      "token": "--color-chart-gridline",
+      "chapter": "viz",
+      "scope": "structural",
+      "status": "proposed",
+      "pass": 1,
+      "absorbs": [
+        { "value": "#e8e8e8", "source": "--clr-gridline (theme.css .gridline)" }
+      ],
+      "usage": [],
+      "notes": "Possibly merges into border-subtle; check where gridlines actually render."
+    }
+  ]
+}

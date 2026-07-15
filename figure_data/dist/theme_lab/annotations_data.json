@@ -1,0 +1,66 @@
+[
+  {
+    "tag": "--color-surface-pill-community",
+    "type": "pill",
+    "legacy": "#f8f9fb",
+    "decision_variable": "--color-surface-pill-neutral",
+    "decision_value": "var(--ext-neutral-cool-100)",
+    "notes": "Community pill background in B2. Converges with occupation pills into neutral pill."
+  },
+  {
+    "tag": "--color-text-pill-community",
+    "type": "text",
+    "legacy": "#6D6E71",
+    "decision_variable": "--color-text-pill-neutral",
+    "decision_value": "var(--ext-neutral-cool-500)",
+    "notes": "Community pill text color. Converges with occupation pills into neutral pill."
+  },
+  {
+    "tag": "--color-border-pill-community",
+    "type": "border",
+    "legacy": "#dcdcdc",
+    "decision_variable": "--color-border-pill-neutral",
+    "decision_value": "var(--ext-neutral-cool-200)",
+    "notes": "Community pill border. Converges with occupation pills into neutral pill."
+  },
+  {
+    "tag": "--color-surface-pill-occupation",
+    "type": "pill",
+    "legacy": "#f2f2f0",
+    "decision_variable": "--color-surface-pill-neutral",
+    "decision_value": "var(--ext-neutral-cool-100)",
+    "notes": "Occupation/gap pill background in D2. Converges with community pills."
+  },
+  {
+    "tag": "--color-text-pill-occupation",
+    "type": "text",
+    "legacy": "#444444",
+    "decision_variable": "--color-text-pill-neutral",
+    "decision_value": "var(--ext-neutral-cool-500)",
+    "notes": "Occupation/gap pill text color. Converges with community pills."
+  },
+  {
+    "tag": "--color-border-pill-occupation",
+    "type": "border",
+    "legacy": "none",
+    "decision_variable": "--color-border-pill-neutral",
+    "decision_value": "var(--ext-neutral-cool-200)",
+    "notes": "Occupation pill border (empty legacy, but mapped to neutral to keep door open)."
+  },
+  {
+    "tag": "--color-concept-shared",
+    "type": "pill",
+    "legacy": "#77AE99",
+    "decision_variable": "--color-surface-pill-shared",
+    "decision_value": "var(--pal-sage-500)",
+    "notes": "Shared strength pill background. Kept as distinct CSS entry."
+  },
+  {
+    "tag": "--color-concept-gap",
+    "type": "pill",
+    "legacy": "#D36828",
+    "decision_variable": "--color-surface-pill-gap",
+    "decision_value": "var(--pal-orange-500)",
+    "notes": "Skills gap pill background. Kept as distinct CSS entry."
+  }
+]

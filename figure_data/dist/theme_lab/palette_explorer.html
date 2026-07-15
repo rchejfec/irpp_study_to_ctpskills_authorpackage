@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Base Palette Explorer</title>
+  <link rel="stylesheet" href="expanded_palette.css">
+  <style>
+    :root {
+      font-family: system-ui, sans-serif;
+      background: #f4f4f4;
+      color: #333;
+    }
+    body {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    h1 { margin-top: 0; margin-bottom: 0.25rem; font-size: 1.5rem; }
+    p.subtitle { color: #666; margin-bottom: 1.5rem; font-size: 0.9rem; margin-top: 0; }
+    
+    .explorer-grid {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .family-row {
+      display: flex;
+      align-items: center;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      transition: background 0.1s;
+    }
+    .family-row:hover {
+      background: #fcfcfc;
+    }
+    
+    .family-name {
+      width: 100px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: #555;
+      letter-spacing: 0.5px;
+    }
+    
+    .swatch-list {
+      display: flex;
+      gap: 0.5rem;
+      flex-grow: 1;
+    }
+    
+    .swatch {
+      flex: 1;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+      transition: transform 0.1s, box-shadow 0.1s;
+      user-select: none;
+    }
+    
+    .swatch:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .swatch:active {
+      transform: translateY(0);
+    }
+    
+    .swatch.light-text {
+      color: #222;
+      text-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Base Palette Explorer</h1>
+  <p class="subtitle">Click any color block to copy its token directly to your clipboard. <code>var(--pal-*)</code> = org-brand ramps; <code>var(--ext-*)</code> = our extensions.</p>
+
+  <div class="explorer-grid" id="explorer-container"></div>
+
+  <script>
+    const container = document.getElementById("explorer-container");
+
+    async function loadPalette() {
+      try {
+        const res = await fetch('./palette_data.json');
+        const families = await res.json();
+        render(families);
+      } catch (err) {
+        container.innerHTML = `<div style="color:red; padding:1rem;">Failed to load palette_data.json: ${err.message}</div>`;
+      }
+    }
+
+    function render(families) {
+      container.innerHTML = "";
+      
+      families.forEach((fam) => {
+        const row = document.createElement("div");
+        row.className = "family-row";
+        
+        const nameDiv = document.createElement("div");
+        nameDiv.className = "family-name";
+        nameDiv.textContent = fam.name;
+        row.appendChild(nameDiv);
+        
+        const listDiv = document.createElement("div");
+        listDiv.className = "swatch-list";
+        
+        fam.steps.forEach((step) => {
+          const tokenName = `--${fam.prefix || 'pal'}-${fam.name}-${step}`;
+          const cssVarString = `var(${tokenName})`;
+          
+          const swatch = document.createElement("div");
+          swatch.className = "swatch";
+                    if (step <= 350) {
+            swatch.classList.add("light-text");
+          }
+          swatch.style.backgroundColor = cssVarString;
+          swatch.textContent = step;
+          swatch.title = cssVarString;
+          
+          swatch.onclick = () => {
+            navigator.clipboard.writeText(cssVarString).then(() => {
+              const originalText = swatch.textContent;
+              swatch.textContent = "Copied!";
+              const originalStyle = swatch.style.fontSize;
+              swatch.style.fontSize = "0.6rem";
+              
+              setTimeout(() => {
+                swatch.textContent = originalText;
+                swatch.style.fontSize = originalStyle;
+              }, 800);
+            });
+          };
+          
+          listDiv.appendChild(swatch);
+        });
+        
+        row.appendChild(listDiv);
+        container.appendChild(row);
+      });
+    }
+
+    loadPalette();
+  </script>
+</body>
+</html>

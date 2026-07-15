@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Theme Token Builder</title>
+  <link rel="stylesheet" href="expanded_palette.css">
+  <style>
+    :root {
+      font-family: system-ui, sans-serif;
+      background: #f4f4f4;
+      color: #333;
+    }
+    body {
+      margin: 0;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 750px 1fr;
+      gap: 2rem;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    .panel {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      overflow-y: auto;
+      height: calc(100vh - 4rem);
+    }
+    .panel-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 0.75rem;
+    }
+    .panel-header-row h2 { margin: 0; }
+    
+    #chapter-select {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      background: #004667;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { border-bottom: 1px solid #eee; padding: 0.5rem; text-align: left; }
+    th { background: #f9f9f9; position: sticky; top: 0; }
+    .tag-name { font-family: monospace; font-weight: bold; color: #004667; }
+    .type-badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; text-transform: uppercase; background: #eee; }
+
+    #preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-content: flex-start;
+      background: var(--color-surface-default, #fff); 
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    /* Dynamic Preview Elements */
+    .preview-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: all 0.2s;
+      position: relative;
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+    
+    .preview-item.is-inverse {
+      background: #222;
+      padding: 1rem;
+      border: 1px solid #333;
+    }
+    
+    .preview-item.is-inverse .preview-label {
+      color: #bbb;
+    }
+    
+    .preview-label {
+      font-family: monospace;
+      font-size: 0.7rem;
+      color: #888;
+      margin-top: 0.5rem;
+      max-width: 120px;
+      word-wrap: break-word;
+    }
+    
+    .preview-surface {
+      width: 100px; height: 100px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 600;
+    }
+    
+    .preview-border {
+      width: 100px; height: 100px;
+      background: transparent;
+      border-style: solid;
+      border-width: 4px;
+      border-radius: 8px;
+    }
+    
+    .preview-text {
+      width: 100px; height: 100px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      font-family: serif;
+      border-radius: 8px;
+    }
+    
+    .preview-shadow {
+      width: 100px; height: 100px;
+      background: #fff;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; color: #aaa;
+    }
+    
+    .preview-pill {
+      min-width: 90px;
+      height: 32px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid rgba(0,0,0,0.08);
+      padding: 0 0.75rem;
+    }
+    
+    .preview-shape {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-block;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .preview-annotation {
+      width: 110px;
+      padding: 0.5rem;
+      border-left-style: solid;
+      border-left-width: 4px;
+      font-size: 0.75rem;
+      text-align: left;
+      background: #fcfcfc;
+      border-top: 1px solid #eee;
+      border-right: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      border-radius: 0 4px 4px 0;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+    <div class="panel-header-row">
+      <h2>Theme Token Builder</h2>
+      <select id="chapter-select">
+        <option value="ui_data.json">Chapter 1: Structural UI</option>
+        <option value="annotations_data.json">Chapter 2: Annotations & Pills</option>
+        <option value="analytical_data.json">Chapter 3: Analytical Story</option>
+        <option value="visualization_data.json">Chapter 4: Map & Viz Specifics</option>
+      </select>
+    </div>
+    <p style="font-size:0.9rem; color:#666;">Data-driven directly from the JSON files. Edit the active JSON file in your IDE and refresh this page to see updates.</p>
+    <table id="data-table">
+      <thead>
+        <tr>
+          <th>Original Tag</th>
+          <th>Legacy Value</th>
+          <th>Decision Var (Consolidator)</th>
+          <th>Decision Value</th>
+          <th>Notes / Context</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>Dynamic Canvas (Consolidated)</h2>
+    <p style="font-size:0.9rem; color:#666;">Plots unique decision variables. If multiple tags share a decision variable, it groups them here.</p>
+    <div id="preview-container"></div>
+  </div>
+
+  <script>
+    const tbody = document.querySelector("#data-table tbody");
+    const previewContainer = document.getElementById("preview-container");
+    const chapterSelect = document.getElementById("chapter-select");
+
+    chapterSelect.onchange = () => {
+      loadData(chapterSelect.value);
+    };
+
+    async function loadData(filename) {
+      try {
+        const res = await fetch(`./${filename}`);
+        if (!res.ok) throw new Error("HTTP error " + res.status);
+        const data = await res.json();
+        render(data);
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" style="color:red; font-weight:bold; padding:1rem;">Failed to load ${filename}: ${err.message}. Ensure you are viewing this page through a local HTTP server.</td></tr>`;
+      }
+    }
+
+    function render(uiData) {
+      tbody.innerHTML = "";
+      previewContainer.innerHTML = "";
+
+      // Map to group and deduplicate consolidated tokens
+      const canvasItems = new Map();
+
+      uiData.forEach((item) => {
+        const finalVar = item.decision_variable && item.decision_variable.trim() !== "" ? item.decision_variable : item.tag;
+        const finalVal = item.decision_value && item.decision_value.trim() !== "" ? item.decision_value : item.legacy;
+        
+        // Push the CSS var to the document root
+        document.documentElement.style.setProperty(finalVar, finalVal);
+        
+        // Group logic for the canvas
+        if (!canvasItems.has(finalVar)) {
+          canvasItems.set(finalVar, { tag: finalVar, type: item.type, val: finalVal, originalTags: [item.tag] });
+        } else {
+          canvasItems.get(finalVar).originalTags.push(item.tag);
+        }
+
+        // --- 1. BUILD TABLE ROW ---
+        const tr = document.createElement("tr");
+        
+        const tdTag = document.createElement("td");
+        const nameSpan = document.createElement("div");
+        nameSpan.className = "tag-name";
+        nameSpan.textContent = item.tag.replace("--color-", "");
+        const typeBadge = document.createElement("div");
+        typeBadge.className = "type-badge";
+        typeBadge.textContent = item.type;
+        tdTag.appendChild(nameSpan);
+        tdTag.appendChild(typeBadge);
+        
+        const tdLegacy = document.createElement("td");
+        tdLegacy.style.fontFamily = "monospace";
+        tdLegacy.textContent = item.legacy;
+        
+        const tdDecisionVar = document.createElement("td");
+        tdDecisionVar.style.fontFamily = "monospace";
+        tdDecisionVar.style.color = "#d36828";
+        tdDecisionVar.style.fontWeight = "bold";
+        tdDecisionVar.textContent = item.decision_variable;
+
+        const tdDecisionVal = document.createElement("td");
+        tdDecisionVal.style.fontFamily = "monospace";
+        tdDecisionVal.textContent = item.decision_value;
+
+        const tdNotes = document.createElement("td");
+        tdNotes.style.fontSize = "0.75rem";
+        tdNotes.style.color = "#666";
+        tdNotes.textContent = item.notes || "";
+
+        tr.appendChild(tdTag);
+        tr.appendChild(tdLegacy);
+        tr.appendChild(tdDecisionVar);
+        tr.appendChild(tdDecisionVal);
+        tr.appendChild(tdNotes);
+        tbody.appendChild(tr);
+      });
+
+      // --- 2. BUILD CANVAS OBJECTS ---
+      canvasItems.forEach((item) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "preview-item";
+        if (item.tag.includes("inverse")) {
+          wrapper.classList.add("is-inverse");
+        }
+
+        const el = document.createElement("div");
+        el.className = `preview-${item.type}`;
+        
+        if (item.type === "surface") {
+          el.style.backgroundColor = `var(${item.tag})`;
+          const isDark = item.tag.includes("brand") || item.tag.includes("inverse");
+          el.style.color = isDark ? "#fff" : "#333";
+          el.textContent = "S";
+        } else if (item.type === "border") {
+          el.style.borderColor = `var(${item.tag})`;
+        } else if (item.type === "text") {
+          el.style.color = `var(${item.tag})`;
+          el.textContent = "Aa";
+        } else if (item.type === "shadow") {
+          el.style.boxShadow = `0 4px 12px var(${item.tag})`;
+          el.textContent = "Drop";
+        } else if (item.type === "pill") {
+          el.style.backgroundColor = `var(${item.tag})`;
+          el.style.color = "#fff"; // Default text color is white for dark pills
+          // If the pill uses a very light color, drop the text contrast to dark
+          const lowContrastTags = ["shared", "candidate2", "community", "100", "200", "300", "50"];
+          const isLowContrast = lowContrastTags.some(term => item.tag.includes(term)) || 
+                                (item.val && (item.val.includes("-100") || item.val.includes("-200") || item.val.includes("-300") || item.val.includes("-50")));
+          if (isLowContrast) {
+             el.style.color = "#222";
+          }
+          el.textContent = "Pill Text";
+        } else if (item.type === "annotation") {
+          el.style.borderLeftColor = `var(${item.tag})`;
+          el.textContent = "Caveat annotation detail block text.";
+        } else if (item.type === "shape") {
+          el.style.backgroundColor = `var(${item.tag})`;
+        }
+        
+        const label = document.createElement("div");
+        label.className = "preview-label";
+        label.textContent = item.tag.replace("--color-", "");
+        
+        if (item.originalTags.length > 1) {
+            const mergeCount = document.createElement("div");
+            mergeCount.style.fontSize = "0.6rem";
+            mergeCount.style.color = "#d36828";
+            mergeCount.style.fontWeight = "bold";
+            mergeCount.textContent = `(Merged ${item.originalTags.length})`;
+            label.appendChild(mergeCount);
+            
+            wrapper.title = `Merges: \n${item.originalTags.join('\n')}`;
+        }
+
+        wrapper.appendChild(el);
+        wrapper.appendChild(label);
+        previewContainer.appendChild(wrapper);
+      });
+    }
+
+    // Fire initial load
+    loadData(chapterSelect.value);
+  </script>
+</body>
+</html>

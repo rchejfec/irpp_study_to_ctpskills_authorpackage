@@ -1,0 +1,31 @@
+/* ════════════════════════════════════════════════════════════════
+   tokens.css — Semantic token layer (theme v2)
+
+   Source of truth: ../theme/registry.json + ../theme/REGISTRY.md.
+   Loaded AFTER theme.css by each figure as it is migrated;
+   theme.css stays untouched until the programme's fold-in step.
+
+   VALUES ARE PINNED to the pre-migration legacy hexes: including
+   this file and swapping a figure's literals to tokens must produce
+   pixel-identical output. Real colour values come at the colour
+   stage, edited here and nowhere else.
+
+   Tokens are added per figure as migration reaches it — an absent
+   token here means no migrated figure needs it yet.
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* populated figure-by-figure; keep in registry.json order */
+}
+
+
+/* ── CANARY MODE — coverage check ──────────────────────────────
+   Toggle:  document.documentElement.classList.add('canary')
+   Every token defined above MUST also appear here with a loud,
+   obviously-wrong value. With canary on, any element still showing
+   normal colours is NOT mapped to a token yet.
+   ─────────────────────────────────────────────────────────────── */
+
+html.canary {
+  /* mirror of :root — populated in lockstep */
+}

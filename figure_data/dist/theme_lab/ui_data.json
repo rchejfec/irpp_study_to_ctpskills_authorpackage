@@ -1,0 +1,210 @@
+[
+  {
+    "tag": "--color-surface-default",
+    "type": "surface",
+    "legacy": "#ffffff",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Gap. Standard canvas background. Keep pure white (#ffffff) or shift to a very light warm tone."
+  },
+  {
+    "tag": "--color-surface-muted",
+    "type": "surface",
+    "legacy": "#f8f9fb",
+    "decision_variable": "",
+    "decision_value": "var(--pal-grey-100)",
+    "notes": "Duplicate/Gap. Consolidate with hover under a single '--color-surface-subtle' token."
+  },
+  {
+    "tag": "--color-surface-hover",
+    "type": "surface",
+    "legacy": "#f8f9fb",
+    "decision_variable": "",
+    "decision_value": "var(--pal-grey-100)",
+    "notes": "Duplicate. Merge with surface-muted. We don't need active hover styles for static report figures."
+  },
+  {
+    "tag": "--color-surface-brand",
+    "type": "surface",
+    "legacy": "#004667",
+    "decision_variable": "",
+    "decision_value": "var(--pal-blue-500)",
+    "notes": "Keep. Header block backgrounds in E2 and G2."
+  },
+  {
+    "tag": "--color-surface-accent1-subtle",
+    "type": "surface",
+    "legacy": "#f6faf7",
+    "decision_variable": "",
+    "decision_value": "var(--pal-sage-300)",
+    "notes": "Outlier/Drop. Mint green gradient in C2. Drop and consolidate to default surface."
+  },
+  {
+    "tag": "--color-surface-accent1-muted",
+    "type": "surface",
+    "legacy": "#e3efe5",
+    "decision_variable": "",
+    "decision_value": "var(--pal-sage-100)",
+    "notes": "Outlier/Drop. Mint green highlighted blocks in C2. Drop/merge under surface-subtle or default."
+  },
+  {
+    "tag": "--color-surface-warm-subtle",
+    "type": "surface",
+    "legacy": "#fafaf8",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Warm split/Gap. Walkthrough explainer background. Merge under unified cool/warm skeleton surface."
+  },
+  {
+    "tag": "--color-surface-warm-muted",
+    "type": "surface",
+    "legacy": "#faf6f0",
+    "decision_variable": "",
+    "decision_value": "var(--pal-orange-100)",
+    "notes": "Warm split. D2 source band wrapper. Merge under unified surface-subtle."
+  },
+  {
+    "tag": "--color-surface-progress-track",
+    "type": "surface",
+    "legacy": "#e6e9ec",
+    "decision_variable": "--color-surface-subtle",
+    "decision_value": "var(--pal-grey-300)",
+    "notes": "Consolidated. Skill rank bar background track in Figure J."
+  },
+  {
+    "tag": "--color-border-default",
+    "type": "border",
+    "legacy": "#dcdcdc",
+    "decision_variable": "",
+    "decision_value": "var(--pal-grey-300)",
+    "notes": "Keep. Main container layout grid borders."
+  },
+  {
+    "tag": "--color-border-subtle",
+    "type": "border",
+    "legacy": "#f0f0f0",
+    "decision_variable": "",
+    "decision_value": "var(--pal-grey-100)",
+    "notes": "Keep. Soft list item separators and gridlines."
+  },
+  {
+    "tag": "--color-border-inverse",
+    "type": "border",
+    "legacy": "#ffffff",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Gap. Standard pure white border for high-contrast pills or cells."
+  },
+  {
+    "tag": "--color-border-inverse-subtle",
+    "type": "border",
+    "legacy": "rgba(255,255,255,0.2)",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Drop/Transparent. G2 table header divider. Safe to make transparent."
+  },
+  {
+    "tag": "--color-border-strong",
+    "type": "border",
+    "legacy": "#004667",
+    "decision_variable": "",
+    "decision_value": "var(--pal-blue-700)",
+    "notes": "Keep. Brand-coloured section separators in C2."
+  },
+  {
+    "tag": "--color-border-warm",
+    "type": "border",
+    "legacy": "#e0ddd6",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Warm split/Gap. D2 warm panel divider. Consolidate into standard border-subtle."
+  },
+  {
+    "tag": "--color-border-annotation-accent",
+    "type": "border",
+    "legacy": "#004667",
+    "decision_variable": "",
+    "decision_value": "var(--pal-blue-300)",
+    "notes": "Duplicate. Merge under brand-strong border."
+  },
+  {
+    "tag": "--color-text-primary",
+    "type": "text",
+    "legacy": "#1a1a2e",
+    "decision_variable": "",
+    "decision_value": "var(--pal-grey-900)",
+    "notes": "Duplicate. Standard typography. Consolidate with text-strong under a single primary text variable."
+  },
+  {
+    "tag": "--color-text-strong",
+    "type": "text",
+    "legacy": "#1a1a2e",
+    "decision_variable": "",
+    "decision_value": "var(--pal-grey-900)",
+    "notes": "Duplicate. Bold/heading text. Merge with text-primary."
+  },
+  {
+    "tag": "--color-text-secondary",
+    "type": "text",
+    "legacy": "#6D6E71",
+    "decision_variable": "",
+    "decision_value": "var(--pal-grey-500)",
+    "notes": "Keep. Muted detail text (needs strict legibility check)."
+  },
+  {
+    "tag": "--color-text-tertiary",
+    "type": "text",
+    "legacy": "#999999",
+    "decision_variable": "",
+    "decision_value": "var(--pal-grey-300)",
+    "notes": "Keep. Very faint text (e.g. ornament arrows, muted timestamps)."
+  },
+  {
+    "tag": "--color-text-inverse",
+    "type": "text",
+    "legacy": "#ffffff",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Gap. Standard knockout white text inside dark badges/cells."
+  },
+  {
+    "tag": "--color-text-disabled",
+    "type": "text",
+    "legacy": "#cccccc",
+    "decision_variable": "--color-text-inverse-muted",
+    "decision_value": "",
+    "notes": "Consolidated. Heatmap 0-value text. Reclassified to inverse-muted."
+  },
+  {
+    "tag": "--color-text-brand",
+    "type": "text",
+    "legacy": "#004667",
+    "decision_variable": "",
+    "decision_value": "var(--pal-blue-700)",
+    "notes": "Keep. Navy text highlights and numbers."
+  },
+  {
+    "tag": "--color-text-accent1",
+    "type": "text",
+    "legacy": "#2c5530",
+    "decision_variable": "",
+    "decision_value": "var(--pal-sage-900)",
+    "notes": "Outlier/Drop. Green text inside C2 opportunity blocks. Consolidate to brand-text."
+  },
+  {
+    "tag": "--color-text-annotation-accent",
+    "type": "text",
+    "legacy": "#004667",
+    "decision_variable": "",
+    "decision_value": "var(--pal-blue-500)",
+    "notes": "Duplicate. Merge under brand-text."
+  },
+  {
+    "tag": "--color-shadow-subtle",
+    "type": "shadow",
+    "legacy": "rgba(0,0,0,0.12)",
+    "decision_variable": "",
+    "decision_value": "",
+    "notes": "Transparent/Drop. B2 sticky header shadow. Can make transparent/none."
+  }
+]

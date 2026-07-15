@@ -1,0 +1,98 @@
+[
+  {
+    "tag": "--color-concept-susceptible",
+    "type": "shape",
+    "legacy": "#CE2129",
+    "decision_variable": "--color-concept-susceptible",
+    "decision_value": "var(--pal-red-700)",
+    "notes": "Red: Susceptible occupation indicator dot. Maintained as standard susceptible token."
+  },
+  {
+    "tag": "--color-concept-suitable",
+    "type": "shape",
+    "legacy": "#163568",
+    "decision_variable": "--color-concept-suitable",
+    "decision_value": "var(--pal-blue-700)",
+    "notes": "Navy/Blue: Suitable occupation indicator dot. Maintained as standard suitable token."
+  },
+  {
+    "tag": "--color-concept-viable",
+    "type": "shape",
+    "legacy": "#166822",
+    "decision_variable": "--color-concept-viable-C2",
+    "decision_value": "oklch(0.38 0.12 145)",
+    "notes": "Green: Viable occupation indicator dot in C2. Distinct from F2's Panel 4 scale."
+  },
+  {
+    "tag": "--color-concept-viable-f2",
+    "type": "shape",
+    "legacy": "#1a7a3a",
+    "decision_variable": "--color-concept-candidate-p4-viable",
+    "decision_value": "oklch(0.45 0.12 145)",
+    "notes": "F2 Panel 4: Standard viable candidate green."
+  },
+  {
+    "tag": "--color-concept-viable-f2-muted",
+    "type": "shape",
+    "legacy": "#4aaa5e",
+    "decision_variable": "--color-concept-candidate-p4-viable-teer",
+    "decision_value": "oklch(0.63 0.11 145)",
+    "notes": "F2 Panel 4: Viable but requiring extended training (Light Green/TEER)."
+  },
+  {
+    "tag": "--color-concept-community",
+    "type": "shape",
+    "legacy": "#5F5A5A",
+    "decision_variable": "--color-concept-community",
+    "decision_value": "var(--ext-neutral-pure-500)",
+    "notes": "Community location indicator dot."
+  },
+  {
+    "tag": "--color-concept-candidate1",
+    "type": "shape",
+    "legacy": "#555555",
+    "decision_variable": "--color-concept-candidate-p1",
+    "decision_value": "var(--ext-neutral-pure-600)",
+    "notes": "F2 Panel 1: Active candidate."
+  },
+  {
+    "tag": "--color-concept-candidate2",
+    "type": "shape",
+    "legacy": "#999999",
+    "decision_variable": "--color-concept-candidate-fade",
+    "decision_value": "var(--ext-neutral-pure-300)",
+    "notes": "F2 Panel 1: Faded/filtered candidate. Merged with local presence out-of-province."
+  },
+  {
+    "tag": "--color-concept-presence1",
+    "type": "shape",
+    "legacy": "#1a3d6b",
+    "decision_variable": "--color-concept-candidate-p2-local",
+    "decision_value": "var(--pal-blue-800)",
+    "notes": "F2 Panel 2: Local presence candidate."
+  },
+  {
+    "tag": "--color-concept-presence2",
+    "type": "shape",
+    "legacy": "#5b8db8",
+    "decision_variable": "--color-concept-candidate-p2-pt",
+    "decision_value": "var(--pal-blue-500)",
+    "notes": "F2 Panel 2: Provincial presence candidate."
+  },
+  {
+    "tag": "--color-concept-presence3",
+    "type": "shape",
+    "legacy": "#a8c8e8",
+    "decision_variable": "--color-concept-candidate-fade",
+    "decision_value": "var(--ext-neutral-pure-300)",
+    "notes": "F2 Panel 2: Out-of-province candidate. Merges under standard candidate-fade."
+  },
+  {
+    "tag": "--color-concept-screen1",
+    "type": "shape",
+    "legacy": "#d4760a",
+    "decision_variable": "--color-concept-candidate-p3",
+    "decision_value": "var(--pal-orange-500)",
+    "notes": "F2 Panel 3: Passed screens candidate."
+  }
+]

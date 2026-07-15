@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Semantic Palette Tester</title>
+  <link rel="stylesheet" href="../theme.css">
+  <style>
+    :root {
+      /* New Tags - Interim Definitions initialized to defaults */
+      --color-surface-default: var(--clr-bg, #ffffff);
+      --color-surface-muted: var(--clr-bg-muted, #f8f9fb);
+      --color-surface-brand: var(--irpp-navy, #004667);
+
+      --color-border-default: var(--clr-border, #dcdcdc);
+      --color-border-subtle: #f0f0f0;
+      --color-border-strong: var(--irpp-navy, #004667);
+
+      --color-text-primary: var(--clr-body, #1a1a2e);
+      --color-text-secondary: var(--clr-body-secondary, #6D6E71);
+      --color-text-inverse: #ffffff;
+      --color-text-brand: var(--irpp-navy, #004667);
+
+      --color-concept-susceptible: var(--irpp-red, #CE2129);
+      --color-concept-suitable: var(--irpp-navy, #004667);
+      --color-concept-viable: #166822;
+      --color-concept-community: #5F5A5A;
+      --color-concept-candidate: #555555;
+      --color-concept-presence: #1a3d6b;
+      --color-concept-screen: #d4760a;
+      --color-concept-shared: var(--irpp-sage, #77AE99);
+      --color-concept-gap: var(--irpp-orange, #D36828);
+
+      --color-status-success: #27ae60;
+      --color-status-warning: #f39c12;
+      --color-status-fail: #e74c3c;
+
+      --color-map-landmass: #dcdcdc;
+      --color-map-region-selected: var(--irpp-navy, #004667);
+      --color-scale-heatmap-base: var(--irpp-navy-light, #B8C4D3);
+      --color-scale-heatmap-max: #002d44;
+      --color-chart-similarity: var(--irpp-navy-light, #B8C4D3);
+      --color-chart-reference-line: var(--irpp-navy, #004667);
+      --color-chart-rank: var(--irpp-teal, #44A3A4);
+    }
+
+    body {
+      padding: 2rem;
+      background: #f4f4f4;
+      font-family: var(--font-primary, sans-serif);
+      color: #333;
+    }
+    h1 {
+      margin-top: 0;
+      margin-bottom: 2rem;
+      font-size: 24px;
+      color: #111;
+    }
+    .tester-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 0;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .header-row {
+      display: contents;
+    }
+    .header-row > div {
+      font-weight: bold;
+      background: #eee;
+      padding: 1rem;
+      border-bottom: 2px solid #ccc;
+    }
+    .row {
+      display: contents;
+    }
+    .row > div {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+    }
+    .row:last-child > div {
+      border-bottom: none;
+    }
+    .tag-name {
+      font-family: monospace;
+      font-size: 14px;
+      color: #555;
+    }
+    .section-header > div {
+      background: #fcfcfc;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #888;
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+      grid-column: span 3;
+    }
+
+    /* Rendering Helpers */
+    .render-box {
+      width: 40px;
+      height: 40px;
+      display: inline-block;
+      border-radius: 4px;
+    }
+    
+    .render-text {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .render-line {
+      width: 100%;
+      height: 0;
+      border-top-width: 4px;
+    }
+    
+    .bg-dark {
+      background: #333;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Semantic Palette Tester</h1>
+  <div class="tester-grid">
+    <div class="header-row">
+      <div>Tag Name</div>
+      <div>Original Element</div>
+      <div>Interim/New Theme</div>
+    </div>
+    
+    <div class="row section-header"><div>Surfaces</div></div>
+    <div class="row">
+      <div class="tag-name">--color-surface-default</div>
+      <div><div class="render-box" style="background: var(--clr-bg, #ffffff); border: 1px solid #ccc;"></div></div>
+      <div><div class="render-box" style="background: var(--color-surface-default); border: 1px solid #ccc;"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-surface-muted</div>
+      <div><div class="render-box" style="background: var(--clr-bg-muted, #f8f9fb); border: 1px solid #ccc;"></div></div>
+      <div><div class="render-box" style="background: var(--color-surface-muted); border: 1px solid #ccc;"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-surface-brand</div>
+      <div><div class="render-box" style="background: var(--irpp-navy, #004667);"></div></div>
+      <div><div class="render-box" style="background: var(--color-surface-brand);"></div></div>
+    </div>
+
+    <div class="row section-header"><div>Borders</div></div>
+    <div class="row">
+      <div class="tag-name">--color-border-default</div>
+      <div><div class="render-line" style="border-top-style: solid; border-top-color: var(--clr-border, #dcdcdc);"></div></div>
+      <div><div class="render-line" style="border-top-style: solid; border-top-color: var(--color-border-default);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-border-subtle</div>
+      <div><div class="render-line" style="border-top-style: solid; border-top-color: #f0f0f0;"></div></div>
+      <div><div class="render-line" style="border-top-style: solid; border-top-color: var(--color-border-subtle);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-border-strong</div>
+      <div><div class="render-line" style="border-top-style: solid; border-top-color: var(--irpp-navy, #004667);"></div></div>
+      <div><div class="render-line" style="border-top-style: solid; border-top-color: var(--color-border-strong);"></div></div>
+    </div>
+
+    <div class="row section-header"><div>Text</div></div>
+    <div class="row">
+      <div class="tag-name">--color-text-primary</div>
+      <div><div class="render-text" style="color: var(--clr-body, #1a1a2e);">Sample Text</div></div>
+      <div><div class="render-text" style="color: var(--color-text-primary);">Sample Text</div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-text-secondary</div>
+      <div><div class="render-text" style="color: var(--clr-body-secondary, #6D6E71);">Sample Text</div></div>
+      <div><div class="render-text" style="color: var(--color-text-secondary);">Sample Text</div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-text-inverse</div>
+      <div><div class="bg-dark"><span class="render-text" style="color: #ffffff;">Sample Text</span></div></div>
+      <div><div class="bg-dark"><span class="render-text" style="color: var(--color-text-inverse);">Sample Text</span></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-text-brand</div>
+      <div><div class="render-text" style="color: var(--irpp-navy, #004667);">Sample Text</div></div>
+      <div><div class="render-text" style="color: var(--color-text-brand);">Sample Text</div></div>
+    </div>
+
+    <div class="row section-header"><div>Analytical Concepts</div></div>
+    <div class="row">
+      <div class="tag-name">--color-concept-susceptible</div>
+      <div><div class="render-box" style="background: var(--irpp-red, #CE2129);"></div></div>
+      <div><div class="render-box" style="background: var(--color-concept-susceptible);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-concept-suitable</div>
+      <div><div class="render-box" style="background: var(--irpp-navy, #004667);"></div></div>
+      <div><div class="render-box" style="background: var(--color-concept-suitable);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-concept-viable</div>
+      <div><div class="render-box" style="background: #166822;"></div></div>
+      <div><div class="render-box" style="background: var(--color-concept-viable);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-concept-community</div>
+      <div><div class="render-box" style="background: #5F5A5A;"></div></div>
+      <div><div class="render-box" style="background: var(--color-concept-community);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-concept-candidate</div>
+      <div><div class="render-box" style="background: #555555;"></div></div>
+      <div><div class="render-box" style="background: var(--color-concept-candidate);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-concept-presence</div>
+      <div><div class="render-box" style="background: #1a3d6b;"></div></div>
+      <div><div class="render-box" style="background: var(--color-concept-presence);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-concept-screen</div>
+      <div><div class="render-box" style="background: #d4760a;"></div></div>
+      <div><div class="render-box" style="background: var(--color-concept-screen);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-concept-shared</div>
+      <div><div class="render-box" style="background: var(--irpp-sage, #77AE99);"></div></div>
+      <div><div class="render-box" style="background: var(--color-concept-shared);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-concept-gap</div>
+      <div><div class="render-box" style="background: var(--irpp-orange, #D36828);"></div></div>
+      <div><div class="render-box" style="background: var(--color-concept-gap);"></div></div>
+    </div>
+
+    <div class="row section-header"><div>Status (Pass/Fail)</div></div>
+    <div class="row">
+      <div class="tag-name">--color-status-success</div>
+      <div><div class="render-box" style="background: #27ae60;"></div></div>
+      <div><div class="render-box" style="background: var(--color-status-success);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-status-warning</div>
+      <div><div class="render-box" style="background: #f39c12;"></div></div>
+      <div><div class="render-box" style="background: var(--color-status-warning);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-status-fail</div>
+      <div><div class="render-box" style="background: #e74c3c;"></div></div>
+      <div><div class="render-box" style="background: var(--color-status-fail);"></div></div>
+    </div>
+
+    <div class="row section-header"><div>Charts & Maps</div></div>
+    <div class="row">
+      <div class="tag-name">--color-map-landmass</div>
+      <div><div class="render-box" style="background: #dcdcdc;"></div></div>
+      <div><div class="render-box" style="background: var(--color-map-landmass);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-map-region-selected</div>
+      <div><div class="render-box" style="background: var(--irpp-navy, #004667);"></div></div>
+      <div><div class="render-box" style="background: var(--color-map-region-selected);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-scale-heatmap-base</div>
+      <div><div class="render-box" style="background: var(--irpp-navy-light, #B8C4D3);"></div></div>
+      <div><div class="render-box" style="background: var(--color-scale-heatmap-base);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-scale-heatmap-max</div>
+      <div><div class="render-box" style="background: #002d44;"></div></div>
+      <div><div class="render-box" style="background: var(--color-scale-heatmap-max);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-chart-similarity</div>
+      <div><div class="render-box" style="background: var(--irpp-navy-light, #B8C4D3);"></div></div>
+      <div><div class="render-box" style="background: var(--color-chart-similarity);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-chart-reference-line</div>
+      <div><div class="render-line" style="border-top-style: dashed; border-top-color: var(--irpp-navy, #004667);"></div></div>
+      <div><div class="render-line" style="border-top-style: dashed; border-top-color: var(--color-chart-reference-line);"></div></div>
+    </div>
+    <div class="row">
+      <div class="tag-name">--color-chart-rank</div>
+      <div><div class="render-box" style="background: var(--irpp-teal, #44A3A4);"></div></div>
+      <div><div class="render-box" style="background: var(--color-chart-rank);"></div></div>
+    </div>
+
+  </div>
+</body>
+</html>

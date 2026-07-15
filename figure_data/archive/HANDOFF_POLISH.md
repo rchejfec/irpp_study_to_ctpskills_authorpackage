@@ -16,11 +16,17 @@ HANDOFF.md freeze lifts, in order:
 3. ~~Supersede the 7 unsigned 2026-07-08 D rows in VALIDATION.md~~ done
    2026-07-15 (annotated superseded → archived D, D2 replaces; rows were
    unsigned so annotation, not immutability, applies).
-4. Hardening sweep: temp code in F2/B2 + anything missed (TODO/FIXME/dead
-   code, tooltip wiring, compact branches).
-5. Docs reconciliation: fold PRINT_SIZING + this file into DECISIONS (F2 &
-   B2 entries missing), adopt-and-archive the exercise docs, unfreeze
-   HANDOFF.md with a fresh handoff.
+4. ~~Hardening sweep~~ done 2026-07-15: gen_B2 docstring rewritten (was
+   cloned gen_B text), dest_noc3→dest_noc2 key rename (JSON verified
+   identical modulo key; B2 renders clean), stale "<640px" compact comments
+   → 440px in B2/C2/D2/F2. No console errors across all 9 live figures
+   (A3's 404 is the favicon, known noise). Left for RC ruling: gen_B2
+   EXPERIMENT keep-all-columns filter; gen_E2's unused single-community
+   JSON variants.
+5. ~~Docs reconciliation~~ done 2026-07-15: DECISIONS gained § Figure F2,
+   § Figure B2, and a print-sizing Outcome coda; this file + PRINT_SIZING.md
+   adopted-and-archived to `figure_data/archive/`; HANDOFF.md unfrozen with
+   a fresh 2026-07-15 handoff (steps 6–8 tracked there now).
 6. Full-regen sanity **with backup** of dist/data for quick diff validation.
 7. PNG re-export **with backup** of old exports for side-by-side HUMAN
    validation of all 9 new baselines.

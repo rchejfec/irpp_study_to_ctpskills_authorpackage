@@ -429,7 +429,22 @@ validate feasibility, then applied in-place. Key learnings: the sidebar
 needed a 27% width cut (274→200px), padding removal, and copy condensing
 (shorter community descriptions) to avoid text overflow. Font sizes were
 bumped *up* (6.5→7, 5.5→6) rather than down. Full execution record in
-`figure_data/PRINT_SIZING.md`.
+`figure_data/archive/PRINT_SIZING.md`.
+
+### Outcome (2026-07-15)
+
+All 9 figures completed. Three resisted polish-in-place and were rebuilt as
+numbered successors: E→E2, D→D2, B→B2 (each has its own section below; the
+old figures are in `dist/archive/`, retired generators in
+`figure_data/archive/`). The single-source rule held everywhere except B2,
+which carries a recorded dual web/print-mode deviation (see § Figure B2).
+Late fix: C2's `.step-detail` was the set's last sub-floor holdout (8.5px);
+bumped to 9px 2026-07-15, depth recovered by RC via spacing (scale kept at
+0.812 — a measured scale-only fix read too small and was rejected).
+Post-completion: `dist/exports/*.png` baselines are stale for figures whose
+default state legitimately changed (D2, I, E2, C2 …) — re-export with backup
+of the old set for side-by-side human validation is the freeze-closure
+programme's final step, followed by RC's signing sweep.
 
 ---
 
@@ -547,6 +562,30 @@ pre-2026-07-08 TEER window rule while porting. Not yet reviewed on-device.
 **Known follow-ups:** colours pass (deferred by RC), tooltip copy revision
 (all figures; Qual. header tooltip still describes the 5-column era),
 PNG export with the rest of the print-sizing pass.
+
+---
+
+## Figure F2 — Filtering network print-fit (2026-07-15, RC solo)
+
+F2 stayed a polish (no rebuild) but was the highest-complexity fit of the
+pass; work recorded from RC's notes (`figure_data/archive/PRINT_SIZING.md`
+§ F2, commit `fcb212d`).
+
+- **Alignment.** SVG viewboxes unified and `min-height` constrained so the
+  network layers align vertically across all four panels.
+- **Controls overflow.** Long `<select>` options stretched
+  `.iframe-controls` past the figure bounds; fixed with an explicit
+  `width: 550px` plus `flex: 1` / `min-width: 0` truncation.
+- **Copy.** Panel descriptions condensed to ~30 words each; all 5 em-dashes
+  replaced with standard punctuation; "Mid-green" renamed "Light-green";
+  panel-4 text now contextualizes the diamond inline: `highlighting (◆)
+  additions`.
+- **Symbols.** Circles/squares standardized to `1em`; diamond scaled to
+  `1.5em` with `line-height: 0` + `vertical-align: -0.05em` so it centers
+  inline without disturbing line rhythm.
+- **Fading.** Previous ad-hoc fade logic replaced with a uniform grey
+  (`#ccc`) fade for all non-passing candidate nodes in panels 2–4 —
+  consistent with D2's de-prioritize-instead-of-add-marks principle.
 
 ---
 

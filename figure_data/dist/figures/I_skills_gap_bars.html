@@ -560,18 +560,28 @@
           // Long-form note (short version lives in D2's specimen pane):
           // zero is data-true under the gap definition, and the caveat is
           // that Skills-domain parity is not whole-profile parity.
-          const noteLines = [
-            'No skill gaps for this pathway — every skill the',
-            'viable occupation relies on more than average is',
-            'already used intensively by this occupation.',
-            'Differences may remain in other competency domains',
-            '(knowledge, abilities, work context) or in',
-            'credentials the taxonomy omits, e.g. accreditations.',
-          ];
+          // Wrapped dynamically to the full panel width (the note sits below
+          // the bars, so it can extend left into the label gutter).
+          const noteText = 'No skill gaps for this pathway — every skill the '
+            + 'viable occupation relies on more than average is already used '
+            + 'intensively by this occupation. Differences may remain in other '
+            + 'competency domains or in credentials the taxonomy omits.';
+          const noteMax = Math.floor((W - 20) / (F.note * 0.5));
+          const noteLines = [];
+          let noteCur = '';
+          noteText.split(' ').forEach(word => {
+            if (noteCur && (noteCur + ' ' + word).length > noteMax) {
+              noteLines.push(noteCur);
+              noteCur = word;
+            } else {
+              noteCur = noteCur ? noteCur + ' ' + word : word;
+            }
+          });
+          if (noteCur) noteLines.push(noteCur);
           const noteY = Math.min(lastBottom + 30, h - 12 - noteLines.length * F.noteLineH);
           noteLines.forEach((line, li) => {
             g.append('text')
-              .attr('x', 4).attr('y', noteY + li * F.noteLineH)
+              .attr('x', -margin.left + 4).attr('y', noteY + li * F.noteLineH)
               .attr('text-anchor', 'start')
               .attr('font-size', F.note + 'px')
               .attr('font-style', 'italic')

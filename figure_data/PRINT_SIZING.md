@@ -125,6 +125,55 @@ Four global changes:
   - [x] G2 (OaSIS Competencies) — scale note made block-level for natural line break; removed em-dash prefix; comment updated
   - [x] I (Skills Gap Bars) — D3 config bumped to font floors; x-axis simplified to "Importance to occupation"; dashed-line annotation ("→ more relevant / than typical") on panel 1; teal bar 80% height; barPad=14 symmetric inset; panel-header locked 50px + top-aligned; controls padding tightened; marginLeft 140→110, margin.bottom 44→36
   - [x] J (Skills Gap Table) — fonts bumped to floors; flex column bottom-alignment; inline bar+count layout (.bar-row); wrapName line-breaks on >3 word titles; height switched to --fig-height-short (320px)
-  - [ ] D (Walkthrough)
+  - [/] D2 (Walkthrough) — in progress. See details below.
 - [ ] Export new PNGs
 - [ ] Validation
+
+---
+
+## Per-figure polish — D2 (Walkthrough) 🔧
+
+Cloned from D_walkthrough.html as D2_walkthrough.html (2026-07-14).
+Work is mid-freeze: committed at `f557712`, continuing in session.
+
+### Source band (R/C:0) ✅
+
+| Element | Before | After |
+|---|---|---|
+| Layout | Single-line community context + occupation name | Two-line narrative: headline + subline |
+| Headline | `src-comm` (8px) + `src-name` (14px) | `em3` occ (14px navy) + "in" + `em2` community (11px bold) |
+| Subline | — | 9px: "Susceptible occupation … sector exposure in **[sector]**" |
+| Stats | Workers, TEER chip, income chip | Removed (workers, income, TEER all dropped from band) |
+| Province mapping | — | Added (CD code → province abbr), unused for now |
+
+### Heatmap (R2C2) — in progress 🔧
+
+| Element | Before | After |
+|---|---|---|
+| Columns | 5 (TEER, Wages, COPS, AI, Qual.) | 6 (Pool, TEER, Earn, COPS, A.I., Qual.) |
+| Pool column | — | Provincial presence pass/fail (pr_workers > 0) |
+| Header labels | Wages, AI | Earn, A.I. (balanced 3–5 char widths) |
+| Dot style | Colored `●` circles, variable size (log-scale pr_workers) | Lucide SVG icons: `circle-check` (green/amber), `circle-x` (red), uniform 13px |
+| Legend | `● ● = pass · dot size = provincial workers` | `✓ = pass · ✓ = pass w/ notes · ✗ = fail` (SVG, flex-centered) |
+| Tooltips | All showed "Provincial workers: N" | Only Pool column shows worker count |
+
+### Headers into explainer (R1C2) ✅
+
+Heatmap column headers (POOL–TEER–EARN–COPS–A.I.–QUAL.) moved from R2C2 into
+the R1C2 explainer panel. The panel's bottom border acts as the implicit
+separator. Negative side margins (-6px) align the 6-column header grid with the
+data grid below.
+
+### Similarity bars (R2C1) ✅
+
+| Element | Before | After |
+|---|---|---|
+| Bar width | Absolute similarity fraction | Normalized to max-in-set (top bar = 100%) |
+| Right padding | None | 16px breathing room |
+| Top padding | 6px | 0 (aligns with row-1 separator) |
+
+### Still ahead
+
+- **R2C2 heatmap**: Row height tuning, bar opacity/saturation in C1
+- **R1/R2C3 (skill gap + assessment notes)**: Brainstorm needed — text-heavy, may restructure
+- **Compact branch**: SVG icons not yet wired into compact render path

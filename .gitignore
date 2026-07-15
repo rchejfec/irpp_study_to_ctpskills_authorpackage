@@ -31,3 +31,6 @@ figure_text_review.txt
 
 figure_data/FACTCHECK_*
 figure_data/export.mjs
+
+# Export backups for side-by-side human validation (kept out of git; history has the old baselines)
+figure_data/dist/exports_backup_*/

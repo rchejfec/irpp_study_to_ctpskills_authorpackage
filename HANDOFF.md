@@ -26,22 +26,22 @@ Freeze-closure programme steps 1–5 (2026-07-15):
    (`PRINT_SIZING.md`, `HANDOFF_POLISH.md`) are adopted-and-archived in
    `figure_data/archive/`.
 
-## Next task (programme steps 6–8, in order)
+## Next task (programme steps 6–8)
 
-6. **Full-regen sanity with backup**: snapshot `figure_data/dist/data/`,
-   run `uv run python run_all.py && uv run python figure_data/generate_all.py`,
-   diff against the snapshot for quick validation. Expect no diffs (B2 JSON
-   was just regenerated with the renamed key).
-7. **PNG re-export with backup** (very last): snapshot
-   `figure_data/dist/exports/`, run `bun run export.mjs` from `dist/`,
-   then side-by-side **human** validation of all 9 new baselines. Known
-   legitimate default-state changes: D2 (new figure), I (no-gap note +
-   "+N more" marker), E2/C2 (rebuild/late fix); B2's PNG is already RC's
-   approved reference — note it captures the **print** variant
-   (`navigator.webdriver` dual mode).
-8. **Signing sweep**: RC reviews evidence and signs — the 2026-07-15 I
-   zero-gap row (`uv run python validation/check_I_zero_gaps.py`,
-   evidence `validation/I_zero_gap_pairs.csv`) plus fresh regen/export rows.
+6. ~~Full-regen sanity~~ done 2026-07-15: byte-identical, 14/14 JSONs
+   (pipeline 27.5s); checksums `validation/regen_manifest_2026-07-15.txt`;
+   VALIDATION row appended (unsigned).
+7. ~~PNG re-export~~ done 2026-07-15: 9/9 exported at 550px; old set backed
+   up (untracked) at `figure_data/dist/exports_backup_2026-07-15/` and in
+   git history; retired A2/B/D/E PNGs removed from `exports/`. **B2's
+   re-export is byte-identical to RC's approved reference.** Awaiting RC's
+   side-by-side visual approval of the other 8 (6 re-renders at the new
+   width + D2/E2 new baselines) — until then the new set is provisional.
+8. **Signing sweep (RC — the only remaining freeze-closure step)**: review
+   evidence and sign the three open 2026-07-15 rows — I zero-gap recount,
+   byte-identical regen, PNG export (sign the export row only after the
+   step-7 side-by-side). Delete `exports_backup_2026-07-15/` after
+   approval.
 
 ## Open items for RC ruling
 

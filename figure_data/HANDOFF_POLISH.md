@@ -1,8 +1,16 @@
-# Figure Polish Handoff — 2026-07-14 (updated same day: E2 refactor)
+# Figure Polish Handoff — 2026-07-14 (updated same day: E2 refactor, then D2 refactor)
 
-## Status: 6/9 figures done (E rebuilt as E2), 3 remaining
+## Status: 7/9 figures done (E rebuilt as E2, D rebuilt as D2), 2 remaining
 
 ### Completed (verified)
+- **D → D2** (Walkthrough) — full redesign, design locked & RC-verified
+  2026-07-14: source band + step chips; 6-screen matrix (Pool) with SVG
+  icons; attrition fade (out = failed AND not curated, curated supersedes,
+  pass tint removed); specimen skill-gap pane (gap pills replace RCA bars);
+  grid minmax(0,1fr); D archived, tester → D2. Full rationale in
+  DECISIONS.md § Figure D2; execution record in PRINT_SIZING.md.
+  Compact ported same day but **not device-verified**; tooltips + colours
+  ride the global passes.
 - **A3** (Interactive Map)
 - **G2** (OaSIS Competencies)
 - **I** (Skills Gap Bars) — x-axis → "Importance to occupation"; dashed annotation "→ more relevant / than typical"; teal bar 80%; barPad=14 symmetric inset; panel-header locked 50px + top-aligned; marginLeft 140→110, margin.bottom 44→36
@@ -24,7 +32,6 @@
 ### Not Started
 - **B** (Suitability Heatmap) — vetoed for now
 - **F2** (OaSIS Filtering/Network) — high complexity
-- **D** (Walkthrough) — medium complexity
 
 ### Global Changes Applied
 - Proxima Nova (Typekit `qgl3xbs`)

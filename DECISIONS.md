@@ -488,6 +488,68 @@ reconcile before citing either number.
 
 ---
 
+## Figure D2 — Walkthrough refactor (2026-07-14)
+
+The print-sizing pass on D escalated into a full redesign (same trajectory
+as E→E2). D2 (`dist/figures/D2_walkthrough.html`) supersedes D (archived to
+`dist/archive/`); same generator and JSONs — `gen_D_walkthrough.py` extended
+so `featured_gap` carries `gaps`/`shared_skills` name lists in place of the
+old RCA bar data.
+
+**Layout.** Full-width source band (occupation-in-community headline; the
+old stat lines dropped — workers moved into the new Pool screen tooltip)
+over a single 3-column grid. Columns are `minmax(0,1fr)`×3, not bare `1fr`:
+`1fr` implies min-width auto, and a long nowrap gap pill in col 3 was
+silently shrinking col 2 (legend wrap; 4 pairs, source 73300). Row 1 =
+explainer panels doubling as column headers ("Similar occupations" — not
+"Skill-similar", which collided with the Skills *domain* — / "From similar
+to viable" / "Skill gaps") with numbered step chips (band=1, panels 2/3/4)
+echoing C2's Identify→Match→Filter→Gaps. Chips are pure-CSS circles (SVG
+`<text>` baseline centering is engine-dependent; lucide has no numbered
+circles). Borders draw four vertical components (similar / screening /
+skill gaps / notes), not two rows — no horizontal rule under the explainer
+row or the matrix header.
+
+**Screening matrix.** Six screens (Pool added: provincial workers > 0);
+fixed-size lucide-style SVG check/cross icons replace text dots and the
+worker-count dot-size encoding.
+
+**Attrition semantics (core decision, RC 2026-07-14).** Rows that fail a
+screen AND are not curated fade to 45% opacity in the matrix only — mark
+the transition, not the state. The green pass-tint was removed: survivors
+are unmarked; persistence at full strength is the pass signal, and the
+✓/✗ legend is now the panel's complete vocabulary. **Curated supersedes
+fade**, so override picks read "selected despite": full-strength rows with
+visible red ✗ (6 in the data: 3 CPAB Earn-fails, 3 NWT Pool+Earn-fails).
+Panel A never colours by downstream outcome (no backwards read); col 3
+contains only survivors. The notes line "may override other screening
+results" is load-bearing — it is the only textual explanation of those 6
+rows; do not cut it.
+
+**Skill-gap pane.** RCA bars dropped — bars only demonstrated magnitude;
+the result (which competencies) is what the figure owes the reader.
+Specimen grammar: "One sample pathway:" → target as "Title (#rank)"
+(matches the notes' reference convention; rank looked up from the candidate
+list; full name wraps, no truncation) → shared/gaps fact lines → gap pills.
+Visible pills prefer one-line labels (≤33 chars); longer labels derank into
+the "+N more" tooltip (4 pairs affected, 0 wrapping pills across all 25;
+slight fidelity trade vs. generator gap order — full ordered list survives
+in the tooltip).
+
+**Notes.** Collapsed to ≤2 merged items (not-viable / curated-selection);
+caveat callout omitted in D2. Notes cell is natural-height, pinned to the
+rail bottom.
+
+**Compact.** Ported to the same grammar 2026-07-14 (6 screens, SVG icons,
+fade + curated-supersede, specimen pane); also fixed compact's stale
+pre-2026-07-08 TEER window rule while porting. Not yet reviewed on-device.
+
+**Known follow-ups:** colours pass (deferred by RC), tooltip copy revision
+(all figures; Qual. header tooltip still describes the 5-column era),
+PNG export with the rest of the print-sizing pass.
+
+---
+
 ## Known data-quality notes
 
 - The reviseddraft abstract says **"16 occupations"**; the authors' Appendix A has

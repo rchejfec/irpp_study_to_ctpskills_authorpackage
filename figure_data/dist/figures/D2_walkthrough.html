@@ -112,36 +112,6 @@
       border-top: 1px solid var(--clr-border);
     }
 
-    /* was 7px — bumped to 6pt decorative floor */
-    .src-comm {
-      font-size: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #999;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .src-name {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--irpp-navy);
-      line-height: 1.3;
-      margin-bottom: 4px;
-    }
-
-    /* was 8px — bumped to ~7pt content floor */
-    .src-detail {
-      font-size: 9.5px;
-      color: #999;
-      line-height: 1.6;
-    }
-
-    .src-detail span {
-      color: #444;
-      font-weight: 500;
-    }
-
     /* ── R2C1: Similarity bars ── */
     .cell-similar {
       grid-column: 1;
@@ -428,6 +398,13 @@
       margin-bottom: 2px;
     }
 
+    /* no-data fallback (never fires with current data; all 25 pairs have gaps) */
+    .rca-hint {
+      font-size: 9px;
+      color: #999;
+      line-height: 1.3;
+    }
+
     /* full name wraps (no truncation); rank rides inline as "(#N)",
        matching how the notes reference occupations */
     .rca-target {
@@ -678,7 +655,7 @@
 
     html.compact .cw-headrow {
       display: grid;
-      grid-template-columns: 1fr repeat(5, 32px);
+      grid-template-columns: 1fr repeat(6, 28px);
       align-items: end;
       padding: 0 12px 3px;
       border-bottom: 1px solid #ddd;
@@ -697,14 +674,15 @@
 
     html.compact .cw-row {
       display: grid;
-      grid-template-columns: 1fr repeat(5, 32px);
+      grid-template-columns: 1fr repeat(6, 28px);
       align-items: center;
       padding: 2px 12px;
       border-bottom: 1px solid #f2f2f2;
     }
 
-    html.compact .cw-row.cw-pass {
-      background: #f0faf2;
+    /* same attrition semantics as desktop: out = failed and not curated */
+    html.compact .cw-row.cw-out {
+      opacity: 0.45;
     }
 
     html.compact .cw-cand {
@@ -752,8 +730,24 @@
     }
 
     html.compact .cw-dot {
-      text-align: center;
-      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    html.compact .cw-dot svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    html.compact .cw-key {
+      display: inline-flex;
+      vertical-align: middle;
+    }
+
+    html.compact .cw-key svg {
+      width: 12px;
+      height: 12px;
     }
 
     html.compact .cw-more {
@@ -774,25 +768,22 @@
       font-size: 11px;
     }
 
+    html.compact .rca-lead {
+      font-size: 11.5px;
+    }
+
     html.compact .rca-target {
       font-size: 13px;
       margin-bottom: 4px;
     }
 
-    html.compact .rca-shared {
+    html.compact .rca-fact {
       font-size: 12px;
     }
 
-    html.compact .rca-gaps-header {
-      font-size: 11px;
-    }
-
-    html.compact .gap-list {
-      font-size: 12px;
-    }
-
-    html.compact .gap-more {
+    html.compact .gap-pill {
       font-size: 11.5px;
+      padding: 2px 7px;
     }
 
     html.compact .cell-qual {
@@ -866,6 +857,11 @@
       'A.I.': 'AI exposure — Dais (2025) ratings; high exposure excluded.',
       'Qual.': 'Qualitative community review — curated pick (green), susceptible-sector exclusion (red), or no local presence (amber). Approximated from IRPP community profiles.',
     };
+
+    // Lucide-style status icons — shared by the desktop matrix, the compact
+    // candidate list, and both legends.
+    const svgCheck = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>`;
+    const svgCross = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>`;
 
     // Tooltip wiring shared by both render modes.
     function attachTips() {
@@ -1022,82 +1018,25 @@
       const fmtW = v => v != null ? Math.round(v).toLocaleString() : '—';
       const geoWord = (t.cd || '').startsWith('PR') ? 'Territorial' : 'Provincial';
 
-      // Same screen derivation as the desktop heatmap.
+      // Same screen derivation as the desktop matrix (incl. the corrected
+      // TEER window — the compact branch previously kept the pre-2026-07-08
+      // rule) plus the Pool screen.
       const srcInc = sl.pr_income || 0;
       function deriveFilters(c) {
-        const teer = c.teer <= t.source_teer ? 'green'
-          : c.teer === t.source_teer + 1 ? 'yellow' : 'red';
+        const delta = c.teer - t.source_teer;
+        const teer = (c.teer < 2 || delta < -2 || delta > 1) ? 'red' : (delta < 0 ? 'yellow' : 'green');
         const wRatio = srcInc > 0 ? c.pr_income / srcInc : 0;
         const wages = wRatio >= 1.0 ? 'green' : wRatio >= 0.65 ? 'yellow' : 'red';
         const cops = ((c.cops || '').toLowerCase()).includes('surplus') ? 'red' : 'green';
         const ai = ((c.ai || '').toLowerCase()).includes('high') ? 'red' : 'green';
         const qual = c.qual_signal || 'green';
-        return { teer, wages, cops, ai, qual };
+        const prov = (c.pr_workers != null && c.pr_workers > 0) ? 'green' : 'red';
+        return { prov, teer, wages, cops, ai, qual };
       }
-      const dotHtml = (sig, tooltipText) => `<div class="cw-dot ${sig === 'green' ? 'hm-ok' : sig === 'yellow' ? 'hm-warn' : 'hm-fail'} screen-dot" data-tippy-content="${tooltipText.replace(/"/g, '&quot;')}">●</div>`;
+      const dotHtml = (sig, tooltipText) => `<div class="cw-dot ${sig === 'green' ? 'hm-ok' : sig === 'yellow' ? 'hm-warn' : 'hm-fail'} screen-dot" data-tippy-content="${tooltipText.replace(/"/g, '&quot;')}">${sig === 'red' ? svgCross : svgCheck}</div>`;
 
-      let html = '';
-
-      // 1 — Source card
-      html += `<div class="cw-source">
-        <div class="cw-comm">${t.community}</div>
-        <div class="cw-name">${t.source_label}</div>
-        <div class="cw-detail">TEER level <span>${t.source_teer}</span> · Sector: <span>${t.sector}</span></div>
-        <div class="cw-detail">${geoWord} income <span>${fmt$(sl.pr_income)}</span> · workers <span>${fmtW(sl.pr_workers)}</span></div>
-      </div>`;
-
-      // 2 — Merged candidates: similarity bar + 5 screening dots per row
-      const compactHeads = { TEER: 'TEER', Wages: 'Wage', COPS: 'COPS', AI: 'AI', 'Qual.': 'Qual' };
-      html += `<div class="cw-sec-title">Skill-similar candidates &amp; screening</div>`;
-      html += `<div class="cw-legend">Bar length = skills similarity · <span class="hm-ok">●</span><span class="hm-warn">●</span> = pass, <span class="hm-fail">●</span> = fail · tap a heading or row for detail</div>`;
-      html += `<div class="cw-headrow"><div></div>` + Object.keys(hmDefs).map(k =>
-        `<div class="cw-h-screen" data-tip="${k === 'Qual.' ? 'Qual' : k}|${hmDefs[k].replace(/"/g, '&quot;')}">${compactHeads[k]}</div>`).join('') + `</div>`;
-      cands.forEach(c => {
-        const f = deriveFilters(c);
-        const allGreen = f.teer !== 'red' && f.wages !== 'red'
-          && f.cops === 'green' && f.ai === 'green' && f.qual === 'green';
-        html += `<div class="cw-row ${allGreen ? 'cw-pass' : ''}" data-tt-label="${c.label}" data-tt-sim="${c.similarity.toFixed(3)}" data-tt-teer="${c.teer}">
-          <div class="cw-cand">
-            <span class="cw-rank">${c.rank}</span>
-            <div class="cw-barwrap">
-              <div class="cw-bar" style="width:${barW(c.similarity)}%"></div>
-              <div class="cw-label">${c.label}</div>
-            </div>
-          </div>
-          ${dotHtml(f.teer, getDotTooltip('teer', c, t))}${dotHtml(f.wages, getDotTooltip('wages', c, t))}${dotHtml(f.cops, getDotTooltip('cops', c, t))}${dotHtml(f.ai, getDotTooltip('ai', c, t))}${dotHtml(f.qual, getDotTooltip('qual', c, t))}
-        </div>`;
-      });
-      if (nTrimmed > 0) html += `<div class="cw-more">+${nTrimmed} more candidate${nTrimmed > 1 ? 's' : ''} in the full (desktop) figure</div>`;
-
-      // 3 — Skill gap preview (same markup as desktop, scaled by CSS)
-      const fg = t.featured_gap;
-      html += `<div class="cell-rca">`;
-      html += `<div class="rca-title">Skill gap preview</div>`;
-      if (fg && fg.gaps && fg.gaps.length > 0) {
-        const _st = (s, n) => { if (s.length <= n) return s; const c = s.lastIndexOf(' ', n); return (c > 0 ? s.slice(0, c) : s.slice(0, n)) + '\u2026'; };
-        const tgtShort = _st(fg.target_label, 30);
-        const tgtTip = fg.target_label.length > 30 ? ` class="occ-title-tt" data-tippy-content="${fg.target_label.replace(/"/g, '&quot;')}"` : '';
-        html += `<div class="rca-target"><span class="rca-target-arrow">↳</span> <span${tgtTip}>${tgtShort}</span></div>`;
-
-        const sharedStr = (fg.shared_skills || []).join('<br>').replace(/"/g, '&quot;');
-        html += `<div class="rca-shared"><span class="occ-title-tt" data-tippy-content="${sharedStr}"><span class="rca-shared-icon">✓</span> ${fg.summary.shared} shared skills</span></div>`;
-        html += `<div class="rca-gaps-header">${fg.summary.gaps} SKILL GAPS</div>`;
-        html += `<ul class="gap-list">`;
-        const topGaps = fg.gaps.slice(0, 3);
-        const moreGaps = fg.gaps.slice(3);
-        topGaps.forEach(g => {
-          html += `<li class="gap-item">${g}</li>`;
-        });
-        if (moreGaps.length > 0) {
-          const moreStr = moreGaps.join('<br>').replace(/"/g, '&quot;');
-          html += `<li class="gap-more occ-title-tt" data-tippy-content="${moreStr}">+ ${moreGaps.length} more</li>`;
-        }
-        html += `</ul></div>`;
-      } else {
-        html += `<div class="rca-hint">No skill-gap data available for this pair's top matches.</div></div>`;
-      }
-
-      // 4 — Assessment notes, collapsed to 2 notes max
+      // Notes labels, hoisted: the curated set drives the fade supersede in
+      // the candidate list; the notes section below reuses them.
       const an = t.assessment_notes || { notes: [] };
       const cDownLabels = [];
       const cUpLabels = [];
@@ -1113,6 +1052,66 @@
       });
       cDownLabels.sort((a, b) => a.rank - b.rank);
       cUpLabels.sort((a, b) => a.rank - b.rank);
+      const curatedNocs = cUpNocs.map(String);
+
+      let html = '';
+
+      // 1 — Source card
+      html += `<div class="cw-source">
+        <div class="cw-comm">${t.community}</div>
+        <div class="cw-name">${t.source_label}</div>
+        <div class="cw-detail">TEER level <span>${t.source_teer}</span> · Sector: <span>${t.sector}</span></div>
+        <div class="cw-detail">${geoWord} income <span>${fmt$(sl.pr_income)}</span> · workers <span>${fmtW(sl.pr_workers)}</span></div>
+      </div>`;
+
+      // 2 — Merged candidates: similarity bar + 6 screening dots per row
+      const compactHeads = { Pool: 'Pool', TEER: 'TEER', Earn: 'Earn', COPS: 'COPS', 'A.I.': 'A.I.', 'Qual.': 'Qual' };
+      html += `<div class="cw-sec-title">Skill-similar candidates &amp; screening</div>`;
+      html += `<div class="cw-legend">Bar length = skills similarity · <span class="hm-ok cw-key">${svgCheck}</span><span class="hm-warn cw-key">${svgCheck}</span> = pass · <span class="hm-fail cw-key">${svgCross}</span> = fail · faded = screened out · tap a heading or row for detail</div>`;
+      html += `<div class="cw-headrow"><div></div>` + Object.keys(hmDefs).map(k =>
+        `<div class="cw-h-screen" data-tip="${k === 'Qual.' ? 'Qual' : k}|${hmDefs[k].replace(/"/g, '&quot;')}">${compactHeads[k]}</div>`).join('') + `</div>`;
+      cands.forEach(c => {
+        const f = deriveFilters(c);
+        const allGreen = f.prov === 'green' && f.teer !== 'red' && f.wages !== 'red'
+          && f.cops === 'green' && f.ai === 'green' && f.qual === 'green';
+        const out = !allGreen && !curatedNocs.includes(String(c.noc || ''));
+        html += `<div class="cw-row ${out ? 'cw-out' : ''}" data-tt-label="${c.label}" data-tt-sim="${c.similarity.toFixed(3)}" data-tt-teer="${c.teer}">
+          <div class="cw-cand">
+            <span class="cw-rank">${c.rank}</span>
+            <div class="cw-barwrap">
+              <div class="cw-bar" style="width:${barW(c.similarity)}%"></div>
+              <div class="cw-label">${c.label}</div>
+            </div>
+          </div>
+          ${dotHtml(f.prov, getDotTooltip('prov', c, t))}${dotHtml(f.teer, getDotTooltip('teer', c, t))}${dotHtml(f.wages, getDotTooltip('wages', c, t))}${dotHtml(f.cops, getDotTooltip('cops', c, t))}${dotHtml(f.ai, getDotTooltip('ai', c, t))}${dotHtml(f.qual, getDotTooltip('qual', c, t))}
+        </div>`;
+      });
+      if (nTrimmed > 0) html += `<div class="cw-more">+${nTrimmed} more candidate${nTrimmed > 1 ? 's' : ''} in the full (desktop) figure</div>`;
+
+      // 3 — Skill gap preview: same specimen grammar as desktop
+      //     (lead-in → target (#rank) → facts → gap pills)
+      const fg = t.featured_gap;
+      html += `<div class="cell-rca">`;
+      html += `<div class="rca-title">Skill gaps</div>`;
+      if (fg && fg.gaps && fg.gaps.length > 0) {
+        const sharedStr = (fg.shared_skills || []).join('<br>').replace(/"/g, '&quot;');
+        const topGaps = fg.gaps.slice(0, 3);
+        const moreGaps = fg.gaps.slice(3);
+        const tgtRank = (t.candidates.find(c => c.noc === fg.target_noc) || {}).rank;
+        html += `<div class="rca-lead">One sample pathway:</div>`;
+        html += `<div class="rca-target">${fg.target_label}${tgtRank != null ? ` (#${tgtRank})` : ''}</div>`;
+        html += `<div class="rca-fact"><span class="occ-title-tt" data-tippy-content="${sharedStr}">${fg.summary.shared} shared skills</span></div>`;
+        html += `<div class="rca-fact">${fg.summary.gaps} skill gap${fg.summary.gaps > 1 ? 's' : ''}</div>`;
+        html += `<div class="gap-pills">`
+          + topGaps.map(g => `<span class="gap-pill">${g}</span>`).join('')
+          + (moreGaps.length > 0 ? `<span class="gap-pill gap-more-pill occ-title-tt" data-tippy-content="${moreGaps.join('<br>').replace(/"/g, '&quot;')}">+${moreGaps.length} more</span>` : '')
+          + `</div>`;
+        html += `</div>`;
+      } else {
+        html += `<div class="rca-hint">No skill-gap data available for this pair's top matches.</div></div>`;
+      }
+
+      // 4 — Assessment notes, collapsed to 2 notes max (labels hoisted above)
       html += `<div class="cell-qual">`;
       html += `<div class="qual-title">Assessment notes</div>`;
       if (cDownLabels.length > 0) {
@@ -1168,14 +1167,7 @@
       const maxSim = Math.max(...cands.map(c => c.similarity));
       const barW = sim => ((sim - 0.70) / (maxSim - 0.70)) * 100;
 
-      function fmt$(v) { return v != null ? '$' + Math.round(v).toLocaleString() : '\u2014'; }
-      function fmtW(v) { return v != null ? Math.round(v).toLocaleString() : '\u2014'; }
       function trunc(s, n) { return s.length > n ? s.slice(0, n - 1) + '\u2026' : s; }
-      function smartTrunc(s, n) {
-        if (s.length <= n) return s;
-        const cut = s.lastIndexOf(' ', n);
-        return (cut > 0 ? s.slice(0, cut) : s.slice(0, n)) + '\u2026';
-      }
 
       // Derive viability signals
       const srcInc = sl.pr_income || 0;
@@ -1194,9 +1186,6 @@
         return { prov, teer, wages, cops, ai, qual };
       }
 
-      const svgCheck = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>`;
-      const svgWarn = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>`;
-      const svgCross = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>`;
       const stepChip = n => `<span class="exp-step">${n}</span>`;
       function sigDot(signal, tooltipText) {
         const cls = signal === 'green' ? 'hm-ok'
@@ -1207,27 +1196,6 @@
 
       let left = '';
       let right = '';
-      const geoWord = (t.cd || '').startsWith('PR') ? 'Territorial' : 'Provincial';
-
-      // TEER training-level labels (condensed from NOC 2021 definitions)
-      const teerLabels = {
-        0: 'management',
-        1: 'university degree',
-        2: 'college / apprenticeship 2+ yr',
-        3: 'college / apprenticeship <2 yr',
-        4: 'high school / on-the-job',
-        5: 'short-term demonstration',
-      };
-      const teerDesc = teerLabels[t.source_teer] || '';
-      // Province abbreviation from census division code
-      const provMap = {
-        '10': 'NL', '11': 'PE', '12': 'NS', '13': 'NB',
-        '24': 'QC', '35': 'ON', '46': 'MB', '47': 'SK',
-        '48': 'AB', '59': 'BC', '60': 'YT', '61': 'NT', '62': 'NU'
-      };
-      const cdStr = String(t.cd || '').replace(/^PR/, '');
-      const provAbbr = provMap[cdStr.slice(0, 2)] || '';
-      const incomeK = sl.pr_income ? Math.round(sl.pr_income / 1000) + 'k' : null;
 
       // ═══ Source band (full width) ═══
       document.getElementById('grid-band').innerHTML = `${stepChip(1)}

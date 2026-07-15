@@ -113,7 +113,7 @@ Four global changes:
 - [x] Git snapshot (`pre-print-sizing` tag)
 - [x] Global `theme.css` change (font, widths, heights, token floors)
 - [x] Global `compact.js` change (breakpoint 640 → 440)
-- [ ] Per-figure polish pass (5/9 verified ✅, 4 remaining)
+- [ ] Per-figure polish pass (7/9 verified ✅, 2 remaining: B vetoed-for-now, F2)
   - [x] A3 (Interactive Map)
   - [x] C2 (Summary) — All three top-tier texts condensed (~30% fewer words); titles rewritten ("Structural change and workforce disruption", "Disruption compounds in susceptible communities"); column 3 rewritten for use-case framing (governments/municipalities/training providers as entity-pill styled spans); mini-table removed; bottom-tier steps condensed; SVG overlay scaled to 0.812 and repositioned; flow-step padding tightened
   - [ ] B (Suitable Heatmap)
@@ -125,7 +125,13 @@ Four global changes:
   - [x] G2 (OaSIS Competencies) — scale note made block-level for natural line break; removed em-dash prefix; comment updated
   - [x] I (Skills Gap Bars) — D3 config bumped to font floors; x-axis simplified to "Importance to occupation"; dashed-line annotation ("→ more relevant / than typical") on panel 1; teal bar 80% height; barPad=14 symmetric inset; panel-header locked 50px + top-aligned; controls padding tightened; marginLeft 140→110, margin.bottom 44→36
   - [x] J (Skills Gap Table) — fonts bumped to floors; flex column bottom-alignment; inline bar+count layout (.bar-row); wrapName line-breaks on >3 word titles; height switched to --fig-height-short (320px)
-  - [/] D2 (Walkthrough) — in progress. See details below.
+  - [x] D (Walkthrough) — rebuilt as **D2**, design locked & verified by RC
+        2026-07-14 (incl. override picks and 3-line target names). Attrition
+        fade (out = failed AND not curated; curated supersedes; pass tint
+        removed), step chips, specimen skill-gap pane (gap pills replace RCA
+        bars), grid hardened to minmax(0,1fr). D archived; tester → D2.
+        See DECISIONS.md § Figure D2 and details below. Compact ported but
+        not device-verified; tooltips + colours pending with global passes.
 - [ ] Export new PNGs
 - [ ] Validation
 
@@ -172,8 +178,27 @@ data grid below.
 | Right padding | None | 16px breathing room |
 | Top padding | 6px | 0 (aligns with row-1 separator) |
 
-### Still ahead
+### Completion (2026-07-14, later same day) ✅
 
-- **R2C2 heatmap**: Row height tuning, bar opacity/saturation in C1
-- **R1/R2C3 (skill gap + assessment notes)**: Brainstorm needed — text-heavy, may restructure
-- **Compact branch**: SVG icons not yet wired into compact render path
+The "still ahead" items resolved; design locked and verified by RC. Full
+rationale in DECISIONS.md § Figure D2. Summary of what landed after the
+mid-freeze:
+
+- **Explainer row**: retitled ("Similar occupations" / "From similar to
+  viable" / "Skill gaps") with numbered step chips (band=1, panels 2/3/4)
+  echoing C2's flow; explainer + matrix-header horizontal rules removed —
+  the figure reads as four vertical components.
+- **Attrition fade**: out-of-the-running rows (failed a screen AND not
+  curated) fade to 45% in the matrix only; green pass tint removed; curated
+  supersedes fade (6 "selected despite" rows: 3 CPAB, 3 NWT).
+- **Skill-gap pane**: specimen grammar — "One sample pathway:" → target
+  "Title (#rank)" (full name, wraps) → shared/gaps facts → gap pills;
+  visible pills prefer ≤33-char labels, longer derank to "+N more" tooltip.
+- **Grid**: columns hardened to `minmax(0,1fr)`×3 (bare 1fr let a long
+  nowrap pill shrink col 2 — the legend-wrap bug).
+- **Notes**: ≤2 merged items; natural height, bottom-anchored.
+- **Compact branch**: ported to the same grammar (6 screens, SVG icons,
+  fade + supersede, specimen pane; fixed stale pre-2026-07-08 TEER rule).
+  NOT yet device-verified.
+- **Housekeeping**: dead code swept; D archived to `dist/archive/`;
+  tester (`dist/index.html`) points at D2.

@@ -1,11 +1,18 @@
-# Handoff — 2026-07-15
+# Handoff — 2026-07-15 (End of Colour Inventory Session)
 
-The 2026-07-13 print-sizing freeze is **lifted**. The workstream completed
-all 9 figures (three rebuilt: E→E2, D→D2, B→B2) and the freeze-closure
-programme has run steps 1–5; only the tail (regen sanity, PNG re-export,
-signing) remains.
+## Task just completed: Semantic Colour Inventory
 
-## Task just completed
+1. **Complete File-by-File Inventory:** Audited all 9 figures (A3–J) to identify every hardcoded hex, generic CSS variable, and D3 colour constant.
+2. **`semantic_requirements.md` Created:** Consolidated all visual properties into a rigid, 59-token semantic taxonomy (e.g., `--color-concept-susceptible`, `--color-surface-brand`, `--color-chart-rank1`).
+3. **Execution Paused (Option 4 Selected):** Instead of immediately rewriting `theme.css` with these tokens, we elected to pause the backwards reconciliation.
+
+## Next task for new session (Option 4)
+
+- **Define the New Design System:** Look at the starting template/target aesthetics, decide on variations, extensions, and the new colour space.
+- **Mapping:** Map the new aesthetic colour palette onto the 59 functional slots defined in `semantic_requirements.md`.
+- **Execution (Backwards Pass):** Once the palette is mapped, execute the `theme.css` rewrite and the HTML file updates to swap the old variables for the new semantic ones.
+
+## Previous Context (Pre-Colour Pass)
 
 Freeze-closure programme steps 1–5 (2026-07-15):
 
@@ -45,15 +52,14 @@ Freeze-closure programme steps 1–5 (2026-07-15):
 
 ## Open items for RC ruling
 
-- gen_B2's `EXPERIMENT` keep-all-columns filter (relaxes the
-  author-directed shared-column rule to a no-op — is keep-all final?).
-- gen_E2 emits single-community JSON variants
-  (`E2_viable_table.{author,user}.cosine.json`) that nothing fetches —
-  keep emitting or drop?
+Both resolved 2026-07-15: gen_B2's `EXPERIMENT` keep-all-columns filter is
+**final as-is** (RC ruling — comment can stay); gen_E2's single-community
+Estevan JSON variants **dropped** (nothing fetched them; generator trimmed,
+files removed).
 
 ## Deferred workstreams (not freeze-blockers)
 
-Colours pass; tooltip revision across all figures (D2's Qual. header
+Tooltip revision across all figures (D2's Qual. header
 tooltip still describes the 5-column era); compact on-device verification
 (D2 compact ported but not device-verified); E2 tooltips.
 

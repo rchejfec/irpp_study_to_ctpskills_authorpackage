@@ -16,7 +16,7 @@ Run the pipeline first (`uv run python run_all.py`) — this layer reads `output
 
 | Figure | Generator | Output | Metric |
 |---|---|---|---|
-| E2 viable table | `gen_E2_viable_table.py` | `E2_viable_table.{pick}.cosine.json` + `.all.{pick}.cosine.json` (all 7, keyed) | cosine |
+| E2 viable table | `gen_E2_viable_table.py` | `E2_viable_table.all.{pick}.cosine.json` (all 7, keyed) | cosine |
 | J skills-gap table | `gen_J_skills_gap_table.py` | `J_skills_gap_table.json` | shared |
 | D2 walkthrough | `gen_D_walkthrough.py` | `D_walkthrough.all.cosine.json` (all 25 pairs, keyed) | cosine |
 | B2 suitable heatmap | `gen_B2_suitable_heatmap.py` | `B2_suitable_heatmap.cosine.json` | cosine |

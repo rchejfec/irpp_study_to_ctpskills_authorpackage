@@ -22,8 +22,10 @@ gen_E_viable_table, now in figure_data/archive/) — same fields, including
 (reserved for tooltips).
 
 Emits, per metric x pick source (author|user):
-  E2_viable_table.<pick>.<metric>.json      — single community (Estevan)
   E2_viable_table.all.<pick>.<metric>.json  — every community, keyed by cd_uid
+
+(The single-community Estevan variant was dropped 2026-07-15 — nothing
+fetched it; the figure reads only the .all files.)
 """
 from __future__ import annotations
 
@@ -34,8 +36,6 @@ import pandas as pd
 import lib
 
 # Migrated from the retired gen_E_viable_table (figure_data/archive/):
-# Community the E figure hardcodes for the single-community JSON.
-FIGURE_COMMUNITY_CD = "4701"  # Estevan
 PICK_SOURCES = ("author", "user")
 
 
@@ -152,13 +152,10 @@ def generate(metric: str) -> None:
         }
         lib.write_json(f"E2_viable_table.all.{pick}.{metric}.json", keyed)
 
-        single = build_community(df[df["cd_uid"] == FIGURE_COMMUNITY_CD], pick)
-        lib.write_json(f"E2_viable_table.{pick}.{metric}.json", single)
-
-        n_picks = sum(len(s["comparable"]) + len(s["extensive"]) for s in single["sources"])
+        n_picks = sum(len(s["comparable"]) + len(s["extensive"])
+                      for c in keyed.values() for s in c["sources"])
         print(f"[E2] {metric}/{pick}: {len(keyed)} communities keyed; "
-              f"single = {single['community']} ({len(single['sources'])} sources, "
-              f"{n_picks} {pick} picks)")
+              f"{n_picks} {pick} picks total")
 
 
 if __name__ == "__main__":

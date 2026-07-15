@@ -101,11 +101,15 @@
 
     .rail-stack>.cell-rca {
       flex: 0 0 auto;
-      border-bottom: 1px solid var(--clr-border);
     }
 
+    /* Notes take only their natural height, pinned to the rail bottom —
+       slack space collects between the two components. The 3|4 divider
+       travels with the notes' top edge. */
     .rail-stack>.cell-qual {
-      flex: 1 0 auto;
+      flex: 0 0 auto;
+      margin-top: auto;
+      border-top: 1px solid var(--clr-border);
     }
 
     /* was 7px — bumped to 6pt decorative floor */
@@ -361,8 +365,12 @@
       border-bottom: none;
     }
 
-    .hm-row.hm-pass {
-      background: #f0faf2;
+    /* Attrition, shown where it happens: rows out of the running (failed a
+       screen and not rescued by review) fade in panel B only. Panel A never
+       knows the future; col 3 already contains only survivors. Survivors are
+       unmarked — persistence at full strength IS the pass signal (no tint). */
+    .hm-row.hm-out {
+      opacity: 0.45;
     }
 
     .hm-dot {
@@ -420,21 +428,14 @@
       margin-bottom: 2px;
     }
 
+    /* full name wraps (no truncation); rank rides inline as "(#N)",
+       matching how the notes reference occupations */
     .rca-target {
       font-size: 10px;
       font-weight: 700;
       color: var(--irpp-teal);
       margin-bottom: 3px;
       line-height: 1.2;
-    }
-
-    /* cross-references col 1's rank gutter; matches the target's size and
-       weight (colour carries the distinction) */
-    .rca-rank {
-      font-size: 10px;
-      color: #999;
-      font-weight: 700;
-      margin-right: 3px;
     }
 
     /* facts + pills sit offset right of the target, sketch-style:
@@ -508,14 +509,14 @@
 
     /* was 8px — bumped to ~7pt content floor */
     .qual-occ {
-      font-size: 9.5px;
+      font-size: 8px;
       font-weight: 600;
       color: var(--clr-body);
     }
 
     /* was 7.5px — bumped toward 7pt content floor (secondary text) */
     .qual-explain {
-      font-size: 9px;
+      font-size: 8.5px;
       color: #888;
       line-height: 1.35;
       margin-top: 1px;
@@ -1263,11 +1264,17 @@
       left += `<div class="cell-filtered">`;
       left += `<div class="hm-grid">`;
       left += `<div class="hm-data-rows">`;
+      // Curated picks never fade: the review supersedes the screens.
+      const curatedNocs = [];
+      ((t.assessment_notes || {}).notes || []).forEach(n => {
+        if (n.type === 'up') (n.labels || []).forEach(l => { if (l.noc) curatedNocs.push(String(l.noc)); });
+      });
       cands.forEach(c => {
         const f = deriveFilters(c);
         const allGreen = f.prov === 'green' && f.teer !== 'red' && f.wages !== 'red'
           && f.cops === 'green' && f.ai === 'green' && f.qual === 'green';
-        const rowCls = allGreen ? 'hm-pass' : '';
+        const out = !allGreen && !curatedNocs.includes(String(c.noc || ''));
+        const rowCls = out ? 'hm-out' : '';
         left += `<div class="hm-row ${rowCls}">
         ${sigDot(f.prov, getDotTooltip('prov', c, t))}
         ${sigDot(f.teer, getDotTooltip('teer', c, t))}
@@ -1291,8 +1298,6 @@
       const fg = t.featured_gap;
       right += `<div class="cell-rca">`;
       if (fg && fg.gaps && fg.gaps.length > 0) {
-        const tgtLabel = smartTrunc(fg.target_label, 30);
-        const tgtTip = fg.target_label.length > 30 ? ` class="occ-title-tt" data-tippy-content="${fg.target_label.replace(/"/g, '&quot;')}"` : '';
         const sharedStr = (fg.shared_skills || []).join('<br>').replace(/"/g, '&quot;');
         // Visible pills favour one-line labels: long ones are deranked into
         // "+N more" (tooltip) so the pane keeps a stable height. Two-line
@@ -1306,7 +1311,7 @@
         const moreGaps = fg.gaps.filter(g => !visible.includes(g));
         const tgtRank = (t.candidates.find(c => c.noc === fg.target_noc) || {}).rank;
         right += `<div class="rca-lead">One sample pathway:</div>`;
-        right += `<div class="rca-target">${tgtRank != null ? `<span class="rca-rank">${tgtRank}</span>` : ''}<span${tgtTip}>${tgtLabel}</span></div>`;
+        right += `<div class="rca-target">${fg.target_label}${tgtRank != null ? ` (#${tgtRank})` : ''}</div>`;
         right += `<div class="rca-fact"><span class="occ-title-tt" data-tippy-content="${sharedStr}">${fg.summary.shared} shared skills</span></div>`;
         right += `<div class="rca-fact">${fg.summary.gaps} skill gap${fg.summary.gaps > 1 ? 's' : ''}</div>`;
         right += `<div class="gap-pills">`

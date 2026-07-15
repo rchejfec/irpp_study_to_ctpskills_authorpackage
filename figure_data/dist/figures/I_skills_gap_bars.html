@@ -566,7 +566,10 @@
             + 'viable occupation relies on more than average is already used '
             + 'intensively by this occupation. Differences may remain in other '
             + 'competency domains or in credentials the taxonomy omits.';
-          const noteMax = Math.floor((W - 20) / (F.note * 0.5));
+          const notePadL = 120;  // inset from the panel's left edge
+          const notePadR = 50;  // inset from the panel's right edge
+          const noteLH = F.noteLineH - 2;   // tighter leading than data labels
+          const noteMax = Math.floor((W - notePadL - notePadR - 8) / (F.note * 0.5));
           const noteLines = [];
           let noteCur = '';
           noteText.split(' ').forEach(word => {
@@ -578,14 +581,40 @@
             }
           });
           if (noteCur) noteLines.push(noteCur);
-          const noteY = Math.min(lastBottom + 30, h - 12 - noteLines.length * F.noteLineH);
+          const noteY = Math.min(lastBottom + 30, h - 12 - noteLines.length * noteLH);
+          // White backing: masks the dashed reference line (and gridlines)
+          // running behind the note text.
+          g.append('rect')
+            .attr('x', -margin.left + notePadL - 6)
+            .attr('y', noteY - F.note - 3)
+            .attr('width', W - notePadL - notePadR + 12)
+            .attr('height', (noteLines.length - 1) * noteLH + F.note + 10)
+            .attr('fill', '#fff');
           noteLines.forEach((line, li) => {
             g.append('text')
-              .attr('x', -margin.left + 4).attr('y', noteY + li * F.noteLineH)
+              .attr('x', -margin.left + notePadL).attr('y', noteY + li * noteLH)
               .attr('text-anchor', 'start')
               .attr('font-size', F.note + 'px')
               .attr('font-style', 'italic')
               .attr('fill', '#999')
+              .text(line);
+          });
+        }
+
+        // Omission marker (bottom-right, two lines): the panel shows at most
+        // 2 gaps — this reconciles with D2's full gap count. Omitted when
+        // every gap is displayed.
+        if (pair.n_more > 0) {
+          const moreLines = [`+ ${pair.n_more} more`, `skill gap${pair.n_more === 1 ? '' : 's'}`];
+          moreLines.forEach((line, li) => {
+            g.append('text')
+              .attr('x', w - 4)
+              .attr('y', h - 6 - (moreLines.length - 1 - li) * (F.note + 3))
+              .attr('text-anchor', 'end')
+              .attr('font-size', F.note + 'px')
+              .attr('font-style', 'italic')
+              .attr('fill', '#999')
+              .attr('stroke', '#fff').attr('stroke-width', 3).attr('paint-order', 'stroke')
               .text(line);
           });
         }

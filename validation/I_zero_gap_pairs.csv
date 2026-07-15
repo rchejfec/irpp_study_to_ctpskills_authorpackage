@@ -1,0 +1,19 @@
+source_noc,source_label,target_noc,target_label,target_skills_above_avg,of_those_missing_from_source
+74201,Water transport deck and engine room crew,74204,Utility maintenance workers,9,0
+94204,Mechanical assemblers and inspectors,94111,Plastics processing machine operators,9,0
+95100,Labourers in mineral and metal processing,75211,Railway and motor transport labourers,8,0
+95100,Labourers in mineral and metal processing,95101,Labourers in metal fabrication,7,0
+95100,Labourers in mineral and metal processing,95102,Labourers in chemical products processing and utilities,9,0
+95100,Labourers in mineral and metal processing,95103,"Labourers in wood, pulp and paper processing",7,0
+95100,Labourers in mineral and metal processing,95104,Labourers in rubber and plastic products manufacturing,9,0
+95100,Labourers in mineral and metal processing,95106,Labourers in food and beverage processing,9,0
+95100,Labourers in mineral and metal processing,95107,Labourers in fish and seafood processing,9,0
+95100,Labourers in mineral and metal processing,95109,"Other labourers in processing, manufacturing and utilities",7,0
+95106,Labourers in food and beverage processing,75211,Railway and motor transport labourers,8,0
+84101,Oil and gas well drilling and related workers and service operators,74204,Utility maintenance workers,9,0
+84101,Oil and gas well drilling and related workers and service operators,94110,Chemical plant machine operators,9,0
+85111,Oil and gas drilling servicing and related labourers,75110,Construction trades helpers and labourers,9,0
+85111,Oil and gas drilling servicing and related labourers,95102,Labourers in chemical products processing and utilities,9,0
+74203,Automotive and heavy truck and equipment parts installers and servicers,74204,Utility maintenance workers,9,0
+74203,Automotive and heavy truck and equipment parts installers and servicers,94111,Plastics processing machine operators,9,0
+85111,Oil and gas drilling servicing and related labourers,75119,Other trades helpers and labourers,8,0

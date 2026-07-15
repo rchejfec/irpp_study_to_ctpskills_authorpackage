@@ -45,6 +45,10 @@ def build_pair(lq: pd.DataFrame, src_noc: str, src_label: str, tgt_noc: str, tgt
     comps = pd.DataFrame({"src": src, "tgt": tgt})
     comps["delta"] = comps["tgt"] - comps["src"]
 
+    # Full gap pool (paper definition; same universe as D2's gap count):
+    # the panel shows at most 2 gaps, and n_more reconciles the difference.
+    gaps_pool = comps[(comps["src"] < 1) & (comps["tgt"] > 1)]
+
     out_comps = []
     override = HARDCODED_SKILLS.get((src_noc, tgt_noc))
 
@@ -81,7 +85,9 @@ def build_pair(lq: pd.DataFrame, src_noc: str, src_label: str, tgt_noc: str, tgt
         "target_noc": tgt_noc,
         "target_label": tgt_label,
         "communities": sorted(communities),
-        "comps": out_comps
+        "comps": out_comps,
+        # Gap skills not shown (0 when every gap is displayed).
+        "n_more": max(len(gaps_pool) - sum(1 for c in out_comps if c["type"] == "gap"), 0)
     }
 
 

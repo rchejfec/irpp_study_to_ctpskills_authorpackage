@@ -13,8 +13,9 @@ HANDOFF.md freeze lifts, in order:
    so `dist/archive/` still renders; tester index: B2 in, A2 out, K path →
    `appendices/`; DECISIONS § B2 written (dual-mode deviation + hardening
    follow-ups recorded there).
-3. Supersede the 7 unsigned 2026-07-08 D rows in VALIDATION.md (describe the
-   archived D, replaced by D2).
+3. ~~Supersede the 7 unsigned 2026-07-08 D rows in VALIDATION.md~~ done
+   2026-07-15 (annotated superseded → archived D, D2 replaces; rows were
+   unsigned so annotation, not immutability, applies).
 4. Hardening sweep: temp code in F2/B2 + anything missed (TODO/FIXME/dead
    code, tooltip wiring, compact branches).
 5. Docs reconciliation: fold PRINT_SIZING + this file into DECISIONS (F2 &

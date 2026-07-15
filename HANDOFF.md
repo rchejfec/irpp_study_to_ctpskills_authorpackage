@@ -33,22 +33,19 @@ Freeze-closure programme steps 1–5 (2026-07-15):
    (`PRINT_SIZING.md`, `HANDOFF_POLISH.md`) are adopted-and-archived in
    `figure_data/archive/`.
 
-## Next task (programme steps 6–8)
+## Freeze-closure programme: CLOSED 2026-07-15 (steps 6–8 done)
 
-6. ~~Full-regen sanity~~ done 2026-07-15: byte-identical, 14/14 JSONs
-   (pipeline 27.5s); checksums `validation/regen_manifest_2026-07-15.txt`;
-   VALIDATION row appended (unsigned).
-7. ~~PNG re-export~~ done 2026-07-15: 9/9 exported at 550px; old set backed
-   up (untracked) at `figure_data/dist/exports_backup_2026-07-15/` and in
-   git history; retired A2/B/D/E PNGs removed from `exports/`. **B2's
-   re-export is byte-identical to RC's approved reference.** Awaiting RC's
-   side-by-side visual approval of the other 8 (6 re-renders at the new
-   width + D2/E2 new baselines) — until then the new set is provisional.
-8. **Signing sweep (RC — the only remaining freeze-closure step)**: review
-   evidence and sign the three open 2026-07-15 rows — I zero-gap recount,
-   byte-identical regen, PNG export (sign the export row only after the
-   step-7 side-by-side). Delete `exports_backup_2026-07-15/` after
-   approval.
+6. ~~Full-regen sanity~~ byte-identical, 14/14 JSONs (pipeline 27.5s);
+   checksums `validation/regen_manifest_2026-07-15.txt`.
+7. ~~PNG re-export~~ 9/9 at 550px; B2 re-export byte-identical to RC's
+   approved reference; retired A2/B/D/E PNGs removed. RC validated the new
+   set side-by-side (via figures) 2026-07-15; the backup folder is deleted
+   (old baselines remain in git history). `dist/exports/` is again the
+   approved default-state reference set.
+8. ~~Signing sweep~~ RC signed all open rows 2026-07-15 (incl. the
+   superseded D annotations). Post-signing rulings also landed: gen_B2's
+   EXPERIMENT filter final as-is; gen_E2's Estevan-only JSON variants
+   dropped (`816746e`).
 
 ## Open items for RC ruling
 
@@ -65,9 +62,10 @@ tooltip still describes the 5-column era); compact on-device verification
 
 ## Trust state
 
-19 evidence rows: 11 signed, 7 superseded-unsigned (archived D), 1 open
-claim awaiting RC (I zero-gap recount). Regen + export rows to be appended
-by steps 6–7.
+21 evidence rows, all signed (11 from 2026-07-08; 7 superseded D
+annotations + the I zero-gap, regen, and export rows signed RC 2026-07-15).
+Known nit: row 33's Signed cell says "RC" without a date — RC to add
+2026-07-15.
 
 ## Unreconciled work (2026-07-13, carried forward)
 
@@ -84,8 +82,8 @@ before building on them.
 - **B2 dual mode**: `navigator.webdriver` (or `?print`) switches B2's
   layout; Puppeteer always sees the print variant. Web default ≠ export
   PNG by design (DECISIONS § Figure B2).
-- `dist/exports/*.png` are the approved default-state references — after
-  step 7, the *new* set becomes the baseline only after RC's side-by-side
-  approval.
+- `dist/exports/*.png` are the approved default-state references (the
+  550px set, RC-validated 2026-07-15) — keep defaults pixel-stable unless
+  RC approves a change.
 - Figures fetch JSON — serve `figure_data/dist/` over HTTP
   (`python3 -m http.server 8090` from `dist/`).

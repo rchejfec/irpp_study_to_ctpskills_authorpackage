@@ -113,7 +113,7 @@
 
     /* ── BOTTOM TIER: SOLUTION FLOW ── */
     .bottom-tier {
-      padding: 10px 16px;
+      padding: 6px 16px;
     }
 
     .flow {
@@ -126,7 +126,7 @@
       flex: 1 1 0;
       min-width: 0;
       position: relative;
-      padding: 4px 6px 65px 12px;
+      padding: 4px 6px 57px 12px;
       background: var(--clr-bg-muted);
       border: 1px solid var(--clr-border);
       border-radius: 3px;
@@ -157,7 +157,8 @@
     }
 
     .step-detail {
-      font-size: 8.5px;
+      /* was 8.5px — bumped to ~7pt content floor (last holdout in C2) */
+      font-size: 9px;
       color: var(--clr-body-secondary);
       line-height: 1.4;
     }
@@ -170,7 +171,7 @@
     .svg-overlay {
       --svg-scale: 0.812;
       position: absolute;
-      bottom: .6%;
+      bottom: -0.5%;
       left: 49.2%;
       transform: translateX(-50%) scale(var(--svg-scale));
       transform-origin: center bottom;

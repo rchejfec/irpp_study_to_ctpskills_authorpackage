@@ -1,4 +1,27 @@
-# Figure Polish Handoff — 2026-07-14 (updated same day: E2 refactor, then D2 refactor)
+# Figure Polish Handoff — 2026-07-14 (updated 2026-07-15: all 9 figures done; closure programme running)
+
+## ⚑ Freeze-closure programme (2026-07-15, in progress)
+
+All 9 figures polished (B rebuilt as B2, RC solo). Remaining before the
+HANDOFF.md freeze lifts, in order:
+1. ~~C2 step-detail 9px fix + SVG spacing~~ done (RC spacing fix, scale kept).
+2. Adoption & archival sweep: B2 adoption (archive B, DECISIONS § B2 incl.
+   dual web/print-mode deviation, commit RC's B2 work), full tester index
+   audit, archive `_E_mockup` + orphaned gens/JSONs.
+3. Supersede the 7 unsigned 2026-07-08 D rows in VALIDATION.md (describe the
+   archived D, replaced by D2).
+4. Hardening sweep: temp code in F2/B2 + anything missed (TODO/FIXME/dead
+   code, tooltip wiring, compact branches).
+5. Docs reconciliation: fold PRINT_SIZING + this file into DECISIONS (F2 &
+   B2 entries missing), adopt-and-archive the exercise docs, unfreeze
+   HANDOFF.md with a fresh handoff.
+6. Full-regen sanity **with backup** of dist/data for quick diff validation.
+7. PNG re-export **with backup** of old exports for side-by-side HUMAN
+   validation of all 9 new baselines.
+8. Signing sweep (I zero-gap row + regen + export rows).
+
+Deferred, separate workstreams (not freeze-blockers): colours pass, tooltip
+revision (all figures), compact on-device verification, E2 tooltips.
 
 ## Status: 7/9 figures done (E rebuilt as E2, D rebuilt as D2), 2 remaining
 

@@ -113,10 +113,16 @@ Four global changes:
 - [x] Git snapshot (`pre-print-sizing` tag)
 - [x] Global `theme.css` change (font, widths, heights, token floors)
 - [x] Global `compact.js` change (breakpoint 640 → 440)
-- [ ] Per-figure polish pass (8/9 verified ✅, 1 remaining: B vetoed-for-now)
+- [x] Per-figure polish pass (9/9 verified ✅)
   - [x] A3 (Interactive Map)
-  - [x] C2 (Summary) — All three top-tier texts condensed (~30% fewer words); titles rewritten ("Structural change and workforce disruption", "Disruption compounds in susceptible communities"); column 3 rewritten for use-case framing (governments/municipalities/training providers as entity-pill styled spans); mini-table removed; bottom-tier steps condensed; SVG overlay scaled to 0.812 and repositioned; flow-step padding tightened
-  - [ ] B (Suitable Heatmap)
+  - [x] C2 (Summary) — All three top-tier texts condensed (~30% fewer words); titles rewritten ("Structural change and workforce disruption", "Disruption compounds in susceptible communities"); column 3 rewritten for use-case framing (governments/municipalities/training providers as entity-pill styled spans); mini-table removed; bottom-tier steps condensed; SVG overlay scaled to 0.812 and repositioned; flow-step padding tightened.
+        **Late fix (2026-07-15):** `.step-detail` 8.5→9px — the set's last
+        content-floor holdout. The bump cost ~18px of text depth in the
+        deepest step; recovered by RC via spacing, keeping scale at 0.812
+        (bottom-tier padding 10→6px, flow-step bottom pad 65→57px, overlay
+        bottom .6%→-0.5%). A measured scale-only fix (0.640) restored the
+        designed −10px text/overlay clearance but read too small — rejected.
+  - [x] B (Suitable Heatmap) — rebuilt as **B2** (2026-07-15): 2-digit NOC aggregation (9 columns). Cells expanded (39x22px), labels shortened. Dual web/print modes. B archived.
   - [x] F2 (Filtering) — SVG viewbox and min-heights unified to fix alignment; legend consolidated and simplified; descriptive text aggressively condensed to ~30 words per panel; symbols scaled and baseline-aligned; non-passing candidates standardized to uniform grey fade; em-dashes replaced with standard punctuation.
   - [x] E (Viable Table) — rebuilt as **E2** (2026-07-14): new column grammar
         (source | top-10 window by NOC1 | curated pathways w/ bracket
@@ -221,3 +227,26 @@ Completed 2026-07-15. Rebuilt to strictly fit the 550px print column width.
 ### Legend Symbols & Fading Logic
 - **Symbol Alignment**: Standardized circles and squares to `1em`. Scaled the diamond to `1.5em` with a `line-height: 0` and `vertical-align: -0.05em` CSS hack to perfectly center it inline without pushing down the line rhythm.
 - **Node Fading**: Replaced the previous ad-hoc fading logic with a strict, uniform grey fade (`#ccc`) for all non-passing candidate nodes across panels 2, 3, and 4.
+
+---
+
+## Per-figure polish — B2 (Suitable Heatmap) ✅
+
+Cloned from B_suitable_heatmap.html as B2_suitable_heatmap.html (2026-07-15).
+
+### Data & Architecture
+- **Aggregation**: Grouped destination occupations into broad 2-digit NOC domains, successfully reducing the matrix from 11 dense columns to 9 manageable columns.
+- **Dual-Mode Rendering**: Implemented a zero-touch Puppeteer detection (`navigator.webdriver`) to serve two distinct layouts from a single file:
+  - **Web Embed**: Shows community pills, truncates row labels to a single line (<30 chars).
+  - **Print Export**: Suppresses community pills, disables truncation to allow natural 2-line wraps.
+
+### Layout & Table Alignment
+- **Cell Proportions**: With only 9 columns, redistributed the horizontal space to massively increase `.hm-cell` size from `28x18px` to `39x22px` for maximum legibility.
+- **Vertical Alignment Fixes**: Eliminated severe row jitter by swapping `.hm-cell` from `inline-block` to `display: block; margin: 0 auto;` (bypassing text-baseline logic) and enforcing strict `vertical-align: middle` across both the `th.row-header` and `td` grid.
+- **Row Headers**: Constrained `.row-header` to exactly `175px` to balance the grid and eliminate dead whitespace.
+
+### Typography & Editorial Pass
+- **Web**: Labels are programmatically shortened (split at first comma, capped at 30 chars).
+- **Print**: Globally replaces `" and "` with `" & "` to maximize density.
+- **Overrides**: Hardcoded two specific print-mode editorial shorthands (`74203` and `94141`) to surgically prevent them from wrapping into 3 lines and breaking the grid rhythm.
+

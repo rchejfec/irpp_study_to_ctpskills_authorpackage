@@ -7,25 +7,26 @@
   <title>Figure F2 — Filtering</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../tokens.css">
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
   <script src="../compact.js"></script>
   <style>
     :root {
-      --p1-active: #555;
-      --p1-faded: #999;
-      --p2-local-cd: #1a3d6b;
-      --p2-local-pr: #5b8db8;
-      --p2-neither: #a8c8e8;
-      --p3-pass: #d4760a;
-      --p3-fail-cops: #DEAC28;
-      --p3-fail-earn: #CE2129;
-      --p3-fail-ai: #3a3a3a;
-      --p4-teer5: #1a7a3a;
-      --p4-teer4: #4aaa5e;
-      --p4-faded: #999;
-      --centre-node: var(--irpp-red);
+      --p1-active: var(--color-concept-candidate-p1);
+      --p1-faded: var(--color-concept-candidate-fade);
+      --p2-local-cd: var(--color-concept-candidate-p2-local);
+      --p2-local-pr: var(--color-concept-candidate-p2-pt);
+      --p2-neither: var(--color-concept-candidate-fade);
+      --p3-pass: var(--color-concept-candidate-p3);
+      --p3-fail-cops: var(--color-concept-candidate-fade);
+      --p3-fail-earn: var(--color-concept-candidate-fade);
+      --p3-fail-ai: var(--color-concept-candidate-fade);
+      --p4-teer5: var(--color-concept-candidate-p4-viable);
+      --p4-teer4: var(--color-concept-candidate-p4-viable-teer);
+      --p4-faded: var(--color-concept-candidate-fade);
+      --centre-node: var(--color-concept-susceptible);
     }
 
     .figure-container {
@@ -34,7 +35,6 @@
          (iframe hosts resize via the figure-sized postMessage). */
       min-height: var(--fig-height);
       height: auto;
-      background: var(--clr-bg);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -43,15 +43,15 @@
 
     .context-strip {
       padding: 8px 14px;
-      background: var(--clr-bg-muted);
-      border-bottom: 1px solid var(--clr-border);
+      background: var(--color-surface-subtle);
+      border-bottom: 1px solid var(--color-border-default);
       font-size: 10px;
-      color: var(--clr-body);
+      color: var(--color-text-primary);
       line-height: 1.45;
     }
 
     .context-strip strong {
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
     }
 
     .panels-row {
@@ -72,7 +72,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
       margin-bottom: 2px;
       text-align: center;
       min-height: 3em;
@@ -100,7 +100,7 @@
 
     .desc-val {
       font-size: 9.3px;
-      color: var(--clr-body);
+      color: var(--color-text-primary);
       padding: 0 4px;
       margin-bottom: 0px;
     }
@@ -108,28 +108,15 @@
     .footer-strip {
       margin: auto 14px 10px;
       padding: 6px 10px;
-      background: var(--clr-bg-muted);
-      border: 1px solid var(--clr-border);
+      background: var(--color-surface-subtle);
+      border: 1px solid var(--color-border-default);
       border-radius: 3px;
       font-size: 9.3px;
-      color: var(--clr-body);
+      color: var(--color-text-primary);
       line-height: 1.6;
     }
 
-    .iframe-controls {
-      width: 550px;
-    }
 
-    .iframe-controls .control-group {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .iframe-controls .control-group select {
-      flex: 1;
-      min-width: 0;
-      text-overflow: ellipsis;
-    }
 
     /* ── COMPACT (<440px iframe width; see compact.js) — lossy per 2026-07-08 decisions:
        panels in a 2×2 grid; the four legend paragraphs collapse into
@@ -217,15 +204,15 @@
       <div class="descs-row">
         <div class="panel-desc">
           <div class="desc-val">We filter for comparable training and select the most similar candidates. The <span
-              style="color:#CE2129;white-space:nowrap;">■ <span style="font-weight:600;">square</span></span> is the susceptible occupation;
-            <span style="color:#555;white-space:nowrap;">● <span style="font-weight:600;">dots</span></span> are candidates (closer to centre
+              style="color:var(--color-concept-susceptible);white-space:nowrap;">■ <span style="font-weight:600;">square</span></span> is the susceptible occupation;
+            <span style="color:var(--color-concept-candidate-p1);white-space:nowrap;">● <span style="font-weight:600;">dots</span></span> are candidates (closer to centre
             = more similar). Faded
             dots are filtered out.</div>
         </div>
         <div class="panel-desc">
           <div class="desc-val">We screen candidates for existing local relevance. <span
-              style="color:#1a3d6b;white-space:nowrap;">● <span style="font-weight:600;">Dark blue</span></span>
-            candidates are present in the Census Division. <span style="color:#5b8db8;white-space:nowrap;">● <span
+              style="color:var(--color-concept-candidate-p2-local);white-space:nowrap;">● <span style="font-weight:600;">Dark blue</span></span>
+            candidates are present in the Census Division. <span style="color:var(--color-concept-candidate-p2-pt);white-space:nowrap;">● <span
                 style="font-weight:600;">Lighter blue</span></span> candidates are present in the province but not
             locally;
             these remain in the pool until community review.</div>
@@ -233,14 +220,14 @@
         <div class="panel-desc">
           <div class="desc-val">Candidates are screened for employment outlook (COPS, projected surpluses or shortages),
             AI exposure risk (Dais), and earnings viability (≥65% of source wage). <span
-              style="color:#d4760a;white-space:nowrap;">● <span style="font-weight:600;">Orange</span></span> candidates
+              style="color:var(--color-concept-candidate-p3);white-space:nowrap;">● <span style="font-weight:600;">Orange</span></span> candidates
             clear all three screens.</div>
         </div>
         <div class="panel-desc">
           <div class="desc-val">Remaining candidates undergo community vetting against local conditions and plans. We
             simulate this review by extrapolating from IRPP profiles and local data, excluding some and <span
-              style="color:#1a7a3a;white-space:nowrap;"><span style="font-weight:600;">highlighting</span> (<span style="font-size:1.5em;line-height:0;display:inline-block;vertical-align:-0.05em;">◆</span>)</span> additions. <span
-              style="color:#4aaa5e;white-space:nowrap;">● <span style="font-weight:600;">Light-green</span></span>
+              style="color:var(--color-concept-candidate-p4-viable);white-space:nowrap;"><span style="font-weight:600;">highlighting</span> (<span style="font-size:1.5em;line-height:0;display:inline-block;vertical-align:-0.05em;">◆</span>)</span> additions. <span
+              style="color:var(--color-concept-candidate-p4-viable-teer);white-space:nowrap;">● <span style="font-weight:600;">Light-green</span></span>
             candidates may require extended training.</div>
         </div>
       </div>
@@ -409,14 +396,12 @@
         return { ...c, dotX: Math.cos(angle) * r, dotY: Math.sin(angle) * r };
       });
 
-      const s = getComputedStyle(document.documentElement);
-      const cv = v => s.getPropertyValue(v).trim();
       const P = {
-        p1Active: cv('--p1-active'), p1Faded: cv('--p1-faded'),
-        p2LocalCd: cv('--p2-local-cd'), p2LocalPr: cv('--p2-local-pr'), p2Neither: cv('--p2-neither'),
-        p3Pass: cv('--p3-pass'), p3FailCops: cv('--p3-fail-cops'), p3FailEarn: cv('--p3-fail-earn'), p3FailAi: cv('--p3-fail-ai'),
-        p4Teer5: cv('--p4-teer5'), p4Teer4: cv('--p4-teer4'), p4Faded: cv('--p4-faded'),
-        centre: cv('--centre-node'),
+        p1Active: 'var(--p1-active)', p1Faded: 'var(--p1-faded)',
+        p2LocalCd: 'var(--p2-local-cd)', p2LocalPr: 'var(--p2-local-pr)', p2Neither: 'var(--p2-neither)',
+        p3Pass: 'var(--p3-pass)', p3FailCops: 'var(--p3-fail-cops)', p3FailEarn: 'var(--p3-fail-earn)', p3FailAi: 'var(--p3-fail-ai)',
+        p4Teer5: 'var(--p4-teer5)', p4Teer4: 'var(--p4-teer4)', p4Faded: 'var(--p4-faded)',
+        centre: 'var(--centre-node)',
       };
 
       const ALPHA_ACTIVE = 1.0;
@@ -469,7 +454,7 @@
         svg.append('rect')
           .attr('x', 0.5).attr('y', 0.5)
           .attr('width', lensSize - 1).attr('height', lensSize - 1)
-          .attr('fill', '#fafafa').attr('stroke', '#ccc').attr('stroke-width', 0.8)
+          .attr('fill', 'var(--color-surface-subtle)').attr('stroke', 'var(--color-border-default)').attr('stroke-width', 0.8)
           .attr('rx', 1);
 
         const g = svg.append('g').attr('transform', `translate(${cx},${cy})`);
@@ -495,13 +480,13 @@
               .attr('points', `${d.dotX},${d.dotY - sz} ${d.dotX + sz},${d.dotY} ${d.dotX},${d.dotY + sz} ${d.dotX - sz},${d.dotY}`)
               .attr('fill', ps.color)
               .attr('opacity', alpha)
-              .attr('stroke', '#fff').attr('stroke-width', 0.4);
+              .style('stroke', 'var(--color-border-inverse)').attr('stroke-width', 0.4);
           } else {
             node = g.append('circle')
               .attr('cx', d.dotX).attr('cy', d.dotY)
               .attr('r', 2.8).attr('fill', ps.color)
               .attr('opacity', alpha)
-              .attr('stroke', '#fff').attr('stroke-width', 0.3);
+              .style('stroke', 'var(--color-border-inverse)').attr('stroke-width', 0.3);
           }
 
           // Tooltip on all visible non-ghost dots (even faded ones)
@@ -544,7 +529,7 @@
         // Centre node (square = susceptible occupation)
         g.append('rect')
           .attr('x', -4.5).attr('y', -4.5).attr('width', 9).attr('height', 9)
-          .attr('fill', P.centre).attr('stroke', '#fff').attr('stroke-width', 1)
+          .attr('fill', P.centre).style('stroke', 'var(--color-border-inverse)').attr('stroke-width', 1)
           .attr('rx', 1);
       });
 
@@ -588,7 +573,7 @@
 
       // Clear panels if no data for this pair
       ['p1', 'p2', 'p3', 'p4'].forEach(pid => {
-        document.getElementById(pid).innerHTML = '<div style="color:#999;font-size:12px;padding:10px;">No data</div>';
+        document.getElementById(pid).innerHTML = '<div style="color:var(--color-text-tertiary);font-size:12px;padding:10px;">No data</div>';
       });
       reportSize();
     }

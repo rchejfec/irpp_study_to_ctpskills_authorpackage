@@ -1,16 +1,22 @@
-# Handoff — 2026-07-15 (End of Colour Inventory Session)
+# Handoff — 2026-07-15 (Theme v2 Sweep in Progress)
 
-## Task just completed: Semantic Colour Inventory
+## Tasks completed in this session
 
-1. **Complete File-by-File Inventory:** Audited all 9 figures (A3–J) to identify every hardcoded hex, generic CSS variable, and D3 colour constant.
-2. **`semantic_requirements.md` Created:** Consolidated all visual properties into a rigid, 59-token semantic taxonomy (e.g., `--color-concept-susceptible`, `--color-surface-brand`, `--color-chart-rank1`).
-3. **Execution Paused (Option 4 Selected):** Instead of immediately rewriting `theme.css` with these tokens, we elected to pause the backwards reconciliation.
+1. **Figure A3 Migration Completed**: Migrated to semantic design tokens.
+2. **Figure B2 Sweep Completed**: Migrated to semantic design tokens. Separated out-of-scale zero cells using `--color-scale-heatmap-zero` (#dcdcdc) and built a dynamic OKLCH color-mix sequential scale for counts 1–10. Integrated WCAG-compliant dynamic text contrast (dark text $\le 3$, white text $\ge 4$).
+3. **Figure C2 Sweep Completed**: Migrated to semantic design tokens. Replaced the consolidated column gradient with a flat `--color-surface-accent1-subtle` background. Mapped opportunity green text to `--color-text-accent1`.
+4. **Figure D2 Sweep Completed**: Migrated to semantic design tokens. Unified warm backgrounds (`#fafaf8`, `#faf9f7`, `#faf6f0`) and borders into `--color-surface-subtle` and `--color-border-subtle`. Mapped progress bars to `--color-chart-similarity` and status lights to `--color-status-success/warning/fail`.
+5. **Figure E2 Sweep Completed**: Migrated to semantic design tokens. Added `--color-surface-brand` for header backgrounds. Standardized custom bracket borders to `--color-border-annotation-accent` and caveats text to `--color-text-annotation-accent`.
+6. **Figure F2 Sweep Completed**: Migrated to semantic design tokens. Mapped the center node to `--color-concept-susceptible` and the candidate filtering states in the D3 SVGs to the new decided pass 3 tokens. Updated description spans to use inline `var(...)` properties for complete Canary repaint coverage.
+7. **Figure G2 Sweep Completed**: Migrated to semantic design tokens. Mapped header backgrounds to `--color-surface-brand` and vertical dividers using `color-mix` with `--color-border-inverse` at 20% opacity. Standardized category columns to `--color-surface-subtle`.
+8. **Figure I Sweep Completed**: Migrated to semantic design tokens. Mapped the SHARED/GAP pills to `--color-surface-pill-shared` and `--color-surface-pill-gap`. Standardized the baseline/reference line to `--color-chart-reference-line`. Bound the JS D3 chart objects directly to raw `var(...)` strings to ensure full Canary repaint capability.
+9. **Figure J Sweep Completed**: Migrated to semantic design tokens. Mapped the sequential teal gaps scale to `--color-chart-rank1`, `--color-chart-rank2`, and `--color-chart-rank3`. Standardized empty progress tracks to `--color-surface-progress-track`.
+10. **Config Panels & Dropdowns Sweep Completed**: Added 6 semantic tokens for dropdown panels, backgrounds, borders, labels, and selector focus states. Added flex layout overrides to globally constrain side-by-side dropdown selectors (resolving the **Figure D2** dropdown width overflow issue). Added a Canary theme override rule to repaint the hardcoded SVG dropdown arrow.
+11. **Design System Clean-Up & Consolidation Completed**: Isolated and archived legacy figures by copying `theme.css` into the archive folder. Repointed global `body`, `.figure-container`, `.section-label`, axis labels, gridlines, and Tippy tooltips in `theme.css` to their semantic tokens. Deleted all legacy variables (all `--irpp-*` and `--clr-*` colors) from the theme, and removed redundant overrides from the nine HTML figures. Deleted the Canary check block from `tokens.css`.
 
-## Next task for new session (Option 4)
+## Next task for new session
 
-- **Define the New Design System:** Look at the starting template/target aesthetics, decide on variations, extensions, and the new colour space.
-- **Mapping:** Map the new aesthetic colour palette onto the 59 functional slots defined in `semantic_requirements.md`.
-- **Execution (Backwards Pass):** Once the palette is mapped, execute the `theme.css` rewrite and the HTML file updates to swap the old variables for the new semantic ones.
+- **Migration and Clean-up Complete**: The entire presentation layer is now 100% migrated to semantic design tokens. All active HTML figures rely entirely on tokens.css for style declarations, and theme.css is clean of legacy color variables. Ready for final review.
 
 ## Previous Context (Pre-Colour Pass)
 

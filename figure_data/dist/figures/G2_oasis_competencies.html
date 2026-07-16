@@ -9,6 +9,7 @@
        example competencies + condensed scale ranges (0–N). Sourced from
        OaSIS 2023 v1.0 data. Original version preserved as G_oasis_competencies.html. -->
   <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../tokens.css">
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
@@ -27,7 +28,7 @@
     .table-wrap {
       flex: 1;
       overflow: hidden;
-      border: 1px solid var(--clr-border);
+      border: 1px solid var(--color-border-default);
       border-radius: 4px;
     }
 
@@ -39,14 +40,14 @@
     }
 
     .oasis-table th {
-      background: var(--irpp-navy);
-      color: #ffffff;
+      background: var(--color-surface-brand);
+      color: var(--color-text-inverse);
       padding: 8px 12px;
       font-weight: 600;
       font-size: 10.5px;
       letter-spacing: 0.3px;
-      border-bottom: 2px solid var(--clr-border);
-      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      border-bottom: 2px solid var(--color-border-strong);
+      border-right: 1px solid color-mix(in srgb, var(--color-border-inverse) 20%, transparent);
     }
 
     .oasis-table th:last-child {
@@ -55,9 +56,9 @@
 
     .oasis-table td {
       padding: 8px 12px;
-      border-bottom: 1px solid var(--clr-border);
-      border-right: 1px solid var(--clr-border);
-      color: var(--clr-body);
+      border-bottom: 1px solid var(--color-border-default);
+      border-right: 1px solid var(--color-border-default);
+      color: var(--color-text-primary);
       vertical-align: middle;
     }
 
@@ -71,7 +72,7 @@
 
     .col-category {
       font-weight: 600;
-      background: var(--clr-bg-muted);
+      background: var(--color-surface-subtle);
       width: 18%;
     }
 
@@ -87,12 +88,12 @@
     }
 
     .example-names {
-      color: var(--clr-body);
+      color: var(--color-text-primary);
     }
 
     .scale-note {
       display: block;
-      color: var(--clr-body-secondary);
+      color: var(--color-text-secondary);
       font-style: italic;
       margin-top: 1px;
     }

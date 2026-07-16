@@ -1,0 +1,29 @@
+registry rows: 67 {'decided': 54, 'merged': 9, 'dropped': 1, 'proposed': 3}
+tokens.css: 53 in :root, 53 in canary
+note — live rows with no usage (bench): ['--color-chart-gridline', '--color-concept-community', '--color-concept-suitable', '--color-concept-viable-C2']
+warning — 14 duplicated canary values (wrong-token detection blind within each set):
+   #0033ff: ['--color-border-subtle', '--color-text-accent1']
+   #00f5ff: ['--color-scale-heatmap-base', '--color-surface-pill-gap']
+   #00ff00: ['--color-text-inverse', '--color-concept-susceptible']
+   #00ffcc: ['--color-text-secondary', '--color-text-control-label']
+   #00ffff: ['--color-border-inverse', '--color-status-warning']
+   #6600ff: ['--color-map-landmass', '--color-scale-heatmap-zero']
+   #9400d3: ['--color-scale-heatmap-max', '--color-surface-pill-shared']
+   #ccff00: ['--color-text-primary', '--color-text-control']
+   #e6007e: ['--color-status-success', '--color-chart-reference-line']
+   #ff0000: ['--color-border-default', '--color-border-control']
+   #ff0055: ['--color-concept-viable-teal', '--color-text-annotation-accent', '--color-chart-rank1', '--color-border-control-focus']
+   #ff00ff: ['--color-surface-default', '--color-surface-control']
+   #ff5100: ['--color-text-brand', '--color-border-control-hover']
+   #ffaa00: ['--color-surface-subtle', '--color-chart-rank3']
+  A3_map.html: clean (0 legacy vars, 0 hex literals)
+  B2_suitable_heatmap.html: clean (0 legacy vars, 0 hex literals)
+  C2_summary.html: clean (0 legacy vars, 0 hex literals)
+  D2_walkthrough.html: clean (0 legacy vars, 0 hex literals)
+  E2_viable_table.html: clean (0 legacy vars, 0 hex literals)
+  F2_filtering.html: clean (0 legacy vars, 0 hex literals)
+  G2_oasis_competencies.html: clean (0 legacy vars, 0 hex literals)
+  I_skills_gap_bars.html: clean (0 legacy vars, 0 hex literals)
+  J_skills_gap_table.html: clean (0 legacy vars, 0 hex literals)
+
+PASS: all 9 live figures fully token-resolved; 53 tokens, lockstep intact.

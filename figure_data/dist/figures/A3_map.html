@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Interactive Census Divisions Map</title>
   <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../tokens.css">
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
@@ -21,16 +22,16 @@
     /* ── Context strip ── */
     .context-strip {
       padding: var(--sp-8) var(--sp-14);
-      background: var(--clr-bg-muted);
-      border-bottom: 1px solid var(--clr-border);
+      background: var(--color-surface-subtle);
+      border-bottom: 1px solid var(--color-border-default);
       font-size: var(--fs-body);
-      color: var(--clr-body);
+      color: var(--color-text-primary);
       line-height: var(--lh-normal);
     }
 
     .context-strip strong {
       font-weight: var(--fw-semibold);
-      color: var(--clr-heading);
+      color: var(--color-text-brand);
     }
 
     /* ── Main split: map + list ── */
@@ -42,8 +43,8 @@
 
     .map-area {
       flex: 1;
-      background: var(--clr-bg);
-      border-right: 1px solid var(--clr-border);
+      background: var(--color-surface-default);
+      border-right: 1px solid var(--color-border-default);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -56,36 +57,37 @@
       width: 100%;
       height: 100%;
       display: block;
-      background-color: #ffffff;
+      background-color: var(--color-surface-default);
     }
 
     .cd-path {
-      fill: #dcdcdc;
+      fill: var(--color-map-landmass);
       stroke: none;
       transition: fill var(--transition-fast), opacity var(--transition-fast);
     }
 
     .cd-path.highlighted-cd {
-      fill: var(--irpp-navy);
+      fill: var(--color-concept-community-marker);
       cursor: pointer;
     }
 
     .cd-path.highlighted-cd.hovered {
-      fill: var(--irpp-teal);
+      fill: var(--color-concept-community-marker-hover);
     }
 
     .cd-path.nwt-background-cd {
-      fill: var(--irpp-navy);
+      /* faded variant = community-marker @ 25% (registry transparency rule) */
+      fill: var(--color-concept-community-marker);
       opacity: 0.25;
     }
 
     .cd-path.nwt-background-cd.hovered {
-      fill: var(--irpp-teal);
+      fill: var(--color-concept-community-marker-hover);
       opacity: 0.35;
     }
 
     .province-boundary {
-      stroke: #ffffff;
+      stroke: var(--color-map-boundary);
       stroke-width: 1px;
       fill: none;
       pointer-events: none;
@@ -96,18 +98,18 @@
     }
 
     .map-badge circle {
-      fill: var(--irpp-navy);
-      stroke: #ffffff;
+      fill: var(--color-concept-community-marker);
+      stroke: var(--color-border-inverse);
       stroke-width: 1.5px;
       transition: fill var(--transition-fast);
     }
 
     .map-badge.hovered circle {
-      fill: var(--irpp-teal);
+      fill: var(--color-concept-community-marker-hover);
     }
 
     .map-badge text {
-      fill: #ffffff;
+      fill: var(--color-text-inverse);
       font-size: 8px;
       font-weight: bold;
       text-anchor: middle;
@@ -130,7 +132,7 @@
     }
 
     .community {
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--color-border-subtle);
       display: flex;
       flex: 1;
       gap: 5px;
@@ -145,19 +147,21 @@
     }
 
     .community.highlighted {
-      background-color: var(--clr-bg-muted);
+      background-color: var(--color-surface-subtle);
     }
 
     .community.highlighted .comm-num {
-      background-color: var(--irpp-teal);
+      /* RC ruling 2026-07-15: sidebar badge = the map badge's twin — one
+         semantic object (community marker), one token pair. */
+      background-color: var(--color-concept-community-marker-hover);
     }
 
     /* ── Numbered badge ── */
     .comm-num {
       font-size: var(--fs-label-xs);
       font-weight: var(--fw-bold);
-      color: #fff;
-      background: var(--clr-heading);
+      color: var(--color-text-inverse);
+      background: var(--color-concept-community-marker);
       border-radius: 50%;
       width: 13px;
       height: 13px;
@@ -180,11 +184,11 @@
 
     .comm-name {
       font-weight: var(--fw-bold);
-      color: var(--clr-body);
+      color: var(--color-text-primary);
     }
 
     .comm-sector {
-      color: var(--clr-heading);
+      color: var(--color-text-brand);
       font-style: italic;
     }
 
@@ -192,14 +196,14 @@
     .comm-row {
       font-size: 7px;
       /* was 6.5px — bumped to meet 7pt content floor */
-      color: var(--clr-body-secondary);
+      color: var(--color-text-secondary);
       line-height: 1.3;
       margin-top: 1px;
     }
 
     .comm-key {
       font-weight: var(--fw-bold);
-      color: var(--clr-heading);
+      color: var(--color-text-brand);
       text-transform: uppercase;
       font-size: 6px;
       /* was 5.5px — bumped to meet 6pt decorative floor (all-caps bold) */
@@ -230,7 +234,7 @@
       flex: none;
       height: 200px;
       border-right: none;
-      border-bottom: 1px solid var(--clr-border);
+      border-bottom: 1px solid var(--color-border-default);
       padding: 4px 0;
     }
 
@@ -286,7 +290,7 @@
       <div class="map-row">
         <div class="map-area">
           <div id="loading"
-            style="font-size: 10px; color: var(--clr-body-secondary); font-weight: bold; font-family: var(--font-primary);">
+            style="font-size: 10px; color: var(--color-text-secondary); font-weight: bold; font-family: var(--font-primary);">
             Loading map data...</div>
           <svg id="map-svg" style="display: none;"></svg>
         </div>

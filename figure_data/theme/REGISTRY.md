@@ -1,5 +1,9 @@
 # Token Registry — Theme v2 (colour first)
 
+> **Colour stage:** read `COLOUR_BRIEF.md` first — the design questions and
+> reasoning that must be settled before any values land. The migration is
+> complete; canary is retired; all values are stale placeholders.
+
 Canonical source of truth for the semantic token programme started 2026-07-15.
 `registry.json` (beside this file) holds the token rows; this file holds the
 grammar and the rules. Everything in `figure_data/archive/colour_exp_gemini_2026-07-15/`
@@ -17,14 +21,24 @@ two-layer token system:
 - **Semantic layer**: `--color-{type}-{role}[-{modifier}]` tokens, defined in
   `dist/tokens.css`, consumed by figures.
 
+**Stance (set the guide, don't backfill it):** the figures were designed
+without a guide; the registry is that guide written after the fact, and
+where the figures' colour usage disagrees with it, **the guide wins**.
+Token consolidation is a design act, not a code cleanup — merges may
+visibly change figures, and that is intended. Tokens are split by
+*semantic role*, not by value: two tokens may share a colour
+(surface-brand / surface-inverse) while two drifted values collapse into
+one token (the ex text-muted/tertiary tiers).
+
 **Process (implementation-first):** the registry was seeded from the
-consolidation passes done 2026-07-15. We now go figure by figure, swapping
-literals/legacy vars for semantic tokens with **values pinned to the current
-legacy hexes** — a pure refactor, zero visual change, verified by pixel-diff
-(and by canary mode, see tokens.css). Colours that don't map to an existing
-token are resolved with RC after each figure (new row, or merge). Actual
-colour *values* are a later stage; nothing here changes what figures look
-like until then.
+consolidation passes done 2026-07-15, then simplified in pass 3. We go
+figure by figure, swapping literals/legacy vars for semantic tokens with
+values pinned from the current legacy hexes. The pinned values are
+**placeholders** — the colour stage replaces essentially all of them —
+so the per-figure pixel-diff is a **changelog** (record what
+consolidation changed), not a zero-change gate. Canary mode (see
+tokens.css) checks coverage. Colours that don't map to an existing token
+are resolved with RC after each figure (new row, or merge).
 
 ## Naming grammar
 
@@ -52,6 +66,15 @@ earns `--color-map-region-hover`).
 **Transparency rule:** every rgba()/opacity usage is normalized to
 `token @ alpha` before it may claim to be a new colour. Near-miss hexes are
 tested against base+alpha composites over white before earning a row.
+
+**Derivation timing (proposed, unratified):** derivation decisions are made
+at the **colour stage**, against real values — never against placeholders.
+During migration, existing state hexes stay as literals behind their
+tokens and the row is tagged "derivation candidate" in notes. The dividing
+line: a state that changes *meaning* mints an explicit token (A3's
+navy→teal hover); a same-meaning intensity shift derives by rule (so it
+repaints itself when its base changes); anything compositing over varying
+backgrounds uses `token @ alpha`, never a pre-lightened hex.
 
 ## Chapters
 
@@ -122,12 +145,21 @@ notes         ours, not Gemini's
   precedent; record, fix at colour stage.
 - D3/JS-constructed colours (interpolators, inline constants) — the grep
   inventory only sees literals.
+- Figure I's RCA bar fills have no row yet (only the reference line does).
+  Ruling at I's sweep: align with the concept tokens if the bars *mean*
+  susceptible-source / viable-target, or mint `--color-chart-*` rows if
+  they read as chart furniture. Both fit the grammar.
 
 ## Verification protocol (per figure)
 
-1. Swap literals/legacy vars → semantic tokens, values pinned.
-2. Pixel-diff rendered output vs pre-swap (identical, or logged intentional
-   sub-perceptual merges).
+1. Swap literals/legacy vars → semantic tokens, values pinned. Colours the
+   figure inherits from theme.css (`.figure-container` ground, body text,
+   tippy theme) are **re-stated on tokens inside the figure**, commented
+   `remove at fold-in` — theme.css itself stays untouched, but canary must
+   cover the figure's full visible surface (found via A3's community panel).
+2. Pixel-diff rendered output vs pre-swap; log every delta. Consolidation
+   deltas are expected and intentional — the diff is the changelog of what
+   the guide changed, not a zero-change gate.
 3. Canary check: `document.documentElement.classList.add('canary')` — any
    normally-coloured element is unmapped.
 4. Unmapped colours → resolve with RC → registry updated.

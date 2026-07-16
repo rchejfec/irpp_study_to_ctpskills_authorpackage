@@ -5,9 +5,11 @@
    Loaded AFTER theme.css by each figure as it is migrated;
    theme.css stays untouched until the programme's fold-in step.
 
-   VALUES ARE PINNED to the pre-migration legacy hexes: including
-   this file and swapping a figure's literals to tokens must produce
-   pixel-identical output. Real colour values come at the colour
+   VALUES ARE PLACEHOLDERS pinned from the pre-migration legacy
+   hexes. Consolidation is a design act: swapping a figure's literals
+   to tokens may visibly change it where drifted values collapse into
+   one token — log deltas in the per-figure pixel-diff (a changelog,
+   not a zero-change gate). Real colour values come at the colour
    stage, edited here and nowhere else.
 
    Tokens are added per figure as migration reaches it — an absent
@@ -16,16 +18,76 @@
 
 :root {
   /* populated figure-by-figure; keep in registry.json order */
+
+  /* ── A3 sweep (2026-07-15) ── */
+  --color-surface-default: #ffffff;
+  --color-surface-subtle: #f8f9fb;
+  --color-border-default: #dcdcdc;
+  --color-border-subtle: #f0f0f0;
+  --color-border-inverse: #ffffff;
+  --color-text-primary: #1a1a2e;
+  --color-text-secondary: #6D6E71;
+  --color-text-inverse: #ffffff;
+  --color-text-brand: #004667;
+  --color-map-landmass: #dcdcdc;
+  --color-map-boundary: #ffffff;
+  --color-concept-community-marker: #004667;
+  --color-concept-community-marker-hover: #44A3A4;
+
+  /* ── B2 sweep (2026-07-15) ── */
+  --color-shadow-subtle: rgba(0, 0, 0, 0.12);
+  --color-surface-pill-neutral: #f8f9fb;
+  --color-text-pill-neutral: #6D6E71;
+  --color-border-pill-neutral: #dcdcdc;
+  --color-scale-heatmap-base: #f0efe9;
+  --color-scale-heatmap-max: #002d44;
+  --color-scale-heatmap-zero: #dcdcdc; /* added (same value as map-landmass) */
+
+  /* ── C2 sweep (2026-07-15) ── */
+  --color-border-strong: #004667;
+  --color-text-tertiary: #999999;
+  --color-text-accent1: #2c5530;
+  --color-surface-accent1-subtle: #e3efe5;
+
+  /* ── D2 sweep (2026-07-15) ── */
+  --color-chart-similarity: #B8C4D3;
+  --color-concept-viable-teal: #44A3A4;
+  --color-status-success: #27ae60;
+  --color-status-warning: #f39c12;
+  --color-status-fail: #e74c3c;
+
+  /* ── E2 sweep (2026-07-15) ── */
+  --color-surface-brand: #004667;
+  --color-text-annotation-accent: #004667;
+  --color-border-annotation-accent: #004667;
+
+  /* ── F2 sweep (2026-07-15) ── */
+  --color-concept-susceptible: #CE2129;
+  --color-concept-candidate-p1: #555555;
+  --color-concept-candidate-fade: #999999;
+  --color-concept-candidate-p2-local: #1a3d6b;
+  --color-concept-candidate-p2-pt: #5b8db8;
+  --color-concept-candidate-p3: #d4760a;
+  --color-concept-candidate-p4-viable: #1a7a3a;
+  --color-concept-candidate-p4-viable-teer: #4aaa5e;
+
+  /* ── I sweep (2026-07-15) ── */
+  --color-surface-pill-shared: #77AE99;
+  --color-surface-pill-gap: #D36828;
+  --color-chart-reference-line: #004667;
+
+  /* ── J sweep (2026-07-15) ── */
+  --color-chart-rank1: #44A3A4;
+  --color-chart-rank2: #5aa9a9;
+  --color-chart-rank3: #93c6c6;
+  --color-surface-progress-track: #e6e9ec;
+
+  /* ── Config Panel (2026-07-15) ── */
+  --color-surface-control: #ffffff;
+  --color-border-control: #dcdcdc;
+  --color-border-control-hover: #004667;
+  --color-border-control-focus: #44A3A4;
+  --color-text-control: #1a1a2e;
+  --color-text-control-label: #004667;
 }
 
-
-/* ── CANARY MODE — coverage check ──────────────────────────────
-   Toggle:  document.documentElement.classList.add('canary')
-   Every token defined above MUST also appear here with a loud,
-   obviously-wrong value. With canary on, any element still showing
-   normal colours is NOT mapped to a token yet.
-   ─────────────────────────────────────────────────────────────── */
-
-html.canary {
-  /* mirror of :root — populated in lockstep */
-}

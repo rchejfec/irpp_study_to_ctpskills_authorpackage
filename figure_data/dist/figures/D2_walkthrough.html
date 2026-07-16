@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Walkthrough Figure D2 — Oxford, ON</title>
   <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../tokens.css">
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
@@ -28,8 +29,8 @@
        Horizontal padding matches .cell-explain (10px) so the band shares
        the figure's left/right text anchors with cols 1 and 3. */
     .source-band {
-      background: #faf6f0;
-      border-bottom: 1px solid #e0ddd6;
+      background: var(--color-surface-subtle);
+      border-bottom: 1px solid var(--color-border-subtle);
       padding: 6px 10px;
       flex-shrink: 0;
       position: relative;
@@ -39,14 +40,14 @@
       line-height: 1.35;
       margin-bottom: 2px;
       font-size: 11px;
-      color: #444;
+      color: var(--color-text-primary);
     }
 
     /* *** occupation name — largest */
     .em3 {
       font-size: 14px;
       font-weight: 700;
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
     }
 
     /* ** community — medium (matches base headline size) */
@@ -56,14 +57,14 @@
 
     .band-subline {
       font-size: 9px;
-      color: #888;
+      color: var(--color-text-tertiary);
       line-height: 1.3;
     }
 
     /* * sector — bold only at base size */
     .em1 {
       font-weight: 700;
-      color: #555;
+      color: var(--color-text-secondary);
     }
 
     /* D2: one grid for all three columns so the row-1 explainer panels align
@@ -93,7 +94,7 @@
     .rail-stack {
       grid-column: 3;
       grid-row: 2;
-      border-left: 1px solid var(--clr-border);
+      border-left: 1px solid var(--color-border-default);
       display: flex;
       flex-direction: column;
       min-height: 0;
@@ -109,14 +110,14 @@
     .rail-stack>.cell-qual {
       flex: 0 0 auto;
       margin-top: auto;
-      border-top: 1px solid var(--clr-border);
+      border-top: 1px solid var(--color-border-default);
     }
 
     /* ── R2C1: Similarity bars ── */
     .cell-similar {
       grid-column: 1;
       grid-row: 2;
-      border-right: 1px solid var(--clr-border);
+      border-right: 1px solid var(--color-border-default);
       padding: 2px 8px 4px 0;
       overflow: hidden;
       display: flex;
@@ -143,7 +144,7 @@
     .sim-rank {
       width: 14px;
       font-size: 9px;
-      color: #999;
+      color: var(--color-text-tertiary);
       text-align: right;
       font-weight: 600;
       flex-shrink: 0;
@@ -160,7 +161,7 @@
     .sim-bar {
       height: 100%;
       border-radius: 2px;
-      background: var(--irpp-navy-light);
+      background: var(--color-chart-similarity);
       position: absolute;
       left: 0;
       top: 0;
@@ -169,7 +170,7 @@
     /* was 8px — bumped to ~7pt content floor */
     .sim-label {
       font-size: 9.5px;
-      color: var(--clr-body);
+      color: var(--color-text-primary);
       height: 100%;
       display: flex;
       align-items: center;
@@ -187,14 +188,14 @@
        each explainer flows into its data panel. */
     .cell-explain {
       padding: 7px 10px 6px;
-      background: #fafaf8;
+      background: var(--color-surface-subtle);
       position: relative;
     }
 
     .cell-explain.c1 {
       grid-column: 1;
       grid-row: 1;
-      border-right: 1px solid var(--clr-border);
+      border-right: 1px solid var(--color-border-default);
     }
 
     .cell-explain.c2 {
@@ -209,14 +210,14 @@
     .cell-explain.c3 {
       grid-column: 3;
       grid-row: 1;
-      border-left: 1px solid var(--clr-border);
+      border-left: 1px solid var(--color-border-default);
     }
 
     .exp-title {
       font-size: 8px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
       font-weight: 700;
       margin-bottom: 3px;
     }
@@ -240,7 +241,7 @@
       font-size: 8px;
       font-weight: 600;
       line-height: 1;
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
       opacity: 0.55;
     }
 
@@ -252,13 +253,13 @@
 
     .exp-body {
       font-size: 9px;
-      color: #666;
+      color: var(--color-text-secondary);
       line-height: 1.45;
     }
 
     .exp-legend {
       font-size: 8px;
-      color: #aaa;
+      color: var(--color-text-tertiary);
       white-space: nowrap;
       margin-left: 4px;
     }
@@ -310,7 +311,7 @@
       font-size: 8px;
       text-transform: uppercase;
       letter-spacing: 0.4px;
-      color: #999;
+      color: var(--color-text-tertiary);
       font-weight: 600;
       text-align: center;
     }
@@ -328,7 +329,7 @@
       align-items: center;
       flex: 1;
       min-height: 0;
-      border-bottom: 1px solid #f2f2f2;
+      border-bottom: 1px solid var(--color-border-subtle);
     }
 
     .hm-row:last-child {
@@ -362,21 +363,21 @@
     }
 
     .hm-ok svg {
-      stroke: #27ae60;
+      stroke: var(--color-status-success);
     }
 
     .hm-fail svg {
-      stroke: #e74c3c;
+      stroke: var(--color-status-fail);
     }
 
     .hm-warn svg {
-      stroke: #f39c12;
+      stroke: var(--color-status-warning);
     }
 
     /* ── R1C3: Skill gap preview ── */
     .cell-rca {
       padding: 4px 10px 6px;
-      background: #fff;
+      background: var(--color-surface-default);
       overflow: hidden;
     }
 
@@ -385,7 +386,7 @@
       font-size: 8px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
       font-weight: 700;
       margin-bottom: 3px;
     }
@@ -394,14 +395,14 @@
        The explainer above carries the concept; this pane is pure example. */
     .rca-lead {
       font-size: 9px;
-      color: #888;
+      color: var(--color-text-tertiary);
       margin-bottom: 2px;
     }
 
     /* no-data fallback (never fires with current data; all 25 pairs have gaps) */
     .rca-hint {
       font-size: 9px;
-      color: #999;
+      color: var(--color-text-tertiary);
       line-height: 1.3;
     }
 
@@ -410,7 +411,7 @@
     .rca-target {
       font-size: 10px;
       font-weight: 700;
-      color: var(--irpp-teal);
+      color: var(--color-concept-viable-teal);
       margin-bottom: 3px;
       line-height: 1.2;
     }
@@ -419,7 +420,7 @@
        facts one step in, pills one step further (containment) */
     .rca-fact {
       font-size: 9px;
-      color: #555;
+      color: var(--color-text-secondary);
       margin-bottom: 2px;
       margin-left: 8px;
     }
@@ -427,7 +428,7 @@
     /* zero-gap (shared-only) pathway note */
     .rca-fact.rca-zero {
       font-style: italic;
-      color: #777;
+      color: var(--color-text-tertiary);
       line-height: 1.35;
     }
 
@@ -442,15 +443,15 @@
     /* pills wrap internally (2 lines) rather than forcing their column wider */
     .gap-pill {
       font-size: 8.5px;
-      color: #444;
-      background: #f2f2f0;
+      color: var(--color-text-pill-neutral);
+      background: var(--color-surface-pill-neutral);
       border-radius: 3px;
       padding: 1px 5px;
       line-height: 1.35;
     }
 
     .gap-pill.gap-more-pill {
-      color: #999;
+      color: var(--color-text-tertiary);
       font-style: italic;
       background: none;
       padding-left: 0;
@@ -459,7 +460,7 @@
     /* ── R2C3: Assessment notes ── */
     .cell-qual {
       padding: 6px 10px 4px;
-      background: #faf9f7;
+      background: var(--color-surface-subtle);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -470,7 +471,7 @@
       font-size: 8px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
       font-weight: 700;
       margin-bottom: 4px;
       flex-shrink: 0;
@@ -479,29 +480,29 @@
     .qual-item {
       margin-bottom: 3px;
       padding-left: 6px;
-      border-left: 2px solid #ddd;
+      border-left: 2px solid var(--color-border-subtle);
       flex-shrink: 0;
     }
 
     .qual-item.up {
-      border-left-color: #27ae60;
+      border-left-color: var(--color-status-success);
     }
 
     .qual-item.down {
-      border-left-color: #e74c3c;
+      border-left-color: var(--color-status-fail);
     }
 
     /* was 8px — bumped to ~7pt content floor */
     .qual-occ {
       font-size: 8px;
       font-weight: 600;
-      color: var(--clr-body);
+      color: var(--color-text-primary);
     }
 
     /* was 7.5px — bumped toward 7pt content floor (secondary text) */
     .qual-explain {
       font-size: 8.5px;
-      color: #888;
+      color: var(--color-text-tertiary);
       line-height: 1.35;
       margin-top: 1px;
     }
@@ -513,43 +514,43 @@
     }
 
     .qual-arrow.up {
-      color: #27ae60;
+      color: var(--color-status-success);
     }
 
     .qual-arrow.down {
-      color: #e74c3c;
+      color: var(--color-status-fail);
     }
 
     .qual-callout {
       margin-top: auto;
       padding: 5px 8px;
-      background: var(--clr-bg-muted);
+      background: var(--color-surface-subtle);
       border-radius: 3px;
-      border-left: 3px solid var(--irpp-navy);
+      border-left: 3px solid var(--color-border-strong);
     }
 
     /* was 7.5px — bumped toward 7pt content floor */
     .qual-callout p {
       font-size: 9px;
-      color: #444;
+      color: var(--color-text-primary);
       line-height: 1.5;
       font-style: italic;
       margin: 0;
     }
 
     .tt-trigger {
-      text-decoration: underline dotted #27ae60;
+      text-decoration: underline dotted var(--color-status-success);
       font-weight: 600;
       cursor: pointer;
       color: inherit;
     }
 
     .tt-trigger:hover {
-      color: #219653;
+      color: var(--color-status-success);
     }
 
     .occ-title-tt {
-      text-decoration: underline dotted #888;
+      text-decoration: underline dotted var(--color-text-tertiary);
       cursor: help;
     }
 
@@ -562,11 +563,11 @@
       font-weight: 700;
       font-size: 9.5px;
       margin-bottom: 4px;
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
     }
 
     .tt-comm-text {
-      color: #444;
+      color: var(--color-text-primary);
       font-size: 9px;
       line-height: 1.4;
     }
@@ -574,7 +575,7 @@
     .tt-divider {
       margin: 6px 0;
       border: 0;
-      border-top: 1px solid #e5e7eb;
+      border-top: 1px solid var(--color-border-subtle);
     }
 
     .tt-value-small {
@@ -612,8 +613,8 @@
     }
 
     html.compact .cw-source {
-      background: #faf6f0;
-      border-bottom: 1px solid #e0ddd6;
+      background: var(--color-surface-subtle);
+      border-bottom: 1px solid var(--color-border-subtle);
       padding: 10px 12px;
     }
 
@@ -621,26 +622,26 @@
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #999;
+      color: var(--color-text-tertiary);
       font-weight: 600;
     }
 
     html.compact .cw-name {
       font-size: 15px;
       font-weight: 700;
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
       line-height: 1.3;
       margin: 2px 0 4px;
     }
 
     html.compact .cw-detail {
       font-size: 12px;
-      color: #777;
+      color: var(--color-text-tertiary);
       line-height: 1.55;
     }
 
     html.compact .cw-detail span {
-      color: #333;
+      color: var(--color-text-primary);
       font-weight: 600;
     }
 
@@ -648,14 +649,14 @@
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
       font-weight: 700;
       padding: 12px 12px 2px;
     }
 
     html.compact .cw-legend {
       font-size: 11px;
-      color: #999;
+      color: var(--color-text-tertiary);
       padding: 0 12px 6px;
       line-height: 1.4;
     }
@@ -665,7 +666,7 @@
       grid-template-columns: 1fr repeat(6, 28px);
       align-items: end;
       padding: 0 12px 3px;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid var(--color-border-subtle);
     }
 
     html.compact .cw-h-screen {
@@ -673,7 +674,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.2px;
-      color: #888;
+      color: var(--color-text-tertiary);
       text-align: center;
       text-decoration: underline dotted;
       text-underline-offset: 2px;
@@ -684,7 +685,7 @@
       grid-template-columns: 1fr repeat(6, 28px);
       align-items: center;
       padding: 2px 12px;
-      border-bottom: 1px solid #f2f2f2;
+      border-bottom: 1px solid var(--color-border-subtle);
     }
 
     /* same attrition semantics as desktop: out = failed and not curated */
@@ -702,7 +703,7 @@
 
     html.compact .cw-rank {
       font-size: 11px;
-      color: #999;
+      color: var(--color-text-tertiary);
       font-weight: 600;
       width: 16px;
       text-align: right;
@@ -721,7 +722,7 @@
       left: 0;
       top: 0;
       height: 100%;
-      background: var(--irpp-navy-light);
+      background: var(--color-chart-similarity);
       border-radius: 2px;
     }
 
@@ -759,14 +760,14 @@
 
     html.compact .cw-more {
       font-size: 11.5px;
-      color: #999;
+      color: var(--color-text-tertiary);
       font-style: italic;
       padding: 6px 12px 2px;
     }
 
     /* Reused desktop cells, scaled to the 12px floor */
     html.compact .cell-rca {
-      border-bottom: 1px solid var(--clr-border);
+      border-bottom: 1px solid var(--color-border-default);
       padding: 12px;
       overflow: visible;
     }

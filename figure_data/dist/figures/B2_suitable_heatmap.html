@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Suitable Heatmap (B2 2-digit NOC)</title>
   <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../tokens.css">
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
@@ -26,11 +27,11 @@
 
     .heatmap-table th {
       font-weight: var(--fw-medium);
-      color: var(--clr-body-secondary);
+      color: var(--color-text-secondary);
       padding: 2px 4px;
       text-align: center;
       vertical-align: bottom;
-      border-bottom: 1px solid var(--clr-border);
+      border-bottom: 1px solid var(--color-border-default);
     }
 
     .heatmap-table th.col-header {
@@ -54,7 +55,7 @@
       max-width: 175px;
       line-height: 1.3;
       font-weight: var(--fw-medium);
-      color: var(--clr-body);
+      color: var(--color-text-primary);
       border-bottom: none;
       vertical-align: middle;
     }
@@ -75,9 +76,9 @@
       letter-spacing: 0.3px;
       padding: 0.5px 3px;
       border-radius: 2px;
-      background: var(--clr-bg-muted);
-      border: 1px solid var(--clr-border);
-      color: var(--clr-body-secondary);
+      background: var(--color-surface-pill-neutral);
+      border: 1px solid var(--color-border-pill-neutral);
+      color: var(--color-text-pill-neutral);
       margin-left: 1px;
       line-height: 1.4;
     }
@@ -100,8 +101,15 @@
       height: 22px;
       line-height: 22px;
       font-size: 9.5px;
-      color: #fff;
       cursor: default;
+    }
+
+    .hm-cell:not(.hm-zero) {
+      background: color-mix(in oklch, var(--color-scale-heatmap-max) calc(var(--ratio) * 100%), var(--color-scale-heatmap-base));
+    }
+
+    .hm-zero {
+      background: var(--color-scale-heatmap-zero);
     }
 
     /* ── COMPACT (<440px iframe width; see compact.js): sticky source column + horizontal
@@ -123,7 +131,7 @@
     html.compact .compact-scroll-hint {
       display: block;
       font-size: 11px;
-      color: var(--clr-body-secondary);
+      color: var(--color-text-secondary);
       padding: 0 12px 6px;
     }
 
@@ -136,12 +144,12 @@
       position: sticky;
       left: 0;
       z-index: 2;
-      background: #fff;
+      background: var(--color-surface-default);
       font-size: 12px;
       min-width: 138px;
       max-width: 138px;
       padding-left: 10px;
-      box-shadow: 3px 0 4px -2px rgba(0, 0, 0, 0.12);
+      box-shadow: 3px 0 4px -2px var(--color-shadow-subtle);
     }
 
     html.compact .heatmap-table th.col-header {
@@ -166,40 +174,7 @@
       font-size: 12px;
     }
 
-    .hm-0 {
-      background: #f0efe9;
-      color: #ccc;
-    }
-
-    .hm-1 {
-      background: var(--irpp-navy-light);
-      color: var(--clr-body);
-    }
-
-    .hm-2 {
-      background: #7a9db8;
-      color: #fff;
-    }
-
-    .hm-3 {
-      background: #4d7d9e;
-      color: #fff;
-    }
-
-    .hm-4 {
-      background: #2a6485;
-      color: #fff;
-    }
-
-    .hm-5 {
-      background: var(--irpp-navy);
-      color: #fff;
-    }
-
-    .hm-7 {
-      background: #002d44;
-      color: #fff;
-    }
+    /* sequential scale classes removed in favor of dynamic color-mix */
   </style>
 </head>
 
@@ -261,15 +236,7 @@
         lookup[`${c.source_noc}|${c.dest_noc2}`] = c;
       });
 
-      function hmClass(v) {
-        if (v === 0) return 'hm-0';
-        if (v === 1) return 'hm-1';
-        if (v === 2) return 'hm-2';
-        if (v === 3) return 'hm-3';
-        if (v <= 5) return 'hm-4';
-        if (v <= 7) return 'hm-5';
-        return 'hm-7';
-      }
+      /* hmClass removed in favor of dynamic inline styles */
 
       let html = '<table class="heatmap-table">';
       html += '<tr><th></th>';
@@ -289,9 +256,14 @@
         dests.forEach(d => {
           const cell = lookup[`${s}|${d}`];
           const v = cell ? cell.count : 0;
-
-          html += `<td><span class="hm-cell ${hmClass(v)}" data-cell="${s}|${d}">`
-            + `${v || ''}</span></td>`;
+          if (v === 0) {
+            html += `<td><span class="hm-cell hm-zero" data-cell="${s}|${d}"></span></td>`;
+          } else {
+            const ratio = Math.min(v / 10, 1.0);
+            const textColor = (v <= 3) ? 'var(--color-text-primary)' : 'var(--color-text-inverse)';
+            html += `<td><span class="hm-cell" style="--ratio: ${ratio}; color: ${textColor};" data-cell="${s}|${d}">`
+              + `${v || ''}</span></td>`;
+          }
         });
         html += '</tr>';
       });
@@ -300,9 +272,9 @@
       document.getElementById('heatmap-container').innerHTML = html;
 
       // ── Tippy tooltips on non-zero cells: name the actual occupations ──
-      document.querySelectorAll('.hm-cell:not(.hm-0)').forEach(el => {
+      document.querySelectorAll('.hm-cell').forEach(el => {
         const cell = lookup[el.dataset.cell];
-        if (!cell) return;
+        if (!cell || cell.count === 0) return;
         const members = (cell.members || []).map(m =>
           `<div class="tt-value">${m.label} <span style="opacity:0.65">· ${m.sim.toFixed(3)}</span></div>`).join('');
 

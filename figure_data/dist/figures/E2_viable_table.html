@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Viable Occupations by Community</title>
 <link rel="stylesheet" href="../theme.css">
+<link rel="stylesheet" href="../tokens.css">
 <script src="../compact.js"></script>
 <style>
   .figure-container {
@@ -17,15 +18,15 @@
   }
 
   .community-header {
-    font-size: 9.5px; font-weight: 700; color: #fff;
-    background: var(--irpp-navy); padding: 4px 10px;
+    font-size: 9.5px; font-weight: 700; color: var(--color-text-inverse);
+    background: var(--color-surface-brand); padding: 4px 10px;
     letter-spacing: 0.3px; flex-shrink: 0;
   }
 
   .table-wrap {
     flex: 1;
     overflow: hidden;
-    border: 1px solid var(--clr-border);
+    border: 1px solid var(--color-border-default);
     border-top: none;
   }
 
@@ -33,24 +34,24 @@
   .viable-table th {
     font-size: var(--fs-body-lg);
     font-weight: var(--fw-semibold);
-    color: var(--clr-heading);
-    background: var(--clr-bg-muted);
+    color: var(--color-text-primary);
+    background: var(--color-surface-subtle);
     text-align: left;
     padding: 5px 8px;
-    border-bottom: 1px solid var(--clr-border);
+    border-bottom: 1px solid var(--color-border-default);
     vertical-align: top;
   }
   .viable-table th .th-sub {
     display: block;
     font-weight: var(--fw-regular);
-    color: var(--clr-body-secondary);
+    color: var(--color-text-secondary);
     font-size: 9.5px;             /* ≥7pt print floor (was --fs-label-sm 8px = 6pt) */
     text-transform: none;
     letter-spacing: 0;
   }
   .viable-table td {
     padding: 7px 8px;
-    border-bottom: 1px solid var(--clr-gridline);
+    border-bottom: 1px solid var(--color-border-subtle);
     vertical-align: top;
     font-size: var(--fs-body);
   }
@@ -59,10 +60,10 @@
   .col-curated { width: 49%; }
 
   .src-label { font-weight: var(--fw-semibold); }
-  .src-meta { font-size: 9.5px; color: var(--clr-body-secondary); margin-top: 2px; }  /* ≥7pt floor */
+  .src-meta { font-size: 9.5px; color: var(--color-text-secondary); margin-top: 2px; }  /* ≥7pt floor */
 
   .fam-line { line-height: var(--lh-tight); margin-bottom: 2px; }
-  .fam-count { color: var(--clr-body-secondary); }
+  .fam-count { color: var(--color-text-secondary); }
 
   /* Aspirational-group annotation: comparable picks are the unmarked default;
      the more-training picks are bracketed (selective borders of an invisible
@@ -81,8 +82,8 @@
   .asp-annot .pick-list {
     width: fit-content;
     padding: 0 6px 2px 4px;
-    border-left: 1px solid var(--irpp-navy);
-    border-bottom: 1px solid var(--irpp-navy);
+    border-left: 1px solid var(--color-border-annotation-accent);
+    border-bottom: 1px solid var(--color-border-annotation-accent);
   }
   /* On the noted row, the line must always reach under the label so it reads
      as terminating AT it (arrow), whatever the name lengths: the label is
@@ -100,18 +101,18 @@
     position: absolute; right: 0; bottom: -7px; height: 10px;
     line-height: 10px; white-space: nowrap;
     font-size: 9.5px; font-style: italic; font-weight: var(--fw-regular);  /* ≥7pt floor */
-    color: var(--irpp-navy);
-    background: var(--clr-bg); padding: 0 13px 0 3px; z-index: 1;
+    color: var(--color-text-annotation-accent);
+    background: var(--color-surface-default); padding: 0 13px 0 3px; z-index: 1;
   }
   ul.pick-list { list-style: none; margin: 0; padding: 0; }
   ul.pick-list li { line-height: var(--lh-tight); margin-bottom: 3px; }
   sup.dagger {
-    color: var(--clr-heading); font-weight: var(--fw-semibold);
+    color: var(--color-text-primary); font-weight: var(--fw-semibold);
     /* neutralize <sup>'s default raised alignment so it can't grow the line box */
     font-size: 8px; line-height: 0; vertical-align: baseline;
     position: relative; top: -0.35em;
   }
-  .none { color: var(--clr-body-secondary); }
+  .none { color: var(--color-text-secondary); }
 
   /* ── COMPACT (<440px iframe width): columns stack into labelled blocks
      under a collapsible per source occupation (2026-07-08 pattern). ── */
@@ -129,14 +130,14 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--clr-body-secondary);
+    color: var(--color-text-secondary);
     margin-bottom: 3px;
   }
   html.compact .fam-line { margin-bottom: 3px; }
   html.compact .asp-note { font-size: 10px; }
   html.compact ul.pick-list li { margin-bottom: 4px; }
 
-  html.compact details.e-src { border-bottom: 1px solid #ddd; }
+  html.compact details.e-src { border-bottom: 1px solid var(--color-border-subtle); }
   html.compact details.e-src > summary {
     cursor: pointer;
     list-style: none;
@@ -144,12 +145,12 @@
     padding: 8px 10px;
     font-size: 13px;
     font-weight: 700;
-    background: #f6f5f0;
-    color: var(--clr-body);
+    background: var(--color-surface-subtle);
+    color: var(--color-text-primary);
   }
   html.compact details.e-src > summary .src-meta { font-size: 10px; font-weight: 400; }
   html.compact details.e-src > summary::-webkit-details-marker { display: none; }
-  html.compact details.e-src > summary::before { content: '▸ '; color: var(--irpp-navy); }
+  html.compact details.e-src > summary::before { content: '▸ '; color: var(--color-text-brand); }
   html.compact details.e-src[open] > summary::before { content: '▾ '; }
 </style>
 </head>

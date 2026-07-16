@@ -5,7 +5,8 @@
     "spec": "REGISTRY.md",
     "passes": {
       "1": "Gemini-era consolidation, RC decisions mined from chapter JSONs (decision_variable fields)",
-      "2": "2026-07-15 interview: warm/cool collapse, scale anchor-pairs, state derivation rules"
+      "2": "2026-07-15 interview: warm/cool collapse, scale anchor-pairs, state derivation rules",
+      "3": "2026-07-15 simplification pass: technical-redundancy merges under the design-the-guide stance (the registry SETS the guide, not backfills it; values are placeholders until the colour stage)"
     }
   },
   "tokens": [
@@ -13,12 +14,20 @@
       "token": "--color-surface-default",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#ffffff", "source": "--clr-bg + literals" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "A3", "selector": ".map-area" },
+        { "figure": "A3", "selector": "#map-svg" },
+        { "figure": "A3", "selector": ".figure-container (re-states theme.css --clr-bg; remove at fold-in)" },
+        { "figure": "B2", "selector": ".figure-container (re-states theme.css --clr-bg; remove at fold-in)" },
+        { "figure": "B2", "selector": "html.compact .heatmap-table th.row-header (background)" },
+        { "figure": "C2", "selector": ".figure-container (re-states theme.css --clr-bg; remove at fold-in)" },
+        { "figure": "C2", "selector": "html.compact .compact-intro (background)" }
+      ],
       "notes": "Main canvas. Keep white vs very light warm tone = colour-stage call."
     },
     {
@@ -26,40 +35,54 @@
       "chapter": "structural",
       "scope": "structural",
       "status": "decided",
-      "pass": 2,
+      "pass": 3,
       "absorbs": [
         { "value": "#f8f9fb", "source": "--clr-bg-muted (muted + hover uses)" },
-        { "value": "#e6e9ec", "source": "J progress track" },
         { "value": "#fafaf8", "source": "D2 .cell-explain (warm drift)" },
         { "value": "#faf9f7", "source": "D2 .cell-qual (warm drift)" },
         { "value": "#faf6f0", "source": "D2 source band (warm drift)" }
       ],
-      "usage": [],
-      "notes": "Single neutral subtle-surface tier. Warm variants were drift, not decisions (p2). Hover-same-as-muted merge deliberate (p1). Collapsing the near-identical warm hexes changes rendered values sub-perceptually — log in pixel-diff."
+      "usage": [
+        { "figure": "A3", "selector": ".context-strip" },
+        { "figure": "A3", "selector": ".community.highlighted" },
+        { "figure": "C2", "selector": ".flow-step (background)" },
+        { "figure": "C2", "selector": "html.compact .compact-intro (background)" },
+        { "figure": "D2", "selector": ".source-band (background)" },
+        { "figure": "D2", "selector": ".cell-explain (background)" },
+        { "figure": "D2", "selector": ".cell-qual (background)" },
+        { "figure": "D2", "selector": ".qual-callout (background)" },
+        { "figure": "D2", "selector": "html.compact .cw-source (background)" },
+        { "figure": "E2", "selector": ".viable-table th (background)" },
+        { "figure": "E2", "selector": "html.compact details.e-src > summary (background)" },
+        { "figure": "G2", "selector": ".col-category (background)" }
+      ],
+      "notes": "Single neutral subtle-surface tier. Warm variants were drift, not decisions (p2). Hover-same-as-muted merge deliberate (p1). Collapsing the near-identical warm hexes changes rendered values sub-perceptually — log in pixel-diff. The earlier '#e6e9ec J progress track' absorb was reversed by the J sweep: RC minted surface-progress-track for it instead."
     },
     {
       "token": "--color-surface-brand",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#004667", "source": "E2/G2 header blocks (--irpp-navy)" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "E2", "selector": ".community-header (background)" },
+        { "figure": "G2", "selector": ".oasis-table th (background)" }
+      ],
       "notes": ""
     },
     {
       "token": "--color-surface-inverse",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
-      "absorbs": [
-        { "value": "#004667", "source": "A3 .comm-num background (--clr-heading)" }
-      ],
+      "status": "merged",
+      "pass": 3,
+      "merged_into": "--color-surface-brand",
+      "absorbs": [],
       "usage": [],
-      "notes": "Dark chip/badge background carrying inverse text. May merge with surface-brand — decide when both are implemented."
+      "notes": "Merged at reconciliation (RC, p3): freed by the A3 comm-num ruling and no sweep claimed it. Dark-chip-with-inverse-text is surface-brand's job until a figure demonstrates a distinct need."
     },
     {
       "token": "--color-surface-warm-subtle",
@@ -98,26 +121,41 @@
       "token": "--color-surface-accent1-subtle",
       "chapter": "structural",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "merged_into": "",
       "absorbs": [
         { "value": "#f6faf7", "source": "C2 mint gradient" },
         { "value": "#e3efe5", "source": "C2 mint highlighted blocks" }
       ],
-      "usage": [],
-      "notes": "Gemini proposed dropping C2's mint surfaces into surface-subtle/default. Not RC-ratified — resolve at C2's sweep."
+      "usage": [
+        { "figure": "C2", "selector": ".setup-block.consolidated (background)" },
+        { "figure": "C2", "selector": ".inline-result (background)" }
+      ],
+      "notes": "Gemini proposed dropping C2's mint surfaces into surface-subtle/default. Not RC-ratified — resolved as decided in pass 3 sweep (no gradient)."
     },
     {
       "token": "--color-border-default",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#dcdcdc", "source": "--clr-border" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "A3", "selector": ".context-strip" },
+        { "figure": "A3", "selector": ".map-area" },
+        { "figure": "A3", "selector": "html.compact .map-area" },
+        { "figure": "B2", "selector": ".heatmap-table th (border-bottom)" },
+        { "figure": "C2", "selector": ".setup-block (border-right)" },
+        { "figure": "C2", "selector": ".flow-step (border)" },
+        { "figure": "E2", "selector": ".table-wrap (border)" },
+        { "figure": "E2", "selector": ".viable-table th (border-bottom)" },
+        { "figure": "G2", "selector": ".table-wrap (border)" },
+        { "figure": "G2", "selector": ".oasis-table td (border)" },
+        { "figure": "J", "selector": ".comm-row (border-bottom)" }
+      ],
       "notes": ""
     },
     {
@@ -125,7 +163,7 @@
       "chapter": "structural",
       "scope": "structural",
       "status": "decided",
-      "pass": 2,
+      "pass": 3,
       "absorbs": [
         { "value": "#f0f0f0", "source": "list separators (A3 etc.)" },
         { "value": "#ddd", "source": "D2" },
@@ -133,168 +171,252 @@
         { "value": "#e5e7eb", "source": "D2 .tt-divider" },
         { "value": "#e0ddd6", "source": "D2 warm border (drift)" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "A3", "selector": ".community" },
+        { "figure": "D2", "selector": ".source-band (border-bottom)" },
+        { "figure": "D2", "selector": ".hm-row (border-bottom)" },
+        { "figure": "D2", "selector": ".qual-item (border-left)" },
+        { "figure": "D2", "selector": ".tt-divider (border-top)" },
+        { "figure": "D2", "selector": "html.compact .cw-source (border-bottom)" },
+        { "figure": "D2", "selector": "html.compact .cw-headrow (border-bottom)" },
+        { "figure": "D2", "selector": "html.compact .cw-row (border-bottom)" }
+      ],
       "notes": "Warm border collapsed here per p2 warm/cool ruling. The four cool near-duplicates merge; log deltas in pixel-diff."
     },
     {
       "token": "--color-border-strong",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#004667", "source": "--clr-border-strong; C2 section separators; D2 .qual-callout" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "C2", "selector": ".top-tier (border-bottom)" },
+        { "figure": "C2", "selector": "html.compact .compact-intro (border-bottom)" },
+        { "figure": "E2", "selector": ".qual-callout (border-left)" },
+        { "figure": "G2", "selector": ".oasis-table th (border-bottom)" }
+      ],
       "notes": "Candidate to also absorb border-annotation-accent (Gemini proposal, unratified)."
+    },
+    {
+      "token": "--color-border-annotation-accent",
+      "chapter": "structural",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#004667", "source": "E2 annotation bracket" }
+      ],
+      "usage": [
+        { "figure": "E2", "selector": ".asp-annot .pick-list (border-left)" },
+        { "figure": "E2", "selector": ".asp-annot .pick-list (border-bottom)" }
+      ],
+      "notes": "Corresponds to high-visibility annotation lines."
     },
     {
       "token": "--color-border-inverse",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
-        { "value": "#ffffff", "source": "A3 badge stroke" }
+        { "value": "#ffffff", "source": "A3 badge stroke" },
+        { "value": "rgba(255,255,255,0.2)", "source": "G2 table header divider — consumed as token @ 0.2 (ex border-inverse-subtle)" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "A3", "selector": ".map-badge circle (stroke)" },
+        { "figure": "G2", "selector": ".oasis-table th (border-right)" },
+        { "figure": "F2", "selector": "D3 node outlines — diamond/circle/centre-rect (stroke via .style; presentation attrs don't resolve var())" }
+      ],
       "notes": ""
     },
     {
       "token": "--color-border-inverse-subtle",
       "chapter": "structural",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 1,
-      "absorbs": [
-        { "value": "rgba(255,255,255,0.2)", "source": "G2 table header divider" }
-      ],
+      "status": "merged",
+      "pass": 3,
+      "merged_into": "--color-border-inverse",
+      "absorbs": [],
       "usage": [],
-      "notes": "Gemini proposed drop-to-transparent. Unratified; also a transparency-rule case (inverse @ 0.2)."
+      "notes": "Transparency rule (p3): G2's rgba(255,255,255,0.2) is border-inverse @ 0.2 — same meaning at lower alpha, not a new colour. Gemini's drop-to-transparent proposal moot."
     },
     {
       "token": "--color-text-primary",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#1a1a2e", "source": "--clr-body" },
-        { "value": "#444", "source": "D2 headlines/pills" }
+        { "value": "#444", "source": "D2 headlines/pills" },
+        { "value": "#1a1a2e", "source": "bold labels via --clr-heading contexts (ex text-strong)" }
       ],
-      "usage": [],
-      "notes": "Pending merge with text-strong (Gemini proposal, unratified)."
+      "usage": [
+        { "figure": "A3", "selector": ".context-strip" },
+        { "figure": "A3", "selector": ".comm-name" },
+        { "figure": "B2", "selector": ".heatmap-table th.row-header (color)" },
+        { "figure": "B2", "selector": ".hm-cell (v <= 3 text color)" },
+        { "figure": "C2", "selector": ".setup-title (color)" },
+        { "figure": "C2", "selector": ".step-title (color)" },
+        { "figure": "C2", "selector": "html.compact .compact-intro (color)" }
+      ],
+      "notes": "Absorbed text-strong (p3): text strength is weight's job, not a second colour. Re-open only if a sweep finds a genuinely colour-distinct strong tier."
     },
     {
       "token": "--color-text-strong",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
-      "absorbs": [
-        { "value": "#1a1a2e", "source": "bold labels via --clr-heading contexts" }
-      ],
+      "status": "merged",
+      "pass": 3,
+      "merged_into": "--color-text-primary",
+      "absorbs": [],
       "usage": [],
-      "notes": "Likely merges into text-primary; hold until A3 sweep shows whether strong ever differs."
+      "notes": "Technical redundancy (p3): same value as text-primary, and strength is carried by font-weight. A3's sweep verifies nothing colour-distinct existed."
     },
     {
       "token": "--color-text-secondary",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#6D6E71", "source": "--clr-body-secondary (--irpp-grey)" },
         { "value": "#555", "source": "D2" },
         { "value": "#666", "source": "D2" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "A3", "selector": ".comm-row" },
+        { "figure": "A3", "selector": "#loading (inline)" },
+        { "figure": "B2", "selector": ".heatmap-table th (color)" },
+        { "figure": "B2", "selector": "html.compact .compact-scroll-hint (color)" },
+        { "figure": "C2", "selector": ".setup-text (color)" },
+        { "figure": "C2", "selector": ".step-detail (color)" },
+        { "figure": "I", "selector": "no-data empty-state div (inline)" }
+      ],
       "notes": "Needs legibility check at colour stage."
     },
     {
       "token": "--color-text-muted",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
-      "absorbs": [
-        { "value": "#777", "source": "D2" },
-        { "value": "#888", "source": "D2" }
-      ],
+      "status": "merged",
+      "pass": 3,
+      "merged_into": "--color-text-tertiary",
+      "absorbs": [],
       "usage": [],
-      "notes": "Tier between secondary and tertiary claimed by Gemini's D2 inventory. Verify D2 really needs 4 text tiers, else merge."
+      "notes": "Technical redundancy (p3): four grey text tiers was drift, not design — the ramp is primary/secondary/tertiary. Name also collided with the muted modifier. D2's sweep verifies three tiers suffice."
     },
     {
       "token": "--color-text-tertiary",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#999", "source": "faint text (D2/F2)" },
-        { "value": "#aaa", "source": "D2 ornament arrows" }
+        { "value": "#aaa", "source": "D2 ornament arrows" },
+        { "value": "#777", "source": "D2 (ex text-muted)" },
+        { "value": "#888", "source": "D2 (ex text-muted)" }
       ],
-      "usage": [],
-      "notes": ""
+      "usage": [
+        { "figure": "C2", "selector": ".flow-arrow (color)" },
+        { "figure": "C2", "selector": "html.compact .flow-arrow::before (color)" }
+      ],
+      "notes": "Faintest live text tier; absorbed text-muted's hexes (p3)."
     },
     {
       "token": "--color-text-inverse",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#ffffff", "source": "knockout text in dark badges/cells" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "A3", "selector": ".map-badge text" },
+        { "figure": "A3", "selector": ".comm-num" },
+        { "figure": "B2", "selector": ".hm-cell (v >= 4 text color)" }
+      ],
       "notes": ""
     },
     {
       "token": "--color-text-inverse-muted",
       "chapter": "structural",
       "scope": "structural",
-      "status": "decided",
-      "pass": 1,
+      "status": "dropped",
+      "pass": 3,
       "absorbs": [
-        { "value": "#cccccc", "source": "B2 zero-value heatmap cell text (was text-disabled)" }
+        { "value": "#cccccc", "source": "B2 zero-value heatmap cell text (was text-disabled; record only)" }
       ],
       "usage": [],
-      "notes": "Reclassified from text-disabled (RC, p1)."
+      "notes": "Dropped at reconciliation (RC, p3): orphaned by the B2 rebuild — zero-count cells no longer carry text, so its #cccccc left the figures. Removed from tokens.css."
     },
     {
       "token": "--color-text-brand",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#004667", "source": "--clr-heading as text; navy highlights/numbers" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "A3", "selector": ".context-strip strong" },
+        { "figure": "A3", "selector": ".comm-sector" },
+        { "figure": "A3", "selector": ".comm-key" },
+        { "figure": "C2", "selector": ".setup-label (color)" },
+        { "figure": "C2", "selector": ".setup-text em (color)" },
+        { "figure": "C2", "selector": ".step-num (color)" },
+        { "figure": "C2", "selector": "html.compact .compact-intro em (color)" },
+        { "figure": "J", "selector": ".comm-name (color)" }
+      ],
       "notes": "Candidate to absorb text-annotation-accent and text-accent1 (Gemini proposals, unratified)."
     },
     {
       "token": "--color-text-accent1",
       "chapter": "structural",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#2c5530", "source": "C2 opportunity-block green text" }
       ],
-      "usage": [],
-      "notes": "Gemini proposed merge into text-brand. Resolve at C2's sweep — may instead belong to concept-viable-C2's family."
+      "usage": [
+        { "figure": "C2", "selector": ".entity-pill (color)" },
+        { "figure": "C2", "selector": ".inline-result (color)" }
+      ],
+      "notes": "Gemini proposed merge into text-brand. Resolved as decided in pass 3 sweep (kept separate as green text accent)."
+    },
+    {
+      "token": "--color-text-annotation-accent",
+      "chapter": "structural",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#004667", "source": "E2 annotation text" }
+      ],
+      "usage": [
+        { "figure": "E2", "selector": ".asp-note (color)" }
+      ],
+      "notes": "Corresponds to high-visibility annotation label text."
     },
     {
       "token": "--color-shadow-subtle",
       "chapter": "structural",
       "scope": "structural",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "rgba(0,0,0,0.12)", "source": "B2 sticky header; tippy theme box-shadow" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "B2", "selector": "html.compact .heatmap-table th.row-header (box-shadow)" }
+      ],
       "notes": "Gemini proposed drop; but the tippy tooltip theme uses it too. Resolve at B2's sweep."
     },
     {
@@ -302,12 +424,14 @@
       "chapter": "components",
       "scope": "structural",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#f8f9fb", "source": "B2 community pills" },
         { "value": "#f2f2f0", "source": "D2 occupation/gap pills" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "B2", "selector": ".comm-pill (background)" }
+      ],
       "notes": "Community + occupation pills converge (RC, p1)."
     },
     {
@@ -315,12 +439,14 @@
       "chapter": "components",
       "scope": "structural",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#6D6E71", "source": "B2 community pill text" },
         { "value": "#444444", "source": "D2 occupation pill text" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "B2", "selector": ".comm-pill (color)" }
+      ],
       "notes": ""
     },
     {
@@ -328,36 +454,42 @@
       "chapter": "components",
       "scope": "structural",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#dcdcdc", "source": "B2 community pill border" },
         { "value": "none", "source": "D2 occupation pills (borderless; token keeps door open)" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "B2", "selector": ".comm-pill (border)" }
+      ],
       "notes": ""
     },
     {
       "token": "--color-surface-pill-shared",
       "chapter": "components",
-      "scope": "report",
+      "scope": "figure",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#77AE99", "source": "shared-strength badge (--irpp-sage)" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "I", "selector": "D3 SHARED pill (fill)" }
+      ],
       "notes": "Concept badge — report scope, exclusive colour at colour stage."
     },
     {
       "token": "--color-surface-pill-gap",
       "chapter": "components",
-      "scope": "report",
+      "scope": "figure",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#D36828", "source": "skills-gap badge (--irpp-orange)" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "I", "selector": "D3 GAP pill (fill)" }
+      ],
       "notes": "Concept badge — report scope. Note current value collides with concept-candidate-p3's neighbourhood (#d4760a) — drift, fix at colour stage."
     },
     {
@@ -365,11 +497,16 @@
       "chapter": "concepts",
       "scope": "report",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#CE2129", "source": "susceptible occupation indicator (--irpp-red)" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "F2", "selector": "--centre-node" },
+        { "figure": "F2", "selector": ".panel-desc square span (color)" },
+        { "figure": "I", "selector": ".header-col.source .header-occ (color)" },
+        { "figure": "I", "selector": "D3 front bars (fill)" }
+      ],
       "notes": "Current value ≈ status-fail red — drift, resolve at colour stage under exclusivity rule."
     },
     {
@@ -382,7 +519,7 @@
         { "value": "#163568", "source": "suitable occupation indicator" }
       ],
       "usage": [],
-      "notes": ""
+      "notes": "Benched at reconciliation (RC, p3): no live usage after the migration sweeps. Report-scope concept vocabulary — colour stage decides whether it returns to the figures."
     },
     {
       "token": "--color-concept-viable-C2",
@@ -394,7 +531,23 @@
         { "value": "#166822", "source": "C2 viable occupation indicator" }
       ],
       "usage": [],
-      "notes": "Figure-suffixed name is a rename candidate for a later pass; kept as decided (RC, p1). Deliberately distinct from F2's candidate-p4 greens."
+      "notes": "Figure-suffixed name is a rename candidate for a later pass; kept as decided (RC, p1). Deliberately distinct from F2's candidate-p4 greens. Benched at reconciliation (RC, p3): no live usage after the sweeps — colour stage decides whether the concept vocabulary returns."
+    },
+    {
+      "token": "--color-concept-viable-teal",
+      "chapter": "concepts",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#44A3A4", "source": "D2 target occupation label (--irpp-teal)" }
+      ],
+      "usage": [
+        { "figure": "D2", "selector": ".rca-target (color)" },
+        { "figure": "I", "selector": ".header-col.target .header-occ (color)" },
+        { "figure": "I", "selector": "D3 back bars (fill)" }
+      ],
+      "notes": "Used to highlight target match in RCA columns."
     },
     {
       "token": "--color-concept-community",
@@ -406,18 +559,21 @@
         { "value": "#5F5A5A", "source": "community location indicator dot" }
       ],
       "usage": [],
-      "notes": ""
+      "notes": "Benched at reconciliation (RC, p3): no live usage after the migration sweeps — colour stage decides whether it returns."
     },
     {
       "token": "--color-concept-candidate-p1",
       "chapter": "concepts",
       "scope": "figure",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#555555", "source": "F2 panel 1 active candidate" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "F2", "selector": "--p1-active" },
+        { "figure": "F2", "selector": ".panel-desc dots span (color)" }
+      ],
       "notes": "F2 pipeline vocabulary — figure scope."
     },
     {
@@ -425,24 +581,34 @@
       "chapter": "concepts",
       "scope": "figure",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#999999", "source": "F2 panel 1 filtered candidate" },
         { "value": "#a8c8e8", "source": "F2 panel 2 out-of-province (merged in, RC p1)" }
       ],
-      "usage": [],
-      "notes": "Check #a8c8e8 against blue-base+alpha composites (transparency rule) during F2 sweep."
+      "usage": [
+        { "figure": "F2", "selector": "--p1-faded" },
+        { "figure": "F2", "selector": "--p2-neither" },
+        { "figure": "F2", "selector": "--p3-fail-cops" },
+        { "figure": "F2", "selector": "--p3-fail-earn" },
+        { "figure": "F2", "selector": "--p3-fail-ai" },
+        { "figure": "F2", "selector": "--p4-faded" }
+      ],
+      "notes": "Check #a8c8e8 against blue-base+alpha composites (transparency rule) during F2 sweep. Name collides with the faded modifier — whether this is candidate-p1 @ faded or its own colour is an F2-sweep ruling."
     },
     {
       "token": "--color-concept-candidate-p2-local",
       "chapter": "concepts",
       "scope": "figure",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#1a3d6b", "source": "F2 panel 2 local presence" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "F2", "selector": "--p2-local-cd" },
+        { "figure": "F2", "selector": ".panel-desc CD presence span (color)" }
+      ],
       "notes": ""
     },
     {
@@ -450,11 +616,14 @@
       "chapter": "concepts",
       "scope": "figure",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#5b8db8", "source": "F2 panel 2 provincial presence" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "F2", "selector": "--p2-local-pr" },
+        { "figure": "F2", "selector": ".panel-desc provincial presence span (color)" }
+      ],
       "notes": ""
     },
     {
@@ -462,11 +631,14 @@
       "chapter": "concepts",
       "scope": "figure",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#d4760a", "source": "F2 panel 3 passed screens" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "F2", "selector": "--p3-pass" },
+        { "figure": "F2", "selector": ".panel-desc Orange span (color)" }
+      ],
       "notes": ""
     },
     {
@@ -474,11 +646,14 @@
       "chapter": "concepts",
       "scope": "figure",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#1a7a3a", "source": "F2 panel 4 viable" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "F2", "selector": "--p4-teer5" },
+        { "figure": "F2", "selector": ".panel-desc highlighting span (color)" }
+      ],
       "notes": ""
     },
     {
@@ -486,48 +661,63 @@
       "chapter": "concepts",
       "scope": "figure",
       "status": "decided",
-      "pass": 1,
+      "pass": 3,
       "absorbs": [
         { "value": "#4aaa5e", "source": "F2 panel 4 viable requiring training" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "F2", "selector": "--p4-teer4" },
+        { "figure": "F2", "selector": ".panel-desc Light-green span (color)" }
+      ],
       "notes": ""
     },
     {
       "token": "--color-status-success",
       "chapter": "concepts",
       "scope": "report",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#27ae60", "source": "D2 pass indicators, qual arrows up, tt-trigger" },
         { "value": "#219653", "source": "D2 tt-trigger:hover (→ derive via hover rule)" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "D2", "selector": ".hm-ok svg (stroke)" },
+        { "figure": "D2", "selector": ".qual-item.up (border-left-color)" },
+        { "figure": "D2", "selector": ".qual-arrow.up (color)" },
+        { "figure": "D2", "selector": ".tt-trigger (text-decoration-color)" },
+        { "figure": "D2", "selector": ".tt-trigger:hover (color)" }
+      ],
       "notes": "Off-brand flat-UI green. Keep token; rebrand value at colour stage (traffic-light hue direction retained, tuned to palette register)."
     },
     {
       "token": "--color-status-warning",
       "chapter": "concepts",
       "scope": "report",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#f39c12", "source": "D2 warn indicators" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "D2", "selector": ".hm-warn svg (stroke)" }
+      ],
       "notes": "Likely steals org orange at colour stage."
     },
     {
       "token": "--color-status-fail",
       "chapter": "concepts",
       "scope": "report",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#e74c3c", "source": "D2 fail indicators, qual arrows down" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "D2", "selector": ".hm-fail svg (stroke)" },
+        { "figure": "D2", "selector": ".qual-item.down (border-left-color)" },
+        { "figure": "D2", "selector": ".qual-arrow.down (color)" }
+      ],
       "notes": "Likely steals org red at colour stage — but must resolve against concept-susceptible exclusivity first."
     },
     {
@@ -539,7 +729,9 @@
       "absorbs": [
         { "value": "#dcdcdc", "source": "A3 unselected region fill" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "A3", "selector": ".cd-path" }
+      ],
       "notes": "Same hex as border-default — coincidence of drift, keep separate tokens."
     },
     {
@@ -551,103 +743,137 @@
       "absorbs": [
         { "value": "#ffffff", "source": "A3 province boundary stroke" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "A3", "selector": ".province-boundary (stroke)" }
+      ],
       "notes": ""
     },
     {
-      "token": "--color-map-region-selected",
-      "chapter": "viz",
+      "token": "--color-concept-community-marker",
+      "chapter": "concepts",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
-        { "value": "#004667", "source": "A3 selected region / badge fill (--irpp-navy)" }
+        { "value": "#004667", "source": "A3 selected region / badge fill (--irpp-navy)" },
+        { "value": "#004667", "source": "A3 .comm-num background (ex surface-inverse)" }
       ],
-      "usage": [],
-      "notes": "Faded variant = this token @ 25% (transparency rule; A3 NWT background)."
+      "usage": [
+        { "figure": "A3", "selector": ".cd-path.highlighted-cd" },
+        { "figure": "A3", "selector": ".cd-path.nwt-background-cd (@ 25% via opacity)" },
+        { "figure": "A3", "selector": ".map-badge circle" },
+        { "figure": "A3", "selector": ".comm-num" }
+      ],
+      "notes": "RC ruling (p3, was map-region-selected): one semantic object — marks a study community wherever rendered (map region, map badge, sidebar chip); named location-neutral for reuse. NOT a modifier of concept-community (the grey location dot). Faded variant = this token @ 25% (A3 NWT background)."
     },
     {
-      "token": "--color-map-region-hover",
-      "chapter": "viz",
+      "token": "--color-concept-community-marker-hover",
+      "chapter": "concepts",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#44A3A4", "source": "A3 hover fill (--irpp-teal)" }
       ],
-      "usage": [],
-      "notes": "Genuine semantic state change (navy→teal), earns an explicit token per REGISTRY.md state rules. Faded-hover = this @ 35%."
+      "usage": [
+        { "figure": "A3", "selector": ".cd-path.highlighted-cd.hovered" },
+        { "figure": "A3", "selector": ".cd-path.nwt-background-cd.hovered (@ 35% via opacity)" },
+        { "figure": "A3", "selector": ".map-badge.hovered circle" },
+        { "figure": "A3", "selector": ".community.highlighted .comm-num" }
+      ],
+      "notes": "Genuine semantic state change (navy→teal), earns an explicit token per REGISTRY.md state rules (was map-region-hover; renamed with its base, p3). Faded-hover = this @ 35%."
     },
     {
       "token": "--color-scale-heatmap-base",
       "chapter": "viz",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 2,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#f0efe9", "source": "B2 heatmap zero/base" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "B2", "selector": ".hm-cell background (base)" }
+      ],
       "notes": "Anchor-pair approach decided p2; values proposed. Steps derived in OKLCH."
     },
     {
       "token": "--color-scale-heatmap-max",
       "chapter": "viz",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 2,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#002d44", "source": "B2 heatmap peak" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "B2", "selector": ".hm-cell background (max)" }
+      ],
       "notes": ""
+    },
+    {
+      "token": "--color-scale-heatmap-zero",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#dcdcdc", "source": "B2 zero count cell background" }
+      ],
+      "usage": [
+        { "figure": "B2", "selector": ".hm-cell.hm-zero (background)" }
+      ],
+      "notes": "Blank/empty cells in heatmap; set to same value as map-landmass."
     },
     {
       "token": "--color-scale-rank-base",
       "chapter": "viz",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 2,
-      "absorbs": [
-        { "value": "#44A3A4", "source": "J rank-1 teal (--irpp-teal)" }
-      ],
+      "status": "merged",
+      "pass": 3,
+      "merged_into": "--color-chart-rank1",
+      "absorbs": [],
       "usage": [],
-      "notes": "J's three rank teals (#44A3A4/#5aa9a9/#93c6c6) become base+max anchors with the middle step derived. Verify derivation reproduces #5aa9a9 acceptably at J's sweep."
+      "notes": "Superseded at J's sweep (p3): only 3 fixed rank steps exist, so RC minted explicit chart-rank1/2/3 tokens instead of the p2 anchor-pair + derivation plan. Anchor pairs remain the pattern for true continuous scales (B2 heatmap)."
     },
     {
       "token": "--color-scale-rank-max",
       "chapter": "viz",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 2,
-      "absorbs": [
-        { "value": "#93c6c6", "source": "J rank-3 subtle teal" }
-      ],
+      "status": "merged",
+      "pass": 3,
+      "merged_into": "--color-chart-rank3",
+      "absorbs": [],
       "usage": [],
-      "notes": ""
+      "notes": "Superseded with scale-rank-base (p3) — see that row."
     },
     {
       "token": "--color-chart-similarity",
       "chapter": "viz",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#B8C4D3", "source": "D2 similarity bars (--irpp-navy-light)" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "D2", "selector": ".sim-bar (background)" },
+        { "figure": "D2", "selector": "html.compact .cw-bar (background)" }
+      ],
       "notes": ""
     },
     {
       "token": "--color-chart-reference-line",
       "chapter": "viz",
       "scope": "figure",
-      "status": "proposed",
-      "pass": 1,
+      "status": "decided",
+      "pass": 3,
       "absorbs": [
         { "value": "#004667", "source": "I RCA=1 baseline (--irpp-navy)" }
       ],
-      "usage": [],
+      "usage": [
+        { "figure": "I", "selector": "D3 RCA=1 dashed baseline (stroke)" }
+      ],
       "notes": ""
     },
     {
@@ -660,7 +886,151 @@
         { "value": "#e8e8e8", "source": "--clr-gridline (theme.css .gridline)" }
       ],
       "usage": [],
-      "notes": "Possibly merges into border-subtle; check where gridlines actually render."
+      "notes": "Possibly merges into border-subtle; check where gridlines actually render. Kept for the fold-in step (theme.css .gridline still consumes --clr-gridline)."
+    },
+    {
+      "token": "--color-chart-rank1",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#44A3A4", "source": "J rank-1 bar / badge fill (--irpp-teal)" }
+      ],
+      "usage": [
+        { "figure": "J", "selector": ".skill.rank1 .bar (background)" },
+        { "figure": "J", "selector": ".rank-tag (background)" }
+      ],
+      "notes": ""
+    },
+    {
+      "token": "--color-chart-rank2",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#5aa9a9", "source": "J rank-2 bar / badge fill" }
+      ],
+      "usage": [
+        { "figure": "J", "selector": ".skill.rank2 .bar (background)" },
+        { "figure": "J", "selector": ".skill.rank2 .rank-tag (background)" }
+      ],
+      "notes": ""
+    },
+    {
+      "token": "--color-chart-rank3",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#93c6c6", "source": "J rank-3 bar / badge fill" }
+      ],
+      "usage": [
+        { "figure": "J", "selector": ".skill.rank3 .bar (background)" },
+        { "figure": "J", "selector": ".skill.rank3 .rank-tag (background)" }
+      ],
+      "notes": ""
+    },
+    {
+      "token": "--color-surface-progress-track",
+      "chapter": "viz",
+      "scope": "figure",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#e6e9ec", "source": "J empty skill bar background" }
+      ],
+      "usage": [
+        { "figure": "J", "selector": ".track (background)" }
+      ],
+      "notes": ""
+    },
+    {
+      "token": "--color-surface-control",
+      "chapter": "components",
+      "scope": "report",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#ffffff", "source": "iframe-controls panel/dropdown background" }
+      ],
+      "usage": [
+        { "figure": "global", "selector": ".iframe-controls (background)" },
+        { "figure": "global", "selector": ".control-group select (background-color)" }
+      ],
+      "notes": ""
+    },
+    {
+      "token": "--color-border-control",
+      "chapter": "components",
+      "scope": "report",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#dcdcdc", "source": "iframe-controls dropdown border" }
+      ],
+      "usage": [
+        { "figure": "global", "selector": ".control-group select (border)" }
+      ],
+      "notes": ""
+    },
+    {
+      "token": "--color-border-control-hover",
+      "chapter": "components",
+      "scope": "report",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#004667", "source": "iframe-controls dropdown border:hover" }
+      ],
+      "usage": [
+        { "figure": "global", "selector": ".control-group select:hover (border-color)" }
+      ],
+      "notes": ""
+    },
+    {
+      "token": "--color-border-control-focus",
+      "chapter": "components",
+      "scope": "report",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#44A3A4", "source": "iframe-controls dropdown border:focus" }
+      ],
+      "usage": [
+        { "figure": "global", "selector": ".control-group select:focus (border-color/box-shadow)" }
+      ],
+      "notes": ""
+    },
+    {
+      "token": "--color-text-control",
+      "chapter": "components",
+      "scope": "report",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#1a1a2e", "source": "iframe-controls dropdown text color" }
+      ],
+      "usage": [
+        { "figure": "global", "selector": ".control-group select (color)" }
+      ],
+      "notes": ""
+    },
+    {
+      "token": "--color-text-control-label",
+      "chapter": "components",
+      "scope": "report",
+      "status": "decided",
+      "pass": 3,
+      "absorbs": [
+        { "value": "#004667", "source": "iframe-controls label text color" }
+      ],
+      "usage": [
+        { "figure": "global", "selector": ".control-group label (color)" }
+      ],
+      "notes": ""
     }
   ]
 }

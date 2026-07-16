@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Top Skills Gaps by Community</title>
   <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../tokens.css">
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://unpkg.com/tippy.js@6"></script>
   <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css">
@@ -35,7 +36,7 @@
       align-items: center;
       gap: 10px;
       padding: 4px 2px;
-      border-bottom: 1px solid var(--clr-border);
+      border-bottom: 1px solid var(--color-border-default);
     }
 
     .comm-row:last-child {
@@ -51,7 +52,7 @@
       display: block;
       font-weight: 700;
       font-size: 9.5px;
-      color: var(--irpp-navy);
+      color: var(--color-text-brand);
       line-height: 1.25;
     }
 
@@ -59,7 +60,7 @@
       display: block;
       font-size: 8px;
       /* was 7.5px — bumped to 6pt decorative floor */
-      color: var(--clr-body-secondary);
+      color: var(--color-text-secondary);
       margin-top: 1px;
     }
 
@@ -81,7 +82,7 @@
       font-size: 9px;
       /* was 8.5px — bumped to ~7pt content floor */
       font-weight: 600;
-      color: var(--clr-body);
+      color: var(--color-text-primary);
       line-height: 1.2;
       margin-bottom: 2px;
     }
@@ -98,7 +99,7 @@
     .skill-meta {
       font-size: 8px;
       /* was 7px — bumped to 6pt decorative floor */
-      color: var(--clr-body-secondary);
+      color: var(--color-text-secondary);
       white-space: nowrap;
       flex-shrink: 0;
     }
@@ -107,7 +108,7 @@
       flex: 1;
       height: 4px;
       border-radius: 2px;
-      background: #e6e9ec;
+      background: var(--color-surface-progress-track);
     }
 
     .bar {
@@ -116,15 +117,15 @@
     }
 
     .skill.rank1 .bar {
-      background: var(--irpp-teal);
+      background: var(--color-chart-rank1);
     }
 
     .skill.rank2 .bar {
-      background: #5aa9a9;
+      background: var(--color-chart-rank2);
     }
 
     .skill.rank3 .bar {
-      background: #93c6c6;
+      background: var(--color-chart-rank3);
     }
 
     .rank-tag {
@@ -132,8 +133,8 @@
       font-size: 7px;
       /* was 6.5px — bumped toward 6pt decorative floor (bold+colored) */
       font-weight: 700;
-      color: #fff;
-      background: var(--irpp-teal);
+      color: var(--color-text-inverse);
+      background: var(--color-chart-rank1);
       border-radius: 2px;
       padding: 0 3px;
       margin-right: 3px;
@@ -141,11 +142,11 @@
     }
 
     .skill.rank2 .rank-tag {
-      background: #5aa9a9;
+      background: var(--color-chart-rank2);
     }
 
     .skill.rank3 .rank-tag {
-      background: #93c6c6;
+      background: var(--color-chart-rank3);
     }
 
     /* ── COMPACT (<440px iframe width) — lossy per 2026-07-08 decisions:
@@ -210,13 +211,13 @@
     html.compact .skill-also {
       display: block;
       font-size: 12px;
-      color: var(--clr-body-secondary);
+      color: var(--color-text-secondary);
       line-height: 1.35;
       margin-top: 4px;
     }
 
     html.compact .skill-also strong {
-      color: var(--clr-body);
+      color: var(--color-text-primary);
       font-weight: 600;
     }
   </style>

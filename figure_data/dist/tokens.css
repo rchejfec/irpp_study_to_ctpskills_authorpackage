@@ -18,7 +18,7 @@
   /* ── A3 sweep ── */
   --color-surface-default: var(--ext-white);
   --color-surface-subtle: var(--ext-neutral-pure-50);
-  --color-surface-hover: var(--pal-teal-700);
+  --color-surface-hover: var(--pal-teal-100);
   --color-border-default: var(--ext-neutral-pure-250);
   --color-border-subtle: var(--ext-neutral-pure-150);
   --color-border-inverse: var(--ext-white);
@@ -26,62 +26,63 @@
   --color-text-secondary: var(--pal-grey-700);
   --color-text-inverse: var(--ext-white);
   --color-text-brand: var(--pal-blue-700);
-  --color-map-landmass: var(--ext-neutral-cool-250);
+  --color-map-landmass: var(--ext-neutral-cool-200);
   --color-map-boundary: var(--ext-white);
   --color-concept-community-marker: var(--pal-blue-700);
   --color-concept-community-marker-hover: var(--pal-teal-700);
 
   /* ── B2 sweep ── */
   --color-shadow-subtle: rgba(0, 0, 0, 0.12);
-  --color-surface-pill-neutral: var(--ext-neutral-cool-50);
+  --color-surface-pill-neutral: var(--ext-neutral-pure-50);
   --color-text-pill-neutral: var(--pal-grey-700);
-  --color-border-pill-neutral: var(--ext-neutral-cool-250);
-  --color-scale-heatmap-base: #f0efe9;
+  --color-border-pill-neutral: var(--ext-neutral-pure-250);
+  --color-scale-heatmap-base: var(--ext-neutral-cool-150);
   /* left as ext (current warm color) */
-  --color-scale-heatmap-max: var(--pal-blue-800);
-  --color-scale-heatmap-zero: var(--ext-neutral-cool-250);
+  --color-scale-heatmap-max: var(--pal-blue-700);
+  --color-scale-heatmap-zero: var(--ext-neutral-pure-200);
 
   /* ── C2 sweep ── */
   --color-border-strong: var(--pal-blue-700);
   --color-text-tertiary: var(--pal-grey-500);
-  --color-text-accent1: var(--pal-sage-800);
-  --color-surface-accent1-subtle: var(--pal-sage-300);
+  --color-text-accent1: var(--pal-teal-800);
+  --color-surface-accent1-subtle: var(--ext-white);
 
   /* ── D2 sweep ── */
-  --color-chart-similarity: var(--pal-blue-300);
-  --color-concept-viable-teal: var(--pal-sage-700);
+  --color-chart-similarity: var(--ext-neutral-cool-250);
+  --color-concept-viable-teal: var(--pal-teal-700);
   --color-status-success: var(--pal-sage-700);
+  /* GAP. NEED A GREEN FAMILY */
   --color-status-warning: var(--pal-gold-700);
   --color-status-fail: var(--pal-red-700);
 
   /* ── E2 sweep ── */
   --color-surface-brand: var(--pal-blue-700);
-  --color-text-annotation-accent: var(--pal-blue-700);
-  --color-border-annotation-accent: var(--pal-blue-700);
+  --color-text-annotation-accent: var(--pal-teal-700);
+  --color-border-annotation-accent: var(--pal-teal-700);
 
   /* ── F2 sweep ── */
-  --color-concept-susceptible: var(--pal-purple-700);
-  --color-concept-candidate-p1: var(--pal-grey-700);
-  --color-concept-candidate-fade: var(--pal-grey-350);
-  --color-concept-candidate-p2-local: var(--pal-blue-500);
-  --color-concept-candidate-p2-pt: var(--pal-blue-300);
-  --color-concept-candidate-p3: var(--pal-blue-600);
-  --color-concept-candidate-p4-viable: var(--pal-sage-700);
-  --color-concept-candidate-p4-viable-teer: var(--pal-sage-300);
+  --color-concept-susceptible: var(--pal-grey-800);
+  --color-concept-candidate-p1: var(--ext-neutral-warm-500);
+  --color-concept-candidate-fade: var(--ext-neutral-warm-400);
+  --color-concept-candidate-p2-local: var(--pal-blue-700);
+  --color-concept-candidate-p2-pt: var(--pal-blue-500);
+  --color-concept-candidate-p3: var(--pal-purple-600);
+  --color-concept-candidate-p4-viable: var(--pal-teal-600);
+  --color-concept-candidate-p4-viable-teer: var(--pal-teal-800);
 
   /* ── I sweep ── */
-  --color-surface-pill-shared: var(--pal-sage-300);
-  --color-surface-pill-gap: var(--pal-gold-300);
-  --color-chart-reference-line: var(--pal-blue-700);
+  --color-surface-pill-shared: var(--ext-neutral-warm-350);
+  --color-surface-pill-gap: var(--ext-neutral-warm-500);
+  --color-chart-reference-line: var(--pal-grey-700);
 
   /* ── J sweep ── */
-  --color-chart-rank1: var(--pal-sage-700);
-  --color-chart-rank2: var(--pal-sage-500);
-  --color-chart-rank3: var(--pal-sage-300);
+  --color-chart-rank1: var(--pal-teal-700);
+  --color-chart-rank2: var(--pal-teal-500);
+  --color-chart-rank3: var(--pal-teal-300);
   --color-surface-progress-track: var(--ext-neutral-cool-150);
 
   /* ── Config Panel ── */
-  --color-surface-control: var(--ext-white);
+  --color-surface-control: var(--ext-neutral-cool-150);
   --color-border-control: var(--ext-neutral-cool-250);
   --color-border-control-hover: var(--pal-blue-700);
   --color-border-control-focus: var(--pal-teal-700);

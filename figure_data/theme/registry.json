@@ -6,7 +6,8 @@
     "passes": {
       "1": "Gemini-era consolidation, RC decisions mined from chapter JSONs (decision_variable fields)",
       "2": "2026-07-15 interview: warm/cool collapse, scale anchor-pairs, state derivation rules",
-      "3": "2026-07-15 simplification pass: technical-redundancy merges under the design-the-guide stance (the registry SETS the guide, not backfills it; values are placeholders until the colour stage)"
+      "3": "2026-07-15 simplification pass: technical-redundancy merges under the design-the-guide stance (the registry SETS the guide, not backfills it; values are placeholders until the colour stage)",
+      "4": "2026-07-16 colour v1: primitives applied (RC play — deviations from PRIMITIVE_MAP deliberate, docs revise after); interactive polish tokens"
     }
   },
   "tokens": [
@@ -377,6 +378,19 @@
         { "figure": "J", "selector": ".comm-name (color)" }
       ],
       "notes": "Candidate to absorb text-annotation-accent and text-accent1 (Gemini proposals, unratified)."
+    },
+    {
+      "token": "--color-text-brand-hover",
+      "chapter": "structural",
+      "scope": "structural",
+      "status": "decided",
+      "pass": 4,
+      "absorbs": [],
+      "usage": [
+        { "figure": "A3", "selector": ".community.highlighted .comm-sector" },
+        { "figure": "A3", "selector": ".community.highlighted .comm-key" }
+      ],
+      "notes": "Explicit hover token (RC, 2026-07-16): brand text follows the same navy→teal hover event as the community marker — a semantic state change, not a derivable intensity shift."
     },
     {
       "token": "--color-text-accent1",

@@ -1,0 +1,15 @@
+registry rows: 68 {'decided': 56, 'merged': 8, 'dropped': 1, 'proposed': 3}
+tokens.css: 55 tokens in :root
+note — live rows with no usage (bench): ['--color-chart-gridline', '--color-concept-community', '--color-concept-suitable', '--color-concept-viable-C2']
+  A3_map.html: clean (0 legacy vars, 0 hex literals)
+  B2_suitable_heatmap.html: clean (0 legacy vars, 0 hex literals)
+  C2_summary.html: clean (0 legacy vars, 0 hex literals)
+  D2_walkthrough.html: clean (0 legacy vars, 0 hex literals)
+  E2_viable_table.html: clean (0 legacy vars, 0 hex literals)
+  F2_filtering.html: clean (0 legacy vars, 0 hex literals)
+  G2_oasis_competencies.html: clean (0 legacy vars, 0 hex literals)
+  I_skills_gap_bars.html: clean (0 legacy vars, 0 hex literals)
+  J_skills_gap_table.html: clean (0 legacy vars, 0 hex literals)
+
+PASS: all 9 live figures fully token-resolved; 55 tokens, lockstep intact.
+theme.css legacy mentions: 0

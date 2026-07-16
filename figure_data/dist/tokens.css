@@ -26,6 +26,7 @@
   --color-text-secondary: var(--pal-grey-700);
   --color-text-inverse: var(--ext-white);
   --color-text-brand: var(--pal-blue-700);
+  --color-text-brand-hover: var(--pal-teal-700);
   --color-map-landmass: var(--ext-neutral-cool-200);
   --color-map-boundary: var(--ext-white);
   --color-concept-community-marker: var(--pal-blue-700);

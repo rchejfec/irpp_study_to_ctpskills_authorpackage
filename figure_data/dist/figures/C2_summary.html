@@ -114,7 +114,7 @@
 
     /* ── BOTTOM TIER: SOLUTION FLOW ── */
     .bottom-tier {
-      padding: 6px 16px;
+      padding: 8px 16px;
     }
 
     .flow {
@@ -127,7 +127,7 @@
       flex: 1 1 0;
       min-width: 0;
       position: relative;
-      padding: 4px 6px 57px 12px;
+      padding: 4px 6px 59px 12px;
       background: var(--color-surface-subtle);
       border: 1px solid var(--color-border-default);
       border-radius: 3px;
@@ -168,27 +168,50 @@
       font-style: italic;
     }
 
-    /* ── SVG OVERLAY — tune --svg-scale to resize (1 = native 593px) ── */
-    .svg-overlay {
-      --svg-scale: 0.812;
+    /* ── Step-specific SVG decorators ── */
+    .step-svg {
       position: absolute;
-      bottom: -0.5%;
-      left: 49.2%;
-      transform: translateX(-50%) scale(var(--svg-scale));
-      transform-origin: center bottom;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 70px;
+      /* comfortable bottom container height */
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
       pointer-events: none;
-      z-index: 5;
+      opacity: 0.50;
       margin: 0;
       padding: 0;
       line-height: 0;
-      opacity: 0.50;
+      z-index: 5;
     }
 
-    .svg-overlay img {
+    .step-svg img {
+      max-height: var(--svg-scale-height, 100%);
+      max-width: var(--svg-scale-width, 100%);
+      object-fit: contain;
       display: block;
       margin: 0;
       padding: 0;
     }
+
+    .step-svg--p1 {
+      --svg-scale-width: 160%;
+      --svg-scale-height: 160%;
+      bottom: -1%;
+      left: -1%;
+    }
+
+    .step-svg--p2,
+    .step-svg--p3,
+    .step-svg--p4 {
+      --svg-scale-width: 140%;
+      --svg-scale-height: 140%;
+      bottom: -1%;
+
+    }
+
 
     /* ── COMPACT (<440px iframe width; see compact.js) — lossy per 2026-07-08 decisions:
        drop the three context prose blocks (one-line intro instead), stack
@@ -210,7 +233,7 @@
       display: none;
     }
 
-    html.compact .svg-overlay {
+    html.compact .step-svg {
       display: none;
     }
 
@@ -321,14 +344,18 @@
             <div class="step-detail">
               Susceptible <em>communities</em> and <em>occupations</em> reliant on sectors facing disruption
             </div>
+            <div class="step-svg step-svg--p1"><img src="../assets/concept-svg/p1.svg" alt=""></div>
           </div>
           <div class="flow-arrow">→</div>
           <div class="flow-step">
             <div class="step-num">2</div>
             <div class="step-title">Match skills</div>
             <div class="step-detail">
-              Match <em>competency profiles</em> across occupations using OaSIS (166 competencies across 4 domains)
+              Match occupations via <em>competency profiles</em> using OaSIS (166 competencies across 4 domains)
+              <br>
+              <br>
             </div>
+            <div class="step-svg step-svg--p2"><img src="../assets/concept-svg/p2.svg" alt=""></div>
           </div>
           <div class="flow-arrow">→</div>
           <div class="flow-step">
@@ -337,6 +364,7 @@
             <div class="step-detail">
               Narrow to locally viable alternatives using <em>earnings, outlook, training fit</em>, and community input
             </div>
+            <div class="step-svg step-svg--p3"><img src="../assets/concept-svg/p3.svg" alt=""></div>
           </div>
           <div class="flow-arrow">→</div>
           <div class="flow-step">
@@ -345,13 +373,9 @@
             <div class="step-detail">
               Pinpoint specific competencies where <em>targeted training</em> would have the most impact per pathway
             </div>
+            <div class="step-svg step-svg--p4"><img src="../assets/concept-svg/p4.svg" alt=""></div>
           </div>
         </div>
-      </div>
-
-      <!-- SVG OVERLAY — pinned to bottom, layered on top -->
-      <div class="svg-overlay">
-        <img src="../assets/svg_decor.svg" alt="">
       </div>
 
     </div>

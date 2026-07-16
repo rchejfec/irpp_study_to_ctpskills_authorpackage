@@ -1,61 +1,13 @@
+@import "primitives.css";
+
 /* ════════════════════════════════════════════════════════════════
    tokens.css — Semantic token layer (theme v2)
    Source of truth: ../theme/registry.json + ../theme/REGISTRY.md.
    ════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ══════════════════════════════════════════════════════════════
-     A. ORG PALETTE ANCHORS & STOPS (PRIMITIVES)
-     Copied directly from expanded_palette.css per design policy
-     ══════════════════════════════════════════════════════════════ */
-
-  /* Org Anchors */
-  --pal-blue-dark: #004667;
-  --pal-blue-light: #B8C4D3;
-  --pal-teal-dark: #44A3A4;
-  --pal-teal-light: #B5D2D3;
-  --pal-gold-dark: #DEAC28;
-  --pal-gold-light: #F0D8A4;
-  --pal-grey-dark: #6D6E71;
-  --pal-grey-light: #B8B6B7;
-  --pal-red-dark: #CE2129;
-  --pal-sage-dark: #77AE99;
-  --pal-sage-light: #C5D8CF;
-  --pal-purple-dark: #55425B;
-  --pal-purple-light: #BCB3BE;
-
-  /* Consumed Org Stops */
-  --pal-blue-800: color-mix(in oklch, var(--pal-blue-dark) 70%, black);
-  --pal-blue-700: var(--pal-blue-dark);
-  --pal-blue-600: color-mix(in oklch, var(--pal-blue-dark) 75%, var(--pal-blue-light) 25%);
-  --pal-blue-500: color-mix(in oklch, var(--pal-blue-dark), var(--pal-blue-light));
-  --pal-blue-300: var(--pal-blue-light);
-
-  --pal-teal-700: var(--pal-teal-dark);
-
-  --pal-gold-700: var(--pal-gold-dark);
-  --pal-gold-300: var(--pal-gold-light);
-
-  --pal-grey-700: var(--pal-grey-dark);
-  --pal-grey-500: color-mix(in oklch, var(--pal-grey-dark), var(--pal-grey-light));
-  --pal-grey-350: color-mix(in oklch, var(--pal-grey-dark) 12.5%, var(--pal-grey-light) 87.5%);
-
-  --pal-red-700: var(--pal-red-dark);
-
-  --pal-sage-800: color-mix(in oklch, var(--pal-sage-dark) 70%, black);
-  --pal-sage-700: var(--pal-sage-dark);
-  --pal-sage-500: color-mix(in oklch, var(--pal-sage-dark), var(--pal-sage-light));
-  --pal-sage-300: var(--pal-sage-light);
-
-  --pal-purple-700: var(--pal-purple-dark);
-  --pal-purple-300: var(--pal-purple-light);
-
-  /* Cool Neutral Extensions */
+  /* True white extension (not a stop in primitives.css) */
   --ext-white: #ffffff;
-  --ext-neutral-cool-900: oklch(0.12 0.008 243);
-  --ext-neutral-cool-250: oklch(0.88 0.008 243);
-  --ext-neutral-cool-150: oklch(0.945 0.008 243);
-  --ext-neutral-cool-50:  oklch(0.985 0.008 243);
 
 
   /* ══════════════════════════════════════════════════════════════

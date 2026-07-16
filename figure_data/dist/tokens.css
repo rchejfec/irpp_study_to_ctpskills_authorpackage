@@ -1,93 +1,136 @@
 /* ════════════════════════════════════════════════════════════════
    tokens.css — Semantic token layer (theme v2)
-
    Source of truth: ../theme/registry.json + ../theme/REGISTRY.md.
-   Loaded AFTER theme.css by each figure as it is migrated;
-   theme.css stays untouched until the programme's fold-in step.
-
-   VALUES ARE PLACEHOLDERS pinned from the pre-migration legacy
-   hexes. Consolidation is a design act: swapping a figure's literals
-   to tokens may visibly change it where drifted values collapse into
-   one token — log deltas in the per-figure pixel-diff (a changelog,
-   not a zero-change gate). Real colour values come at the colour
-   stage, edited here and nowhere else.
-
-   Tokens are added per figure as migration reaches it — an absent
-   token here means no migrated figure needs it yet.
    ════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* populated figure-by-figure; keep in registry.json order */
+  /* ══════════════════════════════════════════════════════════════
+     A. ORG PALETTE ANCHORS & STOPS (PRIMITIVES)
+     Copied directly from expanded_palette.css per design policy
+     ══════════════════════════════════════════════════════════════ */
 
-  /* ── A3 sweep (2026-07-15) ── */
-  --color-surface-default: #ffffff;
-  --color-surface-subtle: #f8f9fb;
-  --color-border-default: #dcdcdc;
-  --color-border-subtle: #f0f0f0;
-  --color-border-inverse: #ffffff;
-  --color-text-primary: #1a1a2e;
-  --color-text-secondary: #6D6E71;
-  --color-text-inverse: #ffffff;
-  --color-text-brand: #004667;
-  --color-map-landmass: #dcdcdc;
-  --color-map-boundary: #ffffff;
-  --color-concept-community-marker: #004667;
-  --color-concept-community-marker-hover: #44A3A4;
+  /* Org Anchors */
+  --pal-blue-dark: #004667;
+  --pal-blue-light: #B8C4D3;
+  --pal-teal-dark: #44A3A4;
+  --pal-teal-light: #B5D2D3;
+  --pal-gold-dark: #DEAC28;
+  --pal-gold-light: #F0D8A4;
+  --pal-grey-dark: #6D6E71;
+  --pal-grey-light: #B8B6B7;
+  --pal-red-dark: #CE2129;
+  --pal-sage-dark: #77AE99;
+  --pal-sage-light: #C5D8CF;
+  --pal-purple-dark: #55425B;
+  --pal-purple-light: #BCB3BE;
 
-  /* ── B2 sweep (2026-07-15) ── */
+  /* Consumed Org Stops */
+  --pal-blue-800: color-mix(in oklch, var(--pal-blue-dark) 70%, black);
+  --pal-blue-700: var(--pal-blue-dark);
+  --pal-blue-600: color-mix(in oklch, var(--pal-blue-dark) 75%, var(--pal-blue-light) 25%);
+  --pal-blue-500: color-mix(in oklch, var(--pal-blue-dark), var(--pal-blue-light));
+  --pal-blue-300: var(--pal-blue-light);
+
+  --pal-teal-700: var(--pal-teal-dark);
+
+  --pal-gold-700: var(--pal-gold-dark);
+  --pal-gold-300: var(--pal-gold-light);
+
+  --pal-grey-700: var(--pal-grey-dark);
+  --pal-grey-500: color-mix(in oklch, var(--pal-grey-dark), var(--pal-grey-light));
+  --pal-grey-350: color-mix(in oklch, var(--pal-grey-dark) 12.5%, var(--pal-grey-light) 87.5%);
+
+  --pal-red-700: var(--pal-red-dark);
+
+  --pal-sage-800: color-mix(in oklch, var(--pal-sage-dark) 70%, black);
+  --pal-sage-700: var(--pal-sage-dark);
+  --pal-sage-500: color-mix(in oklch, var(--pal-sage-dark), var(--pal-sage-light));
+  --pal-sage-300: var(--pal-sage-light);
+
+  --pal-purple-700: var(--pal-purple-dark);
+  --pal-purple-300: var(--pal-purple-light);
+
+  /* Cool Neutral Extensions */
+  --ext-white: #ffffff;
+  --ext-neutral-cool-900: oklch(0.12 0.008 243);
+  --ext-neutral-cool-250: oklch(0.88 0.008 243);
+  --ext-neutral-cool-150: oklch(0.945 0.008 243);
+  --ext-neutral-cool-50:  oklch(0.985 0.008 243);
+
+
+  /* ══════════════════════════════════════════════════════════════
+     B. SEMANTIC TOKENS
+     Mapped according to PRIMITIVE_MAP.md rulings
+     ══════════════════════════════════════════════════════════════ */
+
+  /* ── A3 sweep ── */
+  --color-surface-default: var(--ext-white);
+  --color-surface-subtle: var(--ext-neutral-cool-50);
+  --color-border-default: var(--ext-neutral-cool-250);
+  --color-border-subtle: var(--ext-neutral-cool-150);
+  --color-border-inverse: var(--ext-white);
+  --color-text-primary: var(--ext-neutral-cool-900);
+  --color-text-secondary: var(--pal-grey-700);
+  --color-text-inverse: var(--ext-white);
+  --color-text-brand: var(--pal-blue-700);
+  --color-map-landmass: var(--ext-neutral-cool-250);
+  --color-map-boundary: var(--ext-white);
+  --color-concept-community-marker: var(--pal-blue-700);
+  --color-concept-community-marker-hover: var(--pal-teal-700);
+
+  /* ── B2 sweep ── */
   --color-shadow-subtle: rgba(0, 0, 0, 0.12);
-  --color-surface-pill-neutral: #f8f9fb;
-  --color-text-pill-neutral: #6D6E71;
-  --color-border-pill-neutral: #dcdcdc;
-  --color-scale-heatmap-base: #f0efe9;
-  --color-scale-heatmap-max: #002d44;
-  --color-scale-heatmap-zero: #dcdcdc; /* added (same value as map-landmass) */
+  --color-surface-pill-neutral: var(--ext-neutral-cool-50);
+  --color-text-pill-neutral: var(--pal-grey-700);
+  --color-border-pill-neutral: var(--ext-neutral-cool-250);
+  --color-scale-heatmap-base: #f0efe9; /* left as ext (current warm color) */
+  --color-scale-heatmap-max: var(--pal-blue-800);
+  --color-scale-heatmap-zero: var(--ext-neutral-cool-250);
 
-  /* ── C2 sweep (2026-07-15) ── */
-  --color-border-strong: #004667;
-  --color-text-tertiary: #999999;
-  --color-text-accent1: #2c5530;
-  --color-surface-accent1-subtle: #e3efe5;
+  /* ── C2 sweep ── */
+  --color-border-strong: var(--pal-blue-700);
+  --color-text-tertiary: var(--pal-grey-500);
+  --color-text-accent1: var(--pal-sage-800);
+  --color-surface-accent1-subtle: var(--pal-sage-300);
 
-  /* ── D2 sweep (2026-07-15) ── */
-  --color-chart-similarity: #B8C4D3;
-  --color-concept-viable-teal: #44A3A4;
-  --color-status-success: #27ae60;
-  --color-status-warning: #f39c12;
-  --color-status-fail: #e74c3c;
+  /* ── D2 sweep ── */
+  --color-chart-similarity: var(--pal-blue-300);
+  --color-concept-viable-teal: var(--pal-sage-700);
+  --color-status-success: var(--pal-sage-700);
+  --color-status-warning: var(--pal-gold-700);
+  --color-status-fail: var(--pal-red-700);
 
-  /* ── E2 sweep (2026-07-15) ── */
-  --color-surface-brand: #004667;
-  --color-text-annotation-accent: #004667;
-  --color-border-annotation-accent: #004667;
+  /* ── E2 sweep ── */
+  --color-surface-brand: var(--pal-blue-700);
+  --color-text-annotation-accent: var(--pal-blue-700);
+  --color-border-annotation-accent: var(--pal-blue-700);
 
-  /* ── F2 sweep (2026-07-15) ── */
-  --color-concept-susceptible: #CE2129;
-  --color-concept-candidate-p1: #555555;
-  --color-concept-candidate-fade: #999999;
-  --color-concept-candidate-p2-local: #1a3d6b;
-  --color-concept-candidate-p2-pt: #5b8db8;
-  --color-concept-candidate-p3: #d4760a;
-  --color-concept-candidate-p4-viable: #1a7a3a;
-  --color-concept-candidate-p4-viable-teer: #4aaa5e;
+  /* ── F2 sweep ── */
+  --color-concept-susceptible: var(--pal-purple-700);
+  --color-concept-candidate-p1: var(--pal-grey-700);
+  --color-concept-candidate-fade: var(--pal-grey-350);
+  --color-concept-candidate-p2-local: var(--pal-blue-500);
+  --color-concept-candidate-p2-pt: var(--pal-blue-300);
+  --color-concept-candidate-p3: var(--pal-blue-600);
+  --color-concept-candidate-p4-viable: var(--pal-sage-700);
+  --color-concept-candidate-p4-viable-teer: var(--pal-sage-300);
 
-  /* ── I sweep (2026-07-15) ── */
-  --color-surface-pill-shared: #77AE99;
-  --color-surface-pill-gap: #D36828;
-  --color-chart-reference-line: #004667;
+  /* ── I sweep ── */
+  --color-surface-pill-shared: var(--pal-sage-300);
+  --color-surface-pill-gap: var(--pal-gold-300);
+  --color-chart-reference-line: var(--pal-blue-700);
 
-  /* ── J sweep (2026-07-15) ── */
-  --color-chart-rank1: #44A3A4;
-  --color-chart-rank2: #5aa9a9;
-  --color-chart-rank3: #93c6c6;
-  --color-surface-progress-track: #e6e9ec;
+  /* ── J sweep ── */
+  --color-chart-rank1: var(--pal-sage-700);
+  --color-chart-rank2: var(--pal-sage-500);
+  --color-chart-rank3: var(--pal-sage-300);
+  --color-surface-progress-track: var(--ext-neutral-cool-150);
 
-  /* ── Config Panel (2026-07-15) ── */
-  --color-surface-control: #ffffff;
-  --color-border-control: #dcdcdc;
-  --color-border-control-hover: #004667;
-  --color-border-control-focus: #44A3A4;
-  --color-text-control: #1a1a2e;
-  --color-text-control-label: #004667;
+  /* ── Config Panel ── */
+  --color-surface-control: var(--ext-white);
+  --color-border-control: var(--ext-neutral-cool-250);
+  --color-border-control-hover: var(--pal-blue-700);
+  --color-border-control-focus: var(--pal-teal-700);
+  --color-text-control: var(--ext-neutral-cool-900);
+  --color-text-control-label: var(--pal-blue-700);
 }
-

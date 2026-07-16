@@ -110,12 +110,14 @@
       "token": "--color-surface-hover",
       "chapter": "structural",
       "scope": "structural",
-      "status": "merged",
-      "pass": 1,
-      "merged_into": "--color-surface-subtle",
+      "status": "decided",
+      "pass": 3,
+      "merged_into": "",
       "absorbs": [],
-      "usage": [],
-      "notes": "Deliberately same colour as subtle surface (RC)."
+      "usage": [
+        { "figure": "A3", "selector": ".community.highlighted (background-color)" }
+      ],
+      "notes": "Separate lighter grey surface for active sidebar lists."
     },
     {
       "token": "--color-surface-accent1-subtle",

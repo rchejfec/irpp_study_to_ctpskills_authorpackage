@@ -17,9 +17,10 @@
 
   /* ── A3 sweep ── */
   --color-surface-default: var(--ext-white);
-  --color-surface-subtle: var(--ext-neutral-cool-50);
-  --color-border-default: var(--ext-neutral-cool-250);
-  --color-border-subtle: var(--ext-neutral-cool-150);
+  --color-surface-subtle: var(--ext-neutral-pure-50);
+  --color-surface-hover: var(--pal-teal-700);
+  --color-border-default: var(--ext-neutral-pure-250);
+  --color-border-subtle: var(--ext-neutral-pure-150);
   --color-border-inverse: var(--ext-white);
   --color-text-primary: var(--ext-neutral-cool-900);
   --color-text-secondary: var(--pal-grey-700);
@@ -35,7 +36,8 @@
   --color-surface-pill-neutral: var(--ext-neutral-cool-50);
   --color-text-pill-neutral: var(--pal-grey-700);
   --color-border-pill-neutral: var(--ext-neutral-cool-250);
-  --color-scale-heatmap-base: #f0efe9; /* left as ext (current warm color) */
+  --color-scale-heatmap-base: #f0efe9;
+  /* left as ext (current warm color) */
   --color-scale-heatmap-max: var(--pal-blue-800);
   --color-scale-heatmap-zero: var(--ext-neutral-cool-250);
 
